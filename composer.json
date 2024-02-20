@@ -1,0 +1,25 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Vertuoza\\Libs\\": "src/libs/",
+      "Vertuoza\\Usecases\\": "src/usecases/",
+      "Vertuoza\\Repositories\\": "src/repositories/",
+      "Vertuoza\\Entities\\": "src/entities/",
+      "Vertuoza\\Api\\Graphql\\": "src/graphql/"
+    }
+  },
+  "require": {
+    "webonyx/graphql-php": "^15.8.1",
+    "overblog/dataloader-php": "^0.7.0",
+    "illuminate/database": "^10.33",
+    "illuminate/events": "^10.33",
+    "illuminate/filesystem": "^10.33",
+    "monolog/monolog": "^3.5",
+    "vlucas/phpdotenv": "^5.6",
+    "nesbot/carbon": "^2.71",
+    "react/http": "^1.9",
+    "react/socket": "^1.15",
+    "react/async": "^4.1.0",
+    "react/promise": "^3.1"
+  }
+}

@@ -9,6 +9,7 @@
     }
   },
   "require": {
+    "php": "^8.2",
     "webonyx/graphql-php": "^15.8.1",
     "overblog/dataloader-php": "^0.7.0",
     "illuminate/database": "^10.33",

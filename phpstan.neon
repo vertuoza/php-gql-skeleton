@@ -1,0 +1,15 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 8
+    paths:
+        - src/
+        - index.php
+    exceptions:
+        implicitThrows: false
+        check:
+            missingCheckedExceptionInThrows: true
+            tooWideThrowType: true
+        uncheckedExceptionRegexes:
+            - '#^Prophecy\\Exception\\#' # Ignore Prophecy exceptions

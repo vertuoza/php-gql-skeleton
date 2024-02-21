@@ -1,0 +1,596 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Empty array passed to foreach\\.$#"
+			count: 1
+			path: src/graphql/Context/RequestContext.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Context\\\\RequestContext\\:\\:addCookie\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/graphql/Context/RequestContext.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Context\\\\RequestContext\\:\\:middleware\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/graphql/Context/RequestContext.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Context\\\\RequestContext\\:\\:middleware\\(\\) has parameter \\$dataLoaderPromiseAdapter with generic interface Overblog\\\\PromiseAdapter\\\\PromiseAdapterInterface but does not specify its types\\: TPromise$#"
+			count: 1
+			path: src/graphql/Context/RequestContext.php
+
+		-
+			message: "#^Property Vertuoza\\\\Api\\\\Graphql\\\\Context\\\\RequestContext\\:\\:\\$headerContext type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/graphql/Context/RequestContext.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Errors\\\\GqlClientError\\:\\:__construct\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/graphql/Errors/GqlClientError.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Errors\\\\GqlClientError\\:\\:__construct\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/graphql/Errors/GqlClientError.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Errors\\\\GqlErrorHandler\\:\\:handle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/graphql/Errors/GqlErrorHandler.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Errors\\\\GqlErrorHandler\\:\\:handle\\(\\) has parameter \\$errors with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/graphql/Errors/GqlErrorHandler.php
+
+		-
+			message: "#^Parameter \\#5 \\$statusCode of method Vertuoza\\\\Libs\\\\Logger\\\\ApplicationLogger\\:\\:error\\(\\) expects string\\|null, int given\\.$#"
+			count: 2
+			path: src/graphql/Errors/GqlErrorHandler.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\GqlMiddlewares\\:\\:isGraphQLQueryPath\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/graphql/GqlMiddlewares.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\GqlMiddlewares\\:\\:isGraphQLQueryPath\\(\\) has parameter \\$request with no type specified\\.$#"
+			count: 1
+			path: src/graphql/GqlMiddlewares.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\GqlMiddlewares\\:\\:isSandboxRoute\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/graphql/GqlMiddlewares.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\GqlMiddlewares\\:\\:sandbox\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/graphql/GqlMiddlewares.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\GqlMiddlewares\\:\\:schema\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/graphql/GqlMiddlewares.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\GqlMiddlewares\\:\\:schema\\(\\) has parameter \\$dataLoaderPromiseAdapter with generic interface Overblog\\\\PromiseAdapter\\\\PromiseAdapterInterface but does not specify its types\\: TPromise$#"
+			count: 1
+			path: src/graphql/GqlMiddlewares.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\GqlMiddlewares\\:\\:schema\\(\\) throws checked exception GraphQL\\\\Error\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 3
+			path: src/graphql/GqlMiddlewares.php
+
+		-
+			message: "#^Parameter \\#1 \\$text of static method React\\\\Http\\\\Message\\\\Response\\:\\:plaintext\\(\\) expects string, string\\|false given\\.$#"
+			count: 1
+			path: src/graphql/GqlMiddlewares.php
+
+		-
+			message: "#^Parameter \\#1 \\$typeLoader of method GraphQL\\\\Type\\\\SchemaConfig\\:\\:setTypeLoader\\(\\) expects \\(callable\\(string\\)\\: \\(\\(GraphQL\\\\Type\\\\Definition\\\\NamedType&GraphQL\\\\Type\\\\Definition\\\\Type\\)\\|null\\)\\)\\|null, array\\{'Vertuoza\\\\\\\\Api\\\\\\\\Graphql\\\\\\\\Types', 'byTypename'\\} given\\.$#"
+			count: 1
+			path: src/graphql/GqlMiddlewares.php
+
+		-
+			message: "#^Property GraphQL\\\\Executor\\\\ExecutionResult\\:\\:\\$errors \\(array\\<GraphQL\\\\Error\\\\Error\\>\\) does not accept array\\<int, array\\<string, array\\<int\\|string, mixed\\>\\|string\\>\\>\\.$#"
+			count: 1
+			path: src/graphql/GqlMiddlewares.php
+
+		-
+			message: "#^Trying to invoke \\(callable\\(array\\<GraphQL\\\\Error\\\\Error\\>, callable\\(Throwable\\)\\: array\\{message\\: string, locations\\?\\: array\\<int, array\\{line\\: int, column\\: int\\}\\>, path\\?\\: array\\<int, int\\|string\\>, extensions\\?\\: array\\<string, mixed\\>\\}\\)\\: array\\<int, array\\{message\\: string, locations\\?\\: array\\<int, array\\{line\\: int, column\\: int\\}\\>, path\\?\\: array\\<int, int\\|string\\>, extensions\\?\\: array\\<string, mixed\\>\\}\\>\\)\\|null but it might not be a callable\\.$#"
+			count: 1
+			path: src/graphql/GqlMiddlewares.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Resolvers\\\\Settings\\\\UnitTypes\\\\UnitTypeQuery\\:\\:get\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/graphql/Resolvers/Settings/UnitTypes/UnitTypeQuery.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Resolvers\\\\Settings\\\\UnitTypes\\\\UnitTypeQuery\\:\\:get\\(\\) throws checked exception Vertuoza\\\\Api\\\\Graphql\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: src/graphql/Resolvers/Settings/UnitTypes/UnitTypeQuery.php
+
+		-
+			message: "#^Method Vertuoza\\\\Usecases\\\\Settings\\\\UnitTypes\\\\UnitTypeByIdUseCase\\:\\:handle\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			count: 1
+			path: src/graphql/Resolvers/Settings/UnitTypes/UnitTypeQuery.php
+
+		-
+			message: "#^Method Vertuoza\\\\Usecases\\\\Settings\\\\UnitTypes\\\\UnitTypesFindManyUseCase\\:\\:handle\\(\\) invoked with 1 parameter, 0 required\\.$#"
+			count: 1
+			path: src/graphql/Resolvers/Settings/UnitTypes/UnitTypeQuery.php
+
+		-
+			message: "#^Parameter \\#1 \\$classname of static method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:get\\(\\) expects class\\-string\\<GraphQL\\\\Type\\\\Definition\\\\Type&Vertuoza\\\\Api\\\\Graphql\\\\NamedType\\>, string given\\.$#"
+			count: 2
+			path: src/graphql/Resolvers/Settings/UnitTypes/UnitTypeQuery.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:boolean\\(\\) throws checked exception GraphQL\\\\Error\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: src/graphql/Types.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:byEnumClassName\\(\\) throws checked exception GraphQL\\\\Error\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: src/graphql/Types.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:byTypeName\\(\\) has invalid return type Vertuoza\\\\Api\\\\Graphql\\\\NamedType\\.$#"
+			count: 1
+			path: src/graphql/Types.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:byTypeName\\(\\) should return GraphQL\\\\Type\\\\Definition\\\\Type&Vertuoza\\\\Api\\\\Graphql\\\\NamedType but returns GraphQL\\\\Type\\\\Definition\\\\ScalarType\\.$#"
+			count: 5
+			path: src/graphql/Types.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:byTypeName\\(\\) throws checked exception Vertuoza\\\\Api\\\\Graphql\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 5
+			path: src/graphql/Types.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:float\\(\\) throws checked exception GraphQL\\\\Error\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: src/graphql/Types.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:id\\(\\) throws checked exception GraphQL\\\\Error\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: src/graphql/Types.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:int\\(\\) throws checked exception GraphQL\\\\Error\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: src/graphql/Types.php
+
+		-
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:string\\(\\) throws checked exception GraphQL\\\\Error\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: src/graphql/Types.php
+
+		-
+			message: "#^PHPDoc tag @throws with type Vertuoza\\\\Api\\\\Graphql\\\\InvariantViolation is not subtype of Throwable$#"
+			count: 5
+			path: src/graphql/Types.php
+
+		-
+			message: "#^Parameter \\#1 \\$enum of class GraphQL\\\\Type\\\\Definition\\\\PhpEnumType constructor expects class\\-string\\<UnitEnum\\>, string given\\.$#"
+			count: 1
+			path: src/graphql/Types.php
+
+		-
+			message: "#^Parameter \\$classname of method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:byClassName\\(\\) has invalid type Vertuoza\\\\Api\\\\Graphql\\\\NamedType\\.$#"
+			count: 1
+			path: src/graphql/Types.php
+
+		-
+			message: "#^Parameter \\$classname of method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:get\\(\\) has invalid type Vertuoza\\\\Api\\\\Graphql\\\\NamedType\\.$#"
+			count: 1
+			path: src/graphql/Types.php
+
+		-
+			message: "#^Property Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:\\$types has unknown class Vertuoza\\\\Api\\\\Graphql\\\\NamedType as its type\\.$#"
+			count: 1
+			path: src/graphql/Types.php
+
+		-
+			message: "#^Static method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:getEnum\\(\\) is unused\\.$#"
+			count: 1
+			path: src/graphql/Types.php
+
+		-
+			message: "#^Static property Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:\\$types \\(array\\<string, GraphQL\\\\Type\\\\Definition\\\\Type&Vertuoza\\\\Api\\\\Graphql\\\\NamedType\\>\\) does not accept array\\<string, GraphQL\\\\Type\\\\Definition\\\\PhpEnumType\\|\\(GraphQL\\\\Type\\\\Definition\\\\Type&Vertuoza\\\\Api\\\\Graphql\\\\NamedType\\)\\>\\.$#"
+			count: 1
+			path: src/graphql/Types.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\BadRequestException\\:\\:__construct\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Exceptions/BadRequestException.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\BadUserInputException\\:\\:__construct\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Exceptions/BadUserInputException.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\BadUserInputException\\:\\:__construct\\(\\) has parameter \\$fieldsError with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Exceptions/BadUserInputException.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\BusinessException\\:\\:__construct\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Exceptions/BusinessException.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\BusinessException\\:\\:__construct\\(\\) has parameter \\$code with no type specified\\.$#"
+			count: 1
+			path: src/libs/Exceptions/BusinessException.php
+
+		-
+			message: "#^Property Vertuoza\\\\Libs\\\\Exceptions\\\\BusinessException\\:\\:\\$args type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Exceptions/BusinessException.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\FieldError\\:\\:__construct\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Exceptions/FieldError.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\FieldError\\:\\:__construct\\(\\) throws checked exception TypeError but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: src/libs/Exceptions/FieldError.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\FieldError\\:\\:toArray\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/libs/Exceptions/FieldError.php
+
+		-
+			message: "#^Property Vertuoza\\\\Libs\\\\Exceptions\\\\FieldError\\:\\:\\$args \\(array\\) does not accept array\\|null\\.$#"
+			count: 1
+			path: src/libs/Exceptions/FieldError.php
+
+		-
+			message: "#^Property Vertuoza\\\\Libs\\\\Exceptions\\\\FieldError\\:\\:\\$args type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Exceptions/FieldError.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\ForbiddenException\\:\\:__construct\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Exceptions/ForbiddenException.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\NotAuthorizedException\\:\\:__construct\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Exceptions/NotAuthorizedException.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\NotFoundException\\:\\:__construct\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Exceptions/NotFoundException.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\UnauthorizedTenantException\\:\\:__construct\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Exceptions/UnauthorizedTenantException.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\Validators\\\\StringValidator\\:\\:__construct\\(\\) has parameter \\$field with no type specified\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/StringValidator.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\Validators\\\\StringValidator\\:\\:__construct\\(\\) has parameter \\$path with no type specified\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/StringValidator.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\Validators\\\\StringValidator\\:\\:__construct\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/StringValidator.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\Validators\\\\StringValidator\\:\\:max\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/StringValidator.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\Validators\\\\StringValidator\\:\\:min\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/StringValidator.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\Validators\\\\StringValidator\\:\\:notEmpty\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/StringValidator.php
+
+		-
+			message: "#^Result of && is always false\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/StringValidator.php
+
+		-
+			message: "#^Variable \\$value in isset\\(\\) is never defined\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/StringValidator.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\Validators\\\\Validator\\:\\:__construct\\(\\) has parameter \\$field with no type specified\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/Validator.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\Validators\\\\Validator\\:\\:__construct\\(\\) has parameter \\$path with no type specified\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/Validator.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\Validators\\\\Validator\\:\\:__construct\\(\\) has parameter \\$value with no type specified\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/Validator.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Exceptions\\\\Validators\\\\Validator\\:\\:validate\\(\\) has invalid return type Vertuoza\\\\Libs\\\\Exceptions\\\\Validators\\\\FieldError\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/Validator.php
+
+		-
+			message: "#^Property Vertuoza\\\\Libs\\\\Exceptions\\\\Validators\\\\Validator\\:\\:\\$errors has no type specified\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/Validator.php
+
+		-
+			message: "#^Property Vertuoza\\\\Libs\\\\Exceptions\\\\Validators\\\\Validator\\:\\:\\$field has no type specified\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/Validator.php
+
+		-
+			message: "#^Property Vertuoza\\\\Libs\\\\Exceptions\\\\Validators\\\\Validator\\:\\:\\$path has no type specified\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/Validator.php
+
+		-
+			message: "#^Property Vertuoza\\\\Libs\\\\Exceptions\\\\Validators\\\\Validator\\:\\:\\$value has no type specified\\.$#"
+			count: 1
+			path: src/libs/Exceptions/Validators/Validator.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\ApplicationLogger\\:\\:__construct\\(\\) throws checked exception InvalidArgumentException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: src/libs/Logger/ApplicationLogger.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\ApplicationLogger\\:\\:__construct\\(\\) throws checked exception RuntimeException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: src/libs/Logger/ApplicationLogger.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\ApplicationLogger\\:\\:computeContext\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/libs/Logger/ApplicationLogger.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\ApplicationLogger\\:\\:computeContext\\(\\) has parameter \\$metadata with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Logger/ApplicationLogger.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\ApplicationLogger\\:\\:critical\\(\\) has parameter \\$metadata with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Logger/ApplicationLogger.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\ApplicationLogger\\:\\:debug\\(\\) has parameter \\$metadata with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Logger/ApplicationLogger.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\ApplicationLogger\\:\\:emergency\\(\\) has parameter \\$metadata with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Logger/ApplicationLogger.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\ApplicationLogger\\:\\:error\\(\\) has parameter \\$metadata with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Logger/ApplicationLogger.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\ApplicationLogger\\:\\:info\\(\\) has parameter \\$metadata with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Logger/ApplicationLogger.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\ApplicationLogger\\:\\:warning\\(\\) has parameter \\$metadata with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Logger/ApplicationLogger.php
+
+		-
+			message: "#^Property Vertuoza\\\\Libs\\\\Logger\\\\ApplicationLogger\\:\\:\\$instance has no type specified\\.$#"
+			count: 1
+			path: src/libs/Logger/ApplicationLogger.php
+
+		-
+			message: "#^Array has 2 duplicate keys with value 'DEBUG' \\('DEBUG', 'DEBUG'\\)\\.$#"
+			count: 1
+			path: src/libs/Logger/GcpLoggerFormatter.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\GcpLoggerFormatter\\:\\:__construct\\(\\) has parameter \\$labelProperties with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Logger/GcpLoggerFormatter.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\GcpLoggerFormatter\\:\\:format\\(\\) has parameter \\$record with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Logger/GcpLoggerFormatter.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\GcpLoggerFormatter\\:\\:format\\(\\) throws checked exception RuntimeException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: src/libs/Logger/GcpLoggerFormatter.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\GcpLoggerFormatter\\:\\:formatBatchJson\\(\\) has parameter \\$records with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Logger/GcpLoggerFormatter.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\GcpLoggerFormatter\\:\\:formatBatchJson\\(\\) throws checked exception RuntimeException but it's missing from the PHPDoc @throws tag\\.$#"
+			count: 1
+			path: src/libs/Logger/GcpLoggerFormatter.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\GcpLoggerFormatter\\:\\:mapLevelToSeverity\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/libs/Logger/GcpLoggerFormatter.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\GcpLoggerFormatter\\:\\:toGcp\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/libs/Logger/GcpLoggerFormatter.php
+
+		-
+			message: "#^Method Vertuoza\\\\Libs\\\\Logger\\\\GcpLoggerFormatter\\:\\:toGcp\\(\\) has parameter \\$record with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/libs/Logger/GcpLoggerFormatter.php
+
+		-
+			message: "#^Parameter \\#1 \\$record of method Vertuoza\\\\Libs\\\\Logger\\\\GcpLoggerFormatter\\:\\:toGcp\\(\\) expects array, array\\<array\\|bool\\|float\\|int\\|object\\|string\\|null\\>\\|bool\\|float\\|int\\|object\\|string\\|null given\\.$#"
+			count: 1
+			path: src/libs/Logger/GcpLoggerFormatter.php
+
+		-
+			message: "#^Property Vertuoza\\\\Libs\\\\Logger\\\\GcpLoggerFormatter\\:\\:\\$labelProperties has no type specified\\.$#"
+			count: 1
+			path: src/libs/Logger/GcpLoggerFormatter.php
+
+		-
+			message: "#^Function Vertuoza\\\\Libs\\\\Logger\\\\startLogger\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/libs/Logger/index.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\Database\\\\QueryBuilder\\:\\:__construct\\(\\) has parameter \\$charset with no type specified\\.$#"
+			count: 1
+			path: src/repositories/Database/QueryBuilder.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\RepositoriesFactory\\:\\:__construct\\(\\) has parameter \\$dataLoaderPromiseAdapter with generic interface Overblog\\\\PromiseAdapter\\\\PromiseAdapterInterface but does not specify its types\\: TPromise$#"
+			count: 1
+			path: src/repositories/RepositoriesFactory.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\Models\\\\UnitTypeMapper\\:\\:serializeCreate\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/Models/UnitTypeMapper.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\Models\\\\UnitTypeMapper\\:\\:serializeMutation\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/Models/UnitTypeMapper.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\Models\\\\UnitTypeMapper\\:\\:serializeUpdate\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/Models/UnitTypeMapper.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:__construct\\(\\) has parameter \\$dataLoaderPromiseAdapter with generic interface Overblog\\\\PromiseAdapter\\\\PromiseAdapterInterface but does not specify its types\\: TPromise$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:clearCache\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:countUnitTypeWithLabel\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:fetchByIds\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:fetchByIds\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:findMany\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:getById\\(\\) return type with generic class React\\\\Promise\\\\Promise does not specify its types\\: T$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:getByIds\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:getByIds\\(\\) return type with generic class React\\\\Promise\\\\Promise does not specify its types\\: T$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:getQueryBuilder\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
+
+		-
+			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:update\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
+
+		-
+			message: "#^Property Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:\\$dataLoaderPromiseAdapter with generic interface Overblog\\\\PromiseAdapter\\\\PromiseAdapterInterface does not specify its types\\: TPromise$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
+
+		-
+			message: "#^Property Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:\\$database is never read, only written\\.$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
+
+		-
+			message: "#^Property Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:\\$getbyIdsDL type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
+
+		-
+			message: "#^Method Vertuoza\\\\Usecases\\\\Settings\\\\UnitTypes\\\\UnitTypeByIdUseCase\\:\\:handle\\(\\) has invalid return type Vertuoza\\\\Usecases\\\\Settings\\\\UnitTypes\\\\UnitTypeEntity\\.$#"
+			count: 1
+			path: src/usecases/Settings/UnitTypes/UnitTypeByIdUseCase.php
+
+		-
+			message: "#^Parameter \\#2 \\$tenantId of method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:getById\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/usecases/Settings/UnitTypes/UnitTypeByIdUseCase.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$id$#"
+			count: 1
+			path: src/usecases/Settings/UnitTypes/UnitTypesFindManyUseCase.php
+
+		-
+			message: "#^Parameter \\#1 \\$tenantId of method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:findMany\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/usecases/Settings/UnitTypes/UnitTypesFindManyUseCase.php

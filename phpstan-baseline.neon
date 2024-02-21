@@ -91,11 +91,6 @@ parameters:
 			path: src/graphql/GqlMiddlewares.php
 
 		-
-			message: "#^Parameter \\#1 \\$typeLoader of method GraphQL\\\\Type\\\\SchemaConfig\\:\\:setTypeLoader\\(\\) expects \\(callable\\(string\\)\\: \\(\\(GraphQL\\\\Type\\\\Definition\\\\NamedType&GraphQL\\\\Type\\\\Definition\\\\Type\\)\\|null\\)\\)\\|null, array\\{'Vertuoza\\\\\\\\Api\\\\\\\\Graphql\\\\\\\\Types', 'byTypename'\\} given\\.$#"
-			count: 1
-			path: src/graphql/GqlMiddlewares.php
-
-		-
 			message: "#^Property GraphQL\\\\Executor\\\\ExecutionResult\\:\\:\\$errors \\(array\\<GraphQL\\\\Error\\\\Error\\>\\) does not accept array\\<int, array\\<string, array\\<int\\|string, mixed\\>\\|string\\>\\>\\.$#"
 			count: 1
 			path: src/graphql/GqlMiddlewares.php
@@ -111,7 +106,7 @@ parameters:
 			path: src/graphql/Resolvers/Settings/UnitTypes/UnitTypeQuery.php
 
 		-
-			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Resolvers\\\\Settings\\\\UnitTypes\\\\UnitTypeQuery\\:\\:get\\(\\) throws checked exception Vertuoza\\\\Api\\\\Graphql\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Resolvers\\\\Settings\\\\UnitTypes\\\\UnitTypeQuery\\:\\:get\\(\\) throws checked exception GraphQL\\\\Error\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
 			count: 1
 			path: src/graphql/Resolvers/Settings/UnitTypes/UnitTypeQuery.php
 
@@ -126,12 +121,7 @@ parameters:
 			path: src/graphql/Resolvers/Settings/UnitTypes/UnitTypeQuery.php
 
 		-
-			message: "#^Parameter \\#1 \\$classname of static method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:get\\(\\) expects class\\-string\\<GraphQL\\\\Type\\\\Definition\\\\Type&Vertuoza\\\\Api\\\\Graphql\\\\NamedType\\>, string given\\.$#"
-			count: 2
-			path: src/graphql/Resolvers/Settings/UnitTypes/UnitTypeQuery.php
-
-		-
-			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:boolean\\(\\) throws checked exception GraphQL\\\\Error\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
+			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:byClassName\\(\\) should return T of GraphQL\\\\Type\\\\Definition\\\\NamedType&GraphQL\\\\Type\\\\Definition\\\\Type but returns GraphQL\\\\Type\\\\Definition\\\\NamedType&GraphQL\\\\Type\\\\Definition\\\\Type\\.$#"
 			count: 1
 			path: src/graphql/Types.php
 
@@ -141,72 +131,12 @@ parameters:
 			path: src/graphql/Types.php
 
 		-
-			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:byTypeName\\(\\) has invalid return type Vertuoza\\\\Api\\\\Graphql\\\\NamedType\\.$#"
-			count: 1
-			path: src/graphql/Types.php
-
-		-
-			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:byTypeName\\(\\) should return GraphQL\\\\Type\\\\Definition\\\\Type&Vertuoza\\\\Api\\\\Graphql\\\\NamedType but returns GraphQL\\\\Type\\\\Definition\\\\ScalarType\\.$#"
-			count: 5
-			path: src/graphql/Types.php
-
-		-
-			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:byTypeName\\(\\) throws checked exception Vertuoza\\\\Api\\\\Graphql\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 5
-			path: src/graphql/Types.php
-
-		-
-			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:float\\(\\) throws checked exception GraphQL\\\\Error\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: src/graphql/Types.php
-
-		-
-			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:id\\(\\) throws checked exception GraphQL\\\\Error\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: src/graphql/Types.php
-
-		-
-			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:int\\(\\) throws checked exception GraphQL\\\\Error\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: src/graphql/Types.php
-
-		-
-			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:string\\(\\) throws checked exception GraphQL\\\\Error\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 1
-			path: src/graphql/Types.php
-
-		-
-			message: "#^PHPDoc tag @throws with type Vertuoza\\\\Api\\\\Graphql\\\\InvariantViolation is not subtype of Throwable$#"
-			count: 5
-			path: src/graphql/Types.php
-
-		-
 			message: "#^Parameter \\#1 \\$enum of class GraphQL\\\\Type\\\\Definition\\\\PhpEnumType constructor expects class\\-string\\<UnitEnum\\>, string given\\.$#"
 			count: 1
 			path: src/graphql/Types.php
 
 		-
-			message: "#^Parameter \\$classname of method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:byClassName\\(\\) has invalid type Vertuoza\\\\Api\\\\Graphql\\\\NamedType\\.$#"
-			count: 1
-			path: src/graphql/Types.php
-
-		-
-			message: "#^Parameter \\$classname of method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:get\\(\\) has invalid type Vertuoza\\\\Api\\\\Graphql\\\\NamedType\\.$#"
-			count: 1
-			path: src/graphql/Types.php
-
-		-
-			message: "#^Property Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:\\$types has unknown class Vertuoza\\\\Api\\\\Graphql\\\\NamedType as its type\\.$#"
-			count: 1
-			path: src/graphql/Types.php
-
-		-
 			message: "#^Static method Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:getEnum\\(\\) is unused\\.$#"
-			count: 1
-			path: src/graphql/Types.php
-
-		-
-			message: "#^Static property Vertuoza\\\\Api\\\\Graphql\\\\Types\\:\\:\\$types \\(array\\<string, GraphQL\\\\Type\\\\Definition\\\\Type&Vertuoza\\\\Api\\\\Graphql\\\\NamedType\\>\\) does not accept array\\<string, GraphQL\\\\Type\\\\Definition\\\\PhpEnumType\\|\\(GraphQL\\\\Type\\\\Definition\\\\Type&Vertuoza\\\\Api\\\\Graphql\\\\NamedType\\)\\>\\.$#"
 			count: 1
 			path: src/graphql/Types.php
 

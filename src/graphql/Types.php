@@ -23,9 +23,9 @@ final class Types
   }
 
   /**
-   * @param class-string<Type&NamedType> $classname
-   *
-   * @return \Closure(): Type
+   * @template T of Type&NamedType
+   * @param class-string<T> $classname
+   * @return \Closure(): T
    */
   public static function get(string $classname): \Closure
   {
@@ -38,8 +38,12 @@ final class Types
   }
 
 
-  /** @param class-string<Type&NamedType> $classname */
-  private static function byClassName(string $classname): Type
+  /**
+   * @template T of Type&NamedType
+   * @param class-string<T> $classname
+   * @return T
+   */
+  private static function byClassName(string $classname): Type&NamedType
   {
     $cacheName = self::normalizeClassName($classname);
 

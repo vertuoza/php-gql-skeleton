@@ -7,6 +7,7 @@ namespace Vertuoza\Api\Graphql\Resolvers\Settings\Collaborators;
 use GraphQL\Error\InvariantViolation;
 use GraphQL\Type\Definition\FieldDefinition;
 use GraphQL\Type\Definition\Type;
+use Vertuoza\Api\Graphql\Context\RequestContext;
 use Vertuoza\Api\Graphql\Types;
 
 /**
@@ -29,17 +30,13 @@ class CollaboratorQuery
                 'args' => [
                     'id' => Type::nonNull(Types::string()),
                 ],
-                // TODO: Implement
-                'resolve' => static fn () => [
-                    'id' => '1',
-                    'name' => 'John Doe',
-                    'firstName' => 'John',
-                ],
+                'resolve' => static fn (mixed $rootValue, array $args, RequestContext $context) =>
+                    $context->useCases->collaborator->byId->handle($args['id']),
             ],
             'collaborators' => [
                 'type' => Type::nonNull(Type::listOf(Type::nonNull(Types::get(Collaborator::class)))),
-                // TODO: Implement
-                'resolve' => static fn () => [],
+                'resolve' => static fn (mixed $rootValue, array $args, RequestContext $context) =>
+                    $context->useCases->collaborator->findMany->handle(),
             ],
         ];
     }

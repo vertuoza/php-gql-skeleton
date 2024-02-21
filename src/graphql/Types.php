@@ -3,6 +3,7 @@
 namespace Vertuoza\Api\Graphql;
 
 use GraphQL\Error\InvariantViolation;
+use GraphQL\Type\Definition\NamedType;
 use GraphQL\Type\Definition\PhpEnumType;
 use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Type\Definition\Type;

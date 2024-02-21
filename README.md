@@ -6,6 +6,8 @@ It creates a simple api with a database based on mysql.
 ```gql
 type Query {
   hello: String
+  collaboratorById(id: ID!): Collaborator
+  collaborators: [Collaborator!]!
   unitTypeById(id: String!): UnitType
   unitTypes: [UnitType]!
 }

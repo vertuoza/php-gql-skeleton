@@ -5,6 +5,7 @@ parameters:
     level: 8
     paths:
         - src/
+        - tests/
         - index.php
     exceptions:
         implicitThrows: false

@@ -9,9 +9,9 @@ use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeRepository;
 
 class RepositoriesFactory
 {
-  public readonly UnitTypeRepository $unitType;
+  public UnitTypeRepository $unitType;
 
-  public readonly CollaboratorRepository $collaborator;
+  public CollaboratorRepository $collaborator;
 
   public function __construct(QueryBuilder $database, PromiseAdapterInterface $dataLoaderPromiseAdapter)
   {

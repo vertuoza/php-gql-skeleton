@@ -6,7 +6,7 @@ use Exception;
 use Overblog\DataLoader\DataLoader;
 use Overblog\PromiseAdapter\PromiseAdapterInterface;
 use Ramsey\Uuid\Uuid;
-use React\Promise\Promise;
+use React\Promise\PromiseInterface;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
@@ -71,12 +71,12 @@ class UnitTypeRepository
     return $this->db->getConnection()->table(UnitTypeModel::getTableName());
   }
 
-  public function getByIds(array $ids, string $tenantId): Promise
+  public function getByIds(array $ids, string $tenantId): PromiseInterface
   {
     return $this->getDataloader($tenantId)->loadMany($ids);
   }
 
-  public function getById(string $id, string $tenantId): Promise
+  public function getById(string $id, string $tenantId): PromiseInterface
   {
     return $this->getDataloader($tenantId)->load($id);
   }

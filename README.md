@@ -11,6 +11,10 @@ type Query {
   unitTypeById(id: String!): UnitType
   unitTypes: [UnitType]!
 }
+
+type Mutation {
+  unitTypeCreate(input: UnitTypCreateInput!): UnitType!
+}
 ```
 
 # Getting started

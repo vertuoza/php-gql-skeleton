@@ -11,6 +11,15 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 /**
  * Service running a Symfony validator against the value. It triggers a GraphQL-compatible exception if
  * the value is invalid.
+ *
+ * Example usage:
+ * ```php
+ * $validator = new InputDataValidator(ValidatorFactory::build());
+ * $validator->validate($inputData);
+ * ```
+ *
+ * The invalid input will throw a GraphQL error with the message "Input data is invalid" and the extensions
+ * describing the validation errors.
  */
 class InputDataValidator
 {

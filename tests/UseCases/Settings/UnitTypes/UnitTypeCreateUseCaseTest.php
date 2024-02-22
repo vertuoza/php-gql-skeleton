@@ -7,6 +7,7 @@ namespace Vertuoza\Tests\UseCases\Settings\UnitTypes;
 use Exception;
 use GraphQL\Error\Error;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Vertuoza\Api\Graphql\Context\UserRequestContext;
 use Vertuoza\Entities\Settings\UnitTypeEntity;
@@ -82,8 +83,7 @@ class UnitTypeCreateUseCaseTest extends TestCase
         $mutationData = new UnitTypeMutationData(name: '');
 
         // Expected repository calls
-        $repository->create($mutationData, 'tenant-id')->shouldNotBeCalled();
-        $repository->getById('unit-type-id', 'tenant-id')->shouldNotBeCalled();
+        $repository->create(Argument::any(), Argument::any())->shouldNotBeCalled();
 
         // Run the mutation
         await($useCase->handle($mutationData));
@@ -113,8 +113,7 @@ class UnitTypeCreateUseCaseTest extends TestCase
         $mutationData = new UnitTypeMutationData(name: 'Valid name');
 
         // Expected repository calls
-        $repository->create($mutationData, 'tenant-id')->shouldNotBeCalled();
-        $repository->getById('unit-type-id', 'tenant-id')->shouldNotBeCalled();
+        $repository->create(Argument::any(), Argument::any())->shouldNotBeCalled();
 
         // Run the mutation
         await($useCase->handle($mutationData));

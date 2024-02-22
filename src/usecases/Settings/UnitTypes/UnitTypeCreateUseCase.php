@@ -18,7 +18,7 @@ use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeRepository;
 /** Resolver for a unitTypeCreate mutation */
 class UnitTypeCreateUseCase
 {
-    private UnitTypeRepository $repository;
+    private readonly UnitTypeRepository $repository;
 
     public function __construct(
         RepositoriesFactory $repositories,

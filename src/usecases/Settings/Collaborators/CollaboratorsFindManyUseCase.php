@@ -15,7 +15,7 @@ use Vertuoza\Repositories\Settings\Collaborators\CollaboratorRepository;
 /** Resolver for collaborators query */
 class CollaboratorsFindManyUseCase
 {
-    private CollaboratorRepository $repository;
+    private readonly CollaboratorRepository $repository;
 
     public function __construct(
         RepositoriesFactory $repositories,

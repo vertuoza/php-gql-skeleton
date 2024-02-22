@@ -28,7 +28,7 @@ class CollaboratorQuery
                 // needs to return a nullable type, as the collaborator might not exist.
                 'type' => Types::get(Collaborator::class),
                 'args' => [
-                    'id' => Type::nonNull(Types::string()),
+                    'id' => Type::nonNull(Types::id()),
                 ],
                 'resolve' => static fn (mixed $rootValue, array $args, RequestContext $context) =>
                     $context->useCases->collaborator->byId->handle($args['id']),

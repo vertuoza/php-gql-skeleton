@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Vertuoza\Tests\Validator;
+namespace Vertuoza\Tests\Libs\Validator;
 
 use GraphQL\Error\Error;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Vertuoza\Libs\Validator\InputDataValidator;
 use Vertuoza\Libs\Validator\ValidatorFactory;
-use Vertuoza\Tests\Validator\Examples\ValidatedObject;
+use Vertuoza\Tests\Libs\Validator\Examples\ValidatedObject;
 
 class InputDataValidatorTest extends TestCase
 {

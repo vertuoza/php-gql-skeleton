@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Vertuoza\Tests\Validator\Examples;
+namespace Vertuoza\Tests\Libs\Validator\Examples;
 
 use Symfony\Component\Validator\Constraints\Length;
 

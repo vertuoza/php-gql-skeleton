@@ -82,7 +82,7 @@ parameters:
 
 		-
 			message: "#^Method Vertuoza\\\\Api\\\\Graphql\\\\GqlMiddlewares\\:\\:schema\\(\\) throws checked exception GraphQL\\\\Error\\\\InvariantViolation but it's missing from the PHPDoc @throws tag\\.$#"
-			count: 3
+			count: 5
 			path: src/graphql/GqlMiddlewares.php
 
 		-
@@ -466,17 +466,7 @@ parameters:
 			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
 
 		-
-			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:getById\\(\\) return type with generic class React\\\\Promise\\\\Promise does not specify its types\\: T$#"
-			count: 1
-			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
-
-		-
 			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:getByIds\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
-
-		-
-			message: "#^Method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:getByIds\\(\\) return type with generic class React\\\\Promise\\\\Promise does not specify its types\\: T$#"
 			count: 1
 			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
 
@@ -504,11 +494,6 @@ parameters:
 			message: "#^Property Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:\\$getbyIdsDL type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/repositories/Settings/UnitTypes/UnitTypeRepository.php
-
-		-
-			message: "#^Method Vertuoza\\\\Usecases\\\\Settings\\\\UnitTypes\\\\UnitTypeByIdUseCase\\:\\:handle\\(\\) has invalid return type Vertuoza\\\\Usecases\\\\Settings\\\\UnitTypes\\\\UnitTypeEntity\\.$#"
-			count: 1
-			path: src/usecases/Settings/UnitTypes/UnitTypeByIdUseCase.php
 
 		-
 			message: "#^Parameter \\#2 \\$tenantId of method Vertuoza\\\\Repositories\\\\Settings\\\\UnitTypes\\\\UnitTypeRepository\\:\\:getById\\(\\) expects string, string\\|null given\\.$#"

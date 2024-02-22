@@ -2,8 +2,10 @@
 
 namespace Vertuoza\Repositories\Settings\UnitTypes;
 
+use Exception;
 use Overblog\DataLoader\DataLoader;
 use Overblog\PromiseAdapter\PromiseAdapterInterface;
+use Ramsey\Uuid\Uuid;
 use React\Promise\Promise;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
@@ -112,12 +114,14 @@ class UnitTypeRepository
     )();
   }
 
-  public function create(UnitTypeMutationData $data, string $tenantId): int|string
+  /** @throws Exception */
+  public function create(UnitTypeMutationData $data, string $tenantId): string
   {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
+    $id = Uuid::uuid4()->toString();
+    $this->getQueryBuilder()->insert(
+      ['id' => $id] + UnitTypeMapper::serializeCreate($data, $tenantId)
     );
-    return $newId;
+    return $id;
   }
 
   public function update(string $id, UnitTypeMutationData $data)

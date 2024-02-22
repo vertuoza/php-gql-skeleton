@@ -13,7 +13,7 @@ type Query {
 }
 
 type Mutation {
-  unitTypeCreate(input: UnitTypCreateInput!): UnitType!
+  unitTypeCreate(input: UnitTypeCreateInput!): UnitType!
 }
 ```
 

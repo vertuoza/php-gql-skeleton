@@ -93,3 +93,5 @@ override.tf.json
 terraform.rc
 credentials.json
 *.creds.json
+
+.phpunit.result.cache

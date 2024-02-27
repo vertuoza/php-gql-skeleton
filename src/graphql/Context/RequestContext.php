@@ -7,6 +7,7 @@ namespace Vertuoza\Api\Graphql\Context;
 use Overblog\PromiseAdapter\PromiseAdapterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+//use src\Container;
 use Vertuoza\Usecases\UseCasesFactory;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\RepositoriesFactory;
@@ -21,6 +22,8 @@ class RequestContext
     public UserRequestContext $userContext;
     public UseCasesFactory $useCases;
     public array $headerContext;
+
+   // public Container $container;
 
     function addCookie(string $cookieName, string $cookieValue, int $exp = 0, string $domain = "", string $path = "/", bool $secure = false, bool $httpOnly = false, string $sameSite = "Lax")
     {
@@ -60,11 +63,14 @@ class RequestContext
 
             $useCases = new UseCasesFactory($userContext, $repositories);
 
+            //$container = new Container($userContext);
+
             $context = new RequestContext();
             $context->useCases = $useCases;
             $context->request = $request;
             $context->headerContext = array();
             $context->userContext = $userContext;
+            //$context->container = $container;
 
 
             return $next(

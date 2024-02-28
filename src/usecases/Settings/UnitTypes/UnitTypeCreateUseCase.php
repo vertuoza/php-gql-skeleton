@@ -26,12 +26,21 @@ class UnitTypeCreateUseCase
      */
     public function handle(string $name): Promise
     {
+        $pattern = "/^[a-zA-Z]+$/";
+        $name = filter_var($name, FILTER_VALIDATE_REGEXP, [
+            "options"=>[
+                "regexp" => $pattern
+            ]
+        ]);
+
+        if ($name === false) {
+            throw new \Exception('Name should contain only alphabet and spaces, and not nullable');
+        }
+
         $mutationData = new UnitTypeMutationData();
         $mutationData->name = $name;
         $newId = $this->unitTypeRepository->create($mutationData, $this->userContext->getTenantId());
-        //var_dump($newId);
-        //var_dump($this->unitTypeRepository->getById($newId, $this->userContext->getTenantId()));
-        //die();
+
         return $this->unitTypeRepository->getById($newId, $this->userContext->getTenantId());
     }
 }

@@ -5,6 +5,7 @@ namespace Vertuoza\Repositories\Settings\UnitTypes;
 use Overblog\DataLoader\DataLoader;
 use Overblog\PromiseAdapter\PromiseAdapterInterface;
 use React\Promise\Promise;
+use Vertuoza\Repositories\AbstractRepository;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
@@ -12,20 +13,8 @@ use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 
 use function React\Async\async;
 
-class UnitTypeRepository
+class UnitTypeRepository extends AbstractRepository
 {
-  protected array $getbyIdsDL;
-  private QueryBuilder $db;
-  protected PromiseAdapterInterface $dataLoaderPromiseAdapter;
-
-  public function __construct(
-    private QueryBuilder $database,
-    PromiseAdapterInterface $dataLoaderPromiseAdapter
-  ) {
-    $this->db = $database;
-    $this->dataLoaderPromiseAdapter = $dataLoaderPromiseAdapter;
-    $this->getbyIdsDL = [];
-  }
 
   private function fetchByIds(string $tenantId, array $ids)
   {
@@ -67,16 +56,6 @@ class UnitTypeRepository
   protected function getQueryBuilder()
   {
     return $this->db->getConnection()->table(UnitTypeModel::getTableName());
-  }
-
-  public function getByIds(array $ids, string $tenantId): Promise
-  {
-    return $this->getDataloader($tenantId)->loadMany($ids);
-  }
-
-  public function getById(string $id, string $tenantId): Promise
-  {
-    return $this->getDataloader($tenantId)->load($id);
   }
 
   public function countUnitTypeWithLabel(string $name, string $tenantId, string|int|null $excludeId = null)
@@ -127,15 +106,5 @@ class UnitTypeRepository
       ->update(UnitTypeMapper::serializeUpdate($data));
 
     $this->clearCache($id);
-  }
-
-  private function clearCache(string $id)
-  {
-    foreach ($this->getbyIdsDL as $dl) {
-      if ($dl->key_exists($id)) {
-        $dl->clear($id);
-        return;
-      }
-    }
   }
 }

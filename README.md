@@ -8,6 +8,8 @@ type Query {
   hello: String
   unitTypeById(id: String!): UnitType
   unitTypes: [UnitType]!
+  collaborators; [Collaborator!]!
+  collaboratorById(id: ID!): Collaborator!
 }
 ```
 

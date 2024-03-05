@@ -2,6 +2,9 @@
 
 namespace Vertuoza\Libs\Exceptions\Validators;
 
+use Vertuoza\Libs\Exceptions\BadUserInputException;
+use Vertuoza\Libs\Exceptions\FieldError;
+
 abstract class Validator
 {
   protected $field;
@@ -22,5 +25,11 @@ abstract class Validator
   function validate(): array
   {
     return $this->errors;
+  }
+
+  function throwFirstError() {
+	if (count($this->errors) > 0) {
+	  throw new BadUserInputException($this->errors[0]);
+	}
   }
 }

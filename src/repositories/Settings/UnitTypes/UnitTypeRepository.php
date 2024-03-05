@@ -2,13 +2,14 @@
 
 namespace Vertuoza\Repositories\Settings\UnitTypes;
 
+use Illuminate\Database\Query\Builder;
 use Overblog\DataLoader\DataLoader;
 use Overblog\PromiseAdapter\PromiseAdapterInterface;
 use React\Promise\Promise;
+use Vertuoza\Entities\Settings\UnitTypeEntity;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
-use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 
 use function React\Async\async;
 
@@ -35,7 +36,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -64,7 +65,7 @@ class UnitTypeRepository
   }
 
 
-  protected function getQueryBuilder()
+  protected function getQueryBuilder(): Builder
   {
     return $this->db->getConnection()->table(UnitTypeModel::getTableName());
   }
@@ -74,7 +75,8 @@ class UnitTypeRepository
     return $this->getDataloader($tenantId)->loadMany($ids);
   }
 
-  public function getById(string $id, string $tenantId): Promise
+  /** @return Promise<UnitTypeEntity> */
+  public function getById(string|int $id, string $tenantId): Promise
   {
     return $this->getDataloader($tenantId)->load($id);
   }
@@ -96,6 +98,7 @@ class UnitTypeRepository
     )();
   }
 
+  /** @return Promise<UnitTypeEntity[]>  */
   public function findMany(string $tenantId)
   {
     return async(
@@ -114,10 +117,10 @@ class UnitTypeRepository
 
   public function create(UnitTypeMutationData $data, string $tenantId): int|string
   {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
-    );
-    return $newId;
+	  $entity = UnitTypeMapper::serializeCreate($data, $tenantId);
+	  $entity['id'] = uniqid(); // TODO use symfony/uid
+	  $this->getQueryBuilder()->insert($entity);
+	  return $entity['id'];
   }
 
   public function update(string $id, UnitTypeMutationData $data)

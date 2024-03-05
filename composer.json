@@ -9,6 +9,11 @@
     }
   },
   "require": {
+    "php": "^8.2",
+    "ext-pdo": "*",
+    "ext-pdo_mysql": "*",
+    "ext-mysqli": "*",
+    "ext-xdebug": "*",
     "webonyx/graphql-php": "^15.8.1",
     "overblog/dataloader-php": "^0.7.0",
     "illuminate/database": "^10.33",

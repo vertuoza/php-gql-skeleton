@@ -16,6 +16,14 @@ class CollaboratorQuery {
 				'resolve' => static fn ($rootValue, $args, RequestContext $context) =>
 				$context->useCases->collaborator->collaboratorsFindMany->handle()
 			],
+			'collaboratorById' => [
+				'type' => Types::get(Collaborator::class),
+				'args' => [
+					'id' => new NonNull(Types::id()),
+				],
+				'resolve' => static fn ($rootValue, $args, RequestContext $context) =>
+				$context->useCases->collaborator->collaboratorById->handle($args['id'])
+			]
 		];
 	}
 }

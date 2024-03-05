@@ -9,6 +9,7 @@ type Query {
   unitTypeById(id: String!): UnitType
   unitTypes: [UnitType]!
   collaborators; [Collaborator!]!
+  collaboratorById(id: ID!): Collaborator!
 }
 ```
 

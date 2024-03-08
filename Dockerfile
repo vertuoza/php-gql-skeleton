@@ -53,7 +53,7 @@ RUN apt-get update \
 RUN npm install -g nodemon
 
 
-EXPOSE 9000
+EXPOSE 9003
 EXPOSE 80
 
 # hot reloading enabled
@@ -66,6 +66,7 @@ FROM base as production
 
 RUN rm -rf /var/www/html/tests
 RUN rm -rf /var/www/html/src/**/*.spec
+RUN rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 EXPOSE 80
 

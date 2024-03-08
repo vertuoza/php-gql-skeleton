@@ -6,6 +6,7 @@ use stdClass;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 use Vertuoza\Entities\Settings\UnitTypeEntity;
+use Ramsey\Uuid\Uuid;
 
 class UnitTypeMapper
 {
@@ -14,7 +15,7 @@ class UnitTypeMapper
     $entity = new UnitTypeEntity();
     $entity->id = $dbData->id . '';
     $entity->name = $dbData->label;
-    $entity->isSystem = $dbData->tenant_id === null;
+    $entity->isSystem = is_null($dbData->tenant_id);
 
     return $entity;
   }
@@ -32,7 +33,9 @@ class UnitTypeMapper
   private static function serializeMutation(UnitTypeMutationData $mutation, string $tenantId = null): array
   {
     $data = [
+      'id'=> Uuid::uuid4()->toString(),
       'label' => $mutation->name,
+      UnitTypeModel::getTenantColumnName() => null
     ];
 
     if ($tenantId) {

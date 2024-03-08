@@ -114,10 +114,9 @@ class UnitTypeRepository
 
   public function create(UnitTypeMutationData $data, string $tenantId): int|string
   {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
-    );
-    return $newId;
+    $data = UnitTypeMapper::serializeCreate($data, $tenantId);
+    $this->getQueryBuilder()->insert($data);
+    return $data['id'];
   }
 
   public function update(string $id, UnitTypeMutationData $data)

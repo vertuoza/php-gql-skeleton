@@ -2,6 +2,7 @@
 
  namespace Vertuoza\Api\Graphql\Resolvers\Settings\Collaborators;
 
+ use GraphQL\Type\Definition\NonNull;
  use GraphQL\Type\Definition\ObjectType;
  use Vertuoza\Api\Graphql\Types;
 
@@ -15,15 +16,15 @@
        'fields' => static fn (): array => [
          'id' => [
            'description' => "Unique identifier of the collaborator",
-           'type' => Types::id(),
+           'type' => New NonNull(Types::id())
          ],
          'name' => [
            'description' => "Name of the collaborator",
-           'type' => Types::string()
+           'type' => New NonNull(Types::string())
          ],
          'firstName' => [
            'description' => "First name of the collaborator",
-           'type' => Types::string()
+           'type' => New NonNull(Types::string())
          ],
        ],
      ]);

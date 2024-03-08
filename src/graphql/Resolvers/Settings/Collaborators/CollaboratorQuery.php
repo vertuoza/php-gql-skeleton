@@ -14,9 +14,9 @@ namespace Vertuoza\Api\Graphql\Resolvers\Settings\Collaborators;
     {
         return [
              'collaboratorsById' => [
-                 'type' => Types::get(Collaborator::class),
+                 'type' => new NonNull(Types::get(Collaborator::class)),
                  'args' => [
-                     'id' => new NonNull(Types::string()),
+                     'id' => new NonNull(Types::ID()),
                  ],
                  'resolve' => static fn ($rootValue, $args, RequestContext $context)
                  => $context->useCases->collaborator
@@ -24,7 +24,7 @@ namespace Vertuoza\Api\Graphql\Resolvers\Settings\Collaborators;
                      ->handle($args['id'], $context)
              ],
             'collaborators' => [
-                 'type' => new NonNull(new ListOfType(Types::get(Collaborator::class))),
+                 'type' => new NonNull(new ListOfType(new NonNull(Types::get(Collaborator::class)))),
                  'resolve' => static fn ($rootValue, $args, RequestContext $context)
                  => $context->useCases->collaborator
                      ->collaboratorsFindMany

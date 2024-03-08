@@ -66,6 +66,7 @@ FROM base as production
 
 RUN rm -rf /var/www/html/tests
 RUN rm -rf /var/www/html/src/**/*.spec
+RUN rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 EXPOSE 80
 

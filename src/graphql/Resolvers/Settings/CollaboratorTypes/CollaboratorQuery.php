@@ -19,7 +19,7 @@ class CollaboratorQuery
         'resolve' => static fn ($rootValue, $args, RequestContext $context)
         => $context->useCases->collaboratorType
           ->collaboratorTypesFindMany
-          ->handle($context)
+          ->handle()
       ],
       'collaboratorById' => [
         'type' => Types::get(CollaboratorType::class),
@@ -29,7 +29,7 @@ class CollaboratorQuery
         'resolve' => static fn ($rootValue, $args, RequestContext $context)
         => $context->useCases->collaboratorType
           ->collaboratorTypeById
-          ->handle($args['id'], $context)
+          ->handle($args['id'])
       ],
     ];
   }

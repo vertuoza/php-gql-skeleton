@@ -1,17 +1,18 @@
 <?php
 
-namespace Vertuoza\Repositories\Settings\UnitTypes;
+namespace Vertuoza\Repositories\Settings\Collaborators;
 
 use Overblog\DataLoader\DataLoader;
 use Overblog\PromiseAdapter\PromiseAdapterInterface;
 use React\Promise\Promise;
 use Vertuoza\Repositories\Database\QueryBuilder;
-use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
-use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
+use Vertuoza\Repositories\Settings\Collaborators\Models\CollaboratorMapper;
+use Vertuoza\Repositories\Settings\Collaborators\Models\CollaboratorModel;
+use Vertuoza\Repositories\Settings\Collaborators\CollaboratorMutationData;
 
 use function React\Async\async;
 
-class UnitTypeRepository
+class CollaboratorRepository
 {
   protected array $getbyIdsDL;
   private QueryBuilder $db;
@@ -31,14 +32,14 @@ class UnitTypeRepository
     return async(function () use ($tenantId, $ids) {
       $query = $this->getQueryBuilder()
         ->where(function ($query) use ($tenantId) {
-          $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
-            ->orWhere(UnitTypeModel::getTenantColumnName(), null);
+          $query->where([CollaboratorModel::getTenantColumnName() => $tenantId])
+            ->orWhere(CollaboratorModel::getTenantColumnName(), null);
         });
       $query->whereNull('deleted_at');
-      $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
+      $query->whereIn(CollaboratorModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
-        $entity = UnitTypeMapper::modelToEntity(UnitTypeModel::fromStdclass($row));
+        $entity = CollaboratorMapper::modelToEntity(CollaboratorModel::fromStdclass($row));
         return [$entity->id => $entity];
       });
 
@@ -65,7 +66,7 @@ class UnitTypeRepository
 
   protected function getQueryBuilder()
   {
-    return $this->db->getConnection()->table(UnitTypeModel::getTableName());
+    return $this->db->getConnection()->table(CollaboratorModel::getTableName());
   }
 
   public function getByIds(array $ids, string $tenantId): Promise
@@ -78,7 +79,7 @@ class UnitTypeRepository
     return $this->getDataloader($tenantId)->load($id);
   }
 
-  public function countUnitTypeWithLabel(string $name, string $tenantId, string|int|null $excludeId = null)
+  public function countCollaboratorWithLabel(string $name, string $tenantId, string|int|null $excludeId = null)
   {
     return async(
       fn () => $this->getQueryBuilder()
@@ -89,8 +90,8 @@ class UnitTypeRepository
             $query->where('id', '!=', $excludeId);
         })
         ->where(function ($query) use ($tenantId) {
-          $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
-            ->orWhereNull(UnitTypeModel::getTenantColumnName());
+          $query->where(CollaboratorModel::getTenantColumnName(), '=', $tenantId)
+            ->orWhereNull(CollaboratorModel::getTenantColumnName());
         })
     )();
   }
@@ -101,29 +102,29 @@ class UnitTypeRepository
       fn () => $this->getQueryBuilder()
         ->whereNull('deleted_at')
         ->where(function ($query) use ($tenantId) {
-          $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
-            ->orWhereNull(UnitTypeModel::getTenantColumnName());
+          $query->where(CollaboratorModel::getTenantColumnName(), '=', $tenantId)
+            ->orWhereNull(CollaboratorModel::getTenantColumnName());
         })
         ->get()
         ->map(function ($row) {
-          return UnitTypeMapper::modelToEntity(UnitTypeModel::fromStdclass($row));
+          return CollaboratorMapper::modelToEntity(CollaboratorModel::fromStdclass($row));
         })
     )();
   }
 
-  public function create(UnitTypeMutationData $data, string $tenantId): int|string
+  public function create(CollaboratorMutationData $data, string $tenantId): int|string
   {
     $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
+      CollaboratorMapper::serializeCreate($data, $tenantId)
     );
     return $newId;
   }
 
-  public function update(string $id, UnitTypeMutationData $data)
+  public function update(string $id, CollaboratorMutationData $data)
   {
     $this->getQueryBuilder()
-      ->where(UnitTypeModel::getPkColumnName(), $id)
-      ->update(UnitTypeMapper::serializeUpdate($data));
+      ->where(CollaboratorModel::getPkColumnName(), $id)
+      ->update(CollaboratorMapper::serializeUpdate($data));
 
     $this->clearCache($id);
   }

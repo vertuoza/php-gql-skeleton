@@ -29,18 +29,18 @@ class CollaboratorModel
     return $model;
   }
 
-  /*public static function getPkColumnName(): string
+  public static function getPkColumnName(): string
   {
     return 'id';
-  }*/
+  }
 
   public static function getTenantColumnName(): string
   {
     return 'tenant_id';
   }
 
- /*public static function getTableName(): string
+ public static function getTableName(): string
   {
     return 'collaborator';
-  } */
+  } 
 }

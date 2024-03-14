@@ -84,6 +84,8 @@ final class Types
         return self::int();
       case 'string':
         return self::string();
+      case 'nonNullString':
+        return self::nonNullString();
     }
 
     throw new \Exception("Unknown graphql type: {$shortName}");
@@ -118,4 +120,10 @@ final class Types
   {
     return Type::string();
   }
+
+  /** @throws InvariantViolation */
+  public static function nonNullString(): ScalarType
+    {
+        return Type::nonNull(Type::string());
+    }
 }

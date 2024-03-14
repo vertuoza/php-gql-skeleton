@@ -32,14 +32,13 @@ class CollaboratorRepository
     return async(function () use ($tenantId, $ids) {
       $query = $this->getQueryBuilder()
         ->where(function ($query) use ($tenantId) {
-          $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
-            ->orWhere(UnitTypeModel::getTenantColumnName(), null);
+          $query->where([CollaboratorModel::getTenantColumnName() => $tenantId]);
         });
       $query->whereNull('_deleted_at');
-      $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
+      $query->whereIn(CollaboratorModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
-        $entity = UnitTypeMapper::modelToEntity(UnitTypeModel::fromStdclass($row));
+        $entity = CollaboratorMapper::modelToEntity(CollaboratorModel::fromStdclass($row));
         return [$entity->id => $entity];
       });
 
@@ -66,34 +65,13 @@ class CollaboratorRepository
 
   protected function getQueryBuilder()
   {
-    return $this->db->getConnection()->table(UnitTypeModel::getTableName());
+    return $this->db->getConnection()->table(CollaboratorModel::getTableName());
   }
 
-  public function getByIds(array $ids, string $tenantId): Promise
-  {
-    return $this->getDataloader($tenantId)->loadMany($ids);
-  }
 
   public function getById(string $id, string $tenantId): Promise
   {
     return $this->getDataloader($tenantId)->load($id);
-  }
-
-  public function countUnitTypeWithLabel(string $name, string $tenantId, string|int|null $excludeId = null)
-  {
-    return async(
-      fn () => $this->getQueryBuilder()
-        ->where('label', $name)
-        ->whereNull('deleted_at')
-        ->where(function ($query) use ($excludeId) {
-          if (isset($excludeId))
-            $query->where('id', '!=', $excludeId);
-        })
-        ->where(function ($query) use ($tenantId) {
-          $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
-            ->orWhereNull(UnitTypeModel::getTenantColumnName());
-        })
-    )();
   }
 
   public function findMany(string $tenantId)
@@ -102,40 +80,15 @@ class CollaboratorRepository
       fn () => $this->getQueryBuilder()
         ->whereNull('deleted_at')
         ->where(function ($query) use ($tenantId) {
-          $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
-            ->orWhereNull(UnitTypeModel::getTenantColumnName());
+          $query->where(CollaboratorModel::getTenantColumnName(), '=', $tenantId)
+            ->orWhereNull(          $query->where(CollaboratorModel::getTenantColumnName(), '=', $tenantId)
+            ::getTenantColumnName());
         })
         ->get()
         ->map(function ($row) {
-          return UnitTypeMapper::modelToEntity(UnitTypeModel::fromStdclass($row));
+          return CollaboratorMapper::modelToEntity(CollaboratorModel::fromStdclass($row));
         })
     )();
   }
-
-  public function create(UnitTypeMutationData $data, string $tenantId): int|string
-  {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
-    );
-    return $newId;
-  }
-
-  public function update(string $id, UnitTypeMutationData $data)
-  {
-    $this->getQueryBuilder()
-      ->where(UnitTypeModel::getPkColumnName(), $id)
-      ->update(UnitTypeMapper::serializeUpdate($data));
-
-    $this->clearCache($id);
-  }
-
-  private function clearCache(string $id)
-  {
-    foreach ($this->getbyIdsDL as $dl) {
-      if ($dl->key_exists($id)) {
-        $dl->clear($id);
-        return;
-      }
-    }
-  }
 }
+

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vertuoza\Api\Graphql\Resolvers\Settings\UnitTypes;
+namespace Vertuoza\Api\Graphql\Resolvers\Settings\Collaborators;
 
 use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\NonNull;
@@ -8,28 +8,28 @@ use Vertuoza\Api\Graphql\Context\RequestContext;
 use Vertuoza\Api\Graphql\Types;
 
 
-class UnitTypeQuery
+class CollaboratorQuery
 {
     static function get()
     {
         return [
-            'unitTypeById' => [
-                'type' => Types::get(UnitType::class),
+            'collaboratorById' => [
+                'type' => Types::get(Collaborator::class),
                 'args' => [
                     'id' => new NonNull(Types::string()),
                 ],
                 'resolve' => static fn ($rootValue, $args, RequestContext $context)
-                => $context->useCases->unitType
-                    ->unitTypeById
+                => $context->useCases->collaborator
+                    ->collaboratorById
                     ->handle($args['id'], $context)
             ],
-            'unitTypes' => [
-                'type' => new NonNull(new ListOfType(Types::get(UnitType::class))),
+            'collaborators' => [
+                'type' => new NonNull(new ListOfType(Types::get(Collaborator::class))),
                 'resolve' => static fn ($rootValue, $args, RequestContext $context)
-                => $context->useCases->unitType
-                    ->unitTypesFindMany
+                => $context->useCases->collaborator
+                    ->collaboratorsFindMany
                     ->handle($context)
-            ],
+            ]
         ];
     }
 }

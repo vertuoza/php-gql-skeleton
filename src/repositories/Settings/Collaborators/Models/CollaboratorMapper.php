@@ -21,10 +21,6 @@ class CollaboratorMapper
             throw new \InvalidArgumentException('ID, name, and first name cannot be empty.');
         }
 
-        if (isset(self::$existingIds[$entity->id])) {
-            throw new \InvalidArgumentException("ID '{$entity->id}' already exists.");
-        }
-
         self::$existingIds[$entity->id] = true;
 
         return $entity;

@@ -3,6 +3,7 @@
 namespace Vertuoza\Api\Graphql\Resolvers\Settings\Collaborators;
 
 use Vertuoza\Api\Graphql\Types;
+use GraphQL\Type\Definition\ObjectType;
 
 class Collaborator extends ObjectType
 {
@@ -11,22 +12,20 @@ class Collaborator extends ObjectType
         parent::__construct([
             'name' => 'Collaborator',
             'description' => 'Collaborator',
-            'fields' => static function (): array {
-                return [
+            'fields' => static fn (): array => [
                     'id' => [
                         'description' => "Unique identifier of the collaborator",
-                        'type' => Types::id(),
+                        'type' => Types::id()
                     ],
                     'name' => [
                         'description' => "Name of the collaborator",
-                        'type' => Types::nonNullString(), // New method to prevent nullable string
+                        'type' => Types::string()
                     ],
                     'firstName' => [
                         'description' => "Firstname of the collaborator",
-                        'type' => Types::nonNullString(), // Method to prevent nullable string
+                        'type' => Types::string()
                     ],
-                ];
-            },
+                ],
         ]);
     }
 }

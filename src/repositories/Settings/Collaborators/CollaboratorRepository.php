@@ -34,7 +34,7 @@ class CollaboratorRepository
         ->where(function ($query) use ($tenantId) {
           $query->where([CollaboratorModel::getTenantColumnName() => $tenantId]);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(CollaboratorModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -80,15 +80,15 @@ class CollaboratorRepository
       fn () => $this->getQueryBuilder()
         ->whereNull('deleted_at')
         ->where(function ($query) use ($tenantId) {
-          $query->where(CollaboratorModel::getTenantColumnName(), '=', $tenantId)
-            ->orWhereNull(          $query->where(CollaboratorModel::getTenantColumnName(), '=', $tenantId)
-            ::getTenantColumnName());
+          $query->where(CollaboratorModel::getTenantColumnName(), '=', $tenantId);
         })
         ->get()
         ->map(function ($row) {
           return CollaboratorMapper::modelToEntity(CollaboratorModel::fromStdclass($row));
         })
     )();
+
+    
   }
 }
 

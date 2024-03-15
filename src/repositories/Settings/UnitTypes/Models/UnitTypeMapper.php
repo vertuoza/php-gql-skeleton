@@ -38,6 +38,7 @@ class UnitTypeMapper
     if ($tenantId) {
       $data[UnitTypeModel::getTenantColumnName()] = $tenantId;
     }
+
     return $data;
   }
 }

@@ -20,7 +20,7 @@ class CollaboratorByIdUseCase
   }
 
   /**
-   * @param string $id id of the unit type to retrieve
+   * @param string $id id of the collaborator to retrieve
    * @return Promise<CollaboratorEntity>
    */
   public function handle(string $id): Promise

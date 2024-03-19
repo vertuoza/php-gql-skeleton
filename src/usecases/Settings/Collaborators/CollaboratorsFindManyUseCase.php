@@ -23,7 +23,6 @@ class CollaboratorsFindManyUseCase
   }
 
   /**
-   * @param string $id id of the unit type to retrieve
    * @return Promise<CollaboratorEntity>
    */
   public function handle()

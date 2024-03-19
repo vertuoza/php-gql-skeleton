@@ -117,6 +117,7 @@ class UnitTypeRepository
     $newId = $this->getQueryBuilder()->insertGetId(
       UnitTypeMapper::serializeCreate($data, $tenantId)
     );
+
     return $newId;
   }
 

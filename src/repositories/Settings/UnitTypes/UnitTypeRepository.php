@@ -8,7 +8,6 @@ use React\Promise\Promise;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
-use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 
 use function React\Async\async;
 
@@ -119,6 +118,29 @@ class UnitTypeRepository
     );
 
     return $newId;
+  }
+
+  public function createGetUuid(UnitTypeMutationData $data, string $tenantId): string
+  {
+      $this->getQueryBuilder()->insert(
+          UnitTypeMapper::serializeCreate($data, $tenantId)
+      );
+
+      return $this->getQueryBuilder()->orderby('created_at', 'DESC')->first()->id;
+  }
+
+  public function unitNameExists(string $name, string $tenantId): bool
+  {
+      $count = $this->getQueryBuilder()
+          ->where(function ($query) use ($tenantId) {
+                $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
+                ->orWhereNull(UnitTypeModel::getTenantColumnName());
+          })->where(UnitTypeModel::getLabelColumnName(), $name)
+          ->count();
+
+      if ($count === 0) return false;
+
+      return true;
   }
 
   public function update(string $id, UnitTypeMutationData $data)

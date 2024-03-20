@@ -8,7 +8,6 @@ use React\Promise\Promise;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\Collaborators\Models\CollaboratorMapper;
 use Vertuoza\Repositories\Settings\Collaborators\Models\CollaboratorModel;
-use Vertuoza\Repositories\Settings\Collaborators\CollaboratorMutationData;
 
 use function React\Async\async;
 
@@ -69,31 +68,9 @@ class CollaboratorRepository
     return $this->db->getConnection()->table(CollaboratorModel::getTableName());
   }
 
-  public function getByIds(array $ids, string $tenantId): Promise
-  {
-    return $this->getDataloader($tenantId)->loadMany($ids);
-  }
-
   public function getById(string $id, string $tenantId): Promise
   {
     return $this->getDataloader($tenantId)->load($id);
-  }
-
-  public function countCollaboratorWithLabel(string $name, string $tenantId, string|int|null $excludeId = null)
-  {
-    return async(
-      fn () => $this->getQueryBuilder()
-        ->where('label', $name)
-        ->whereNull('deleted_at')
-        ->where(function ($query) use ($excludeId) {
-          if (isset($excludeId))
-            $query->where('id', '!=', $excludeId);
-        })
-        ->where(function ($query) use ($tenantId) {
-          $query->where(CollaboratorModel::getTenantColumnName(), '=', $tenantId)
-            ->orWhereNull(CollaboratorModel::getTenantColumnName());
-        })
-    )();
   }
 
   public function findMany(string $tenantId)
@@ -110,32 +87,5 @@ class CollaboratorRepository
           return CollaboratorMapper::modelToEntity(CollaboratorModel::fromStdclass($row));
         })
     )();
-  }
-
-  public function create(CollaboratorMutationData $data, string $tenantId): int|string
-  {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      CollaboratorMapper::serializeCreate($data, $tenantId)
-    );
-    return $newId;
-  }
-
-  public function update(string $id, CollaboratorMutationData $data)
-  {
-    $this->getQueryBuilder()
-      ->where(CollaboratorModel::getPkColumnName(), $id)
-      ->update(CollaboratorMapper::serializeUpdate($data));
-
-    $this->clearCache($id);
-  }
-
-  private function clearCache(string $id)
-  {
-    foreach ($this->getbyIdsDL as $dl) {
-      if ($dl->key_exists($id)) {
-        $dl->clear($id);
-        return;
-      }
-    }
   }
 }

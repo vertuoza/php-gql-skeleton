@@ -10,6 +10,22 @@ use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 
+// TODO: Move this into Lib or use an external library
+function generateUUIDv4($data = null)
+{
+  // Generate 16 bytes (128 bits) of random data or use the data passed into the function.
+  $data = $data ?? random_bytes(16);
+  assert(strlen($data) == 16);
+
+  // Set version to 0100
+  $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+  // Set bits 6-7 to 10
+  $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+  // Output the 36 character UUID.
+  return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+}
+
 use function React\Async\async;
 
 class UnitTypeRepository
@@ -35,7 +51,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -62,7 +78,6 @@ class UnitTypeRepository
 
     return $this->getbyIdsDL[$tenantId];
   }
-
 
   protected function getQueryBuilder()
   {
@@ -114,10 +129,15 @@ class UnitTypeRepository
 
   public function create(UnitTypeMutationData $data, string $tenantId): int|string
   {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
-    );
-    return $newId;
+    $entity = UnitTypeMapper::serializeCreate($data, $tenantId);
+
+    $uuid = generateUUIDv4(); 
+    $entity['id'] = $uuid;
+
+    $this->getQueryBuilder()->insert($entity);
+    error_log("Created unit type: " . print_r($entity, true));
+
+    return $entity['id'];
   }
 
   public function update(string $id, UnitTypeMutationData $data)

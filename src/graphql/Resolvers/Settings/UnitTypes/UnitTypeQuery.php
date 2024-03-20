@@ -31,6 +31,16 @@ class UnitTypeQuery
                     ->unitTypesFindMany
                     ->handle($context)
             ],
+            'unitTypeCreateInput' => [
+                'type' => Types::get(UnitType::class),
+                'args' => [
+                    'name' => new NonNull(Types::string()),
+                ],
+                'resolve' => static fn ($rootValue, $args, RequestContext $context)
+                => $context->useCases->unitType
+                    ->unitTypeCreateInput
+                    ->handle($args['name'], $context)
+            ]
         ];
     }
 }

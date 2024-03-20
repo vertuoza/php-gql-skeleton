@@ -2,8 +2,6 @@
 
 namespace Vertuoza\Repositories\Settings\UnitTypes\Models;
 
-use stdClass;
-use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 use Vertuoza\Entities\Settings\UnitTypeEntity;
 

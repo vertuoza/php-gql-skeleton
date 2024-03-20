@@ -9,7 +9,7 @@ class UnitTypeUseCases
 {
   public UnitTypeByIdUseCase $unitTypeById;
   public UnitTypesFindManyUseCase $unitTypesFindMany;
-
+  public UnitTypeCreateByNameUseCase $unitTypeCreateByName;
 
   public function __construct(UserRequestContext $userContext, RepositoriesFactory $repositories)
   {

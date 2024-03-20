@@ -35,7 +35,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -62,7 +62,6 @@ class UnitTypeRepository
 
     return $this->getbyIdsDL[$tenantId];
   }
-
 
   protected function getQueryBuilder()
   {
@@ -100,7 +99,7 @@ class UnitTypeRepository
   {
     return async(
       fn () => $this->getQueryBuilder()
-        ->whereNull('deleted_at')
+        ->whereNull('_deleted_at')
         ->where(function ($query) use ($tenantId) {
           $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
             ->orWhereNull(UnitTypeModel::getTenantColumnName());

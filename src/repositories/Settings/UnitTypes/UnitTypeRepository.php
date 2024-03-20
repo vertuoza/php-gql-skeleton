@@ -99,7 +99,7 @@ class UnitTypeRepository
   {
     return async(
       fn () => $this->getQueryBuilder()
-        ->whereNull('_deleted_at')
+        ->whereNull('deleted_at')
         ->where(function ($query) use ($tenantId) {
           $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
             ->orWhereNull(UnitTypeModel::getTenantColumnName());

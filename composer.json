@@ -21,6 +21,5 @@
     "react/socket": "^1.15",
     "react/async": "^4.1.0",
     "react/promise": "^3.1",
-    "ramsey/uuid": "^3.9"
   }
 }

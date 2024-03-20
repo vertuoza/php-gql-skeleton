@@ -15,5 +15,6 @@ class UnitTypeUseCases
   {
     $this->unitTypeById = new UnitTypeByIdUseCase($repositories, $userContext);
     $this->unitTypesFindMany = new UnitTypesFindManyUseCase($repositories, $userContext);
+    $this->unitTypeCreateByName = new UnitTypeCreateByNameUseCase($repositories, $userContext);
   }
 }

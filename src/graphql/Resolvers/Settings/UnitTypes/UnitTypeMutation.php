@@ -15,7 +15,8 @@ class UnitTypeMutation
                 'type' => new NonNull(Types::get(UnitType::class)),
                 'description' => "Create a unit type by supplying a name",
                 'args' => [
-                    'input' => new NonNull(Types::get(UnitTypeCreateInput::class)),
+                    'input' => new NonNull(Types::string())
+                    //'input' => new NonNull(Types::get(UnitTypeCreateInput::class))
                 ],
                 'resolve' => static fn ($rootValue, $args, RequestContext $context)
                 => $context->useCases->unitType

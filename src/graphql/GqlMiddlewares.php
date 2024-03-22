@@ -58,7 +58,7 @@ class GqlMiddlewares
         $schema = new Schema((
                 new SchemaConfig())
                 ->setQuery($query)
-                //->setMutation($mutation)
+                ->setMutation($mutation)
                 ->setTypeLoader([Types::class, 'byTypename'])
         );
 

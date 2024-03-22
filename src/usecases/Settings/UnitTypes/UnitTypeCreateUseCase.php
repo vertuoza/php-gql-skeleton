@@ -19,8 +19,11 @@ class UnitTypeCreateUseCase
     $this->userContext = $userContext;
   }
 
-  public function handle(UnitTypeMutationData $data): Promise
+  public function handle(string $name): Promise
   {
+    $data = new UnitTypeMutationData();
+    $data->name = $name;
+
     $id = $this->unitTypeRepository->create($data, $this->userContext->getTenantId());
     return $this->unitTypeRepository->getById($id, $this->userContext->getTenantId());
   }

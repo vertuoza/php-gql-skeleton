@@ -12,6 +12,7 @@ final class Query extends ObjectType
   public function __construct()
   {
     $config = [
+      'name' => 'Query',
       'fields' => function () {
         return [
           'hello' => [

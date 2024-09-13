@@ -4,11 +4,13 @@ namespace Vertuoza\Repositories\Settings\UnitTypes;
 
 use Overblog\DataLoader\DataLoader;
 use Overblog\PromiseAdapter\PromiseAdapterInterface;
+use Ramsey\Uuid\Uuid;
 use React\Promise\Promise;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
+use Exception;
 
 use function React\Async\async;
 
@@ -35,7 +37,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -112,10 +114,10 @@ class UnitTypeRepository
     )();
   }
 
-  public function create(UnitTypeMutationData $data, string $tenantId): int|string
+  public function create(UnitTypeMutationData $data, string $tenantId, string $id = null): int|string
   {
     $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
+      UnitTypeMapper::serializeCreate($data, $tenantId, $id)
     );
     return $newId;
   }
@@ -137,5 +139,20 @@ class UnitTypeRepository
         return;
       }
     }
+  }
+
+  /**
+   * @return string
+   * @throws Exception
+   */
+  public function generateId(): string
+  {
+    for ($tries = 0; $tries < 10; $tries++) {
+      $newId = Uuid::uuid4()->toString();
+      if (!$this->getQueryBuilder()->where(UnitTypeModel::getPkColumnName(), $newId)->exists()) {
+        return $newId;
+      }
+    }
+    throw new \Exception('Failed to generate a new ID');
   }
 }

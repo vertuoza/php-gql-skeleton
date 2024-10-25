@@ -2,22 +2,30 @@
 
 namespace Vertuoza;
 
+use GraphQL\Server\ServerConfig;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Schema;
 use GraphQL\Type\SchemaConfig;
 use Illuminate\Database\Capsule\Manager;
 use Overblog\PromiseAdapter\PromiseAdapterInterface as OverblogPromiseAdapterInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use React\Http\Message\ServerRequest;
-use Symfony\Component\Serializer\Serializer;
+use Vertuoza\Entities\CollaboratorEntity;
+use Vertuoza\Entities\TenantEntity;
 use Vertuoza\Entities\UserRequestContext;
-use Vertuoza\Factories\SingletonFactory;
+use Vertuoza\Errors\GqlErrorHandler;
 use Vertuoza\Interface\DatabaseInterface;
+use Vertuoza\Logger\LogContext;
+use Vertuoza\Middleware\ApiAccessMiddleware;
 use Vertuoza\Middleware\AppContext;
 use Vertuoza\Middleware\GraphQLMiddleware;
 use Vertuoza\Middleware\Sandbox;
+use Vertuoza\Middleware\UserRequestContextMiddleware;
+use Vertuoza\Middleware\ValidationUserContextMiddleware;
 use Vertuoza\Patterns\SingletonPattern;
 use GraphQL\Executor\Promise\PromiseAdapter as GraphQLPromiseAdapterInterface;
-use Vertuoza\Serializer\Denormalizer\EntityDernormalizer;
+use Vertuoza\Repositories\AbstractRepository;
+use function React\Async\async;
 
 class Kernel extends SingletonPattern
 {
@@ -45,6 +53,7 @@ class Kernel extends SingletonPattern
      * @var ObjectType
      */
     protected ObjectType $query;
+    protected ObjectType $mutation;
 
     /**
      * @var Schema
@@ -64,7 +73,12 @@ class Kernel extends SingletonPattern
     protected GraphQLPromiseAdapterInterface $graphqlPromiseAdapter;
     protected array $graphqlSchema;
     protected array $graphqlTypes;
-    protected Serializer $serializer;
+    protected LogContext $logContext;
+    protected ServerConfig $serverConfig;
+    protected ApiAccessMiddleware $apiAccessMiddleware;
+    protected ValidationUserContextMiddleware $validationUserContextMiddleware;
+    protected UserRequestContextMiddleware $userRequestContextMiddleware;
+    protected array $config;
 
     public function init(): void
     {
@@ -128,7 +142,7 @@ class Kernel extends SingletonPattern
 
     public function getGraphqlSchema()
     {
-        return $this->graphqlSchema ??= $this->getConfigContent('graphql/schema');
+        return $this->getConfigContent('graphql/schema');
     }
 
     /**
@@ -148,22 +162,15 @@ class Kernel extends SingletonPattern
     {
         return $this->schemaConfig ??= $this->containers['factory'][SchemaConfig::class]
             ->addSetter('query', $this->getQuery())
+            ->addSetter('mutation', $this->getMutation())
             ->addSetter('typeLoader', [$this, 'getType'])
             ->newInstance();
     }
 
-    /**
-     * @return Serializer
-     */
-    public function getSerializer(): Serializer
+    public function getMutation(): ObjectType
     {
-        return $this->serializer ??= $this->containers['factory'][Serializer::class]
-            ->addConstructorArgument(
-                'normalizers',
-                [
-                    new EntityDernormalizer()
-                ]
-            )
+        return $this->mutation ??= $this->containers['factory'][ObjectType::class]
+            ->addConstructorArgument('config', $this->getGraphqlSchema()['mutation'])
             ->newInstance();
     }
 
@@ -192,7 +199,7 @@ class Kernel extends SingletonPattern
      */
     public function getConfigContent(string $filename): mixed
     {
-        return include $this->getConfigFilename($filename);
+        return $this->config[$filename] ??= include $this->getConfigFilename($filename);
     }
 
     public function getOverblogPromiseAdapter(): OverblogPromiseAdapterInterface
@@ -201,9 +208,11 @@ class Kernel extends SingletonPattern
             ->newInstance();
     }
 
-    public function getRepository(string $repositoryClassName)
+    public function getRepository(string $entityClassName): AbstractRepository
     {
-        return $this->repositories[$repositoryClassName] ??= $this->containers['factory'][$repositoryClassName]
+        $repositoryName = $this->getConfigContent('repositories')[$entityClassName] ?? null;
+
+        return $this->repositories[$repositoryName] ??= $this->containers['factory'][$repositoryName]
             ->newInstance();
     }
 
@@ -218,14 +227,19 @@ class Kernel extends SingletonPattern
      */
     public function getUserContext(): UserRequestContext
     {
-        return $this->userRequestContext ??= new UserRequestContext(
-            '448ef4f1-56e1-48be-838c-d147b5f09705',
-            '112c33ae-3dbe-431b-994d-fffffe6fd49b'
-        );
+        return $this->getAppContext()->userContext;
+    }
+
+    public function getUserRequestContextMiddleware(): UserRequestContextMiddleware
+    {
+        return $this->userRequestContextMiddleware ??= $this->containers['factory'][UserRequestContextMiddleware::class]
+            ->addConstructorArgument('kernel', $this)
+            ->newInstance();
     }
 
     public function getAppContext(): AppContext
     {
+
         return $this->appContext ??= $this->containers['factory'][AppContext::class]
             ->newInstance();
     }
@@ -233,6 +247,7 @@ class Kernel extends SingletonPattern
     public function getSandbox(): Sandbox
     {
         return $this->sandbox ??= $this->containers['factory'][Sandbox::class]
+            ->addConstructorArgument('kernel', $this)
             ->newInstance();
     }
 
@@ -259,5 +274,55 @@ class Kernel extends SingletonPattern
     public function getTypes()
     {
         return $this->graphqlTypes ??= $this->getGraphqlSchema()['types'];
+    }
+
+    public function getApiAccessMiddleware(): ApiAccessMiddleware
+    {
+        return $this->apiAccessMiddleware ??= $this->containers['factory'][ApiAccessMiddleware::class]
+                ->addConstructorArgument('config', $this->getConfigContent('api_access'))
+                ->newInstance();
+    }
+
+    /**
+     * @return ServerRequestInterface
+     */
+    public function getRequest(): ServerRequestInterface
+    {
+        return $this->getAppContext()->request;
+    }
+
+    /**
+     * @return ServerConfig
+     */
+    public function getServerConfig(): ServerConfig
+    {
+        return $this->serverConfig ??= $this->containers['factory'][ServerConfig::class]
+            ->addSetter(
+                'ErrorsHandler',
+                function (array $errors, ?callable $formatter) {
+                    return GqlErrorHandler::handle($errors, $formatter, $this->getUserContext());
+                }
+            )
+            ->newInstance();
+    }
+
+    /**
+     * @return LogContext
+     */
+    public function getLogContext(): LogContext
+    {
+        return $this->logContext ??= $this->containers['factory'][LogContext::class]
+            ->addConstructorArgument('tenantId', $this->getUserContext()->getTenantId())
+            ->addConstructorArgument('userId', $this->getUserContext()->getUserId())
+            ->newInstance();
+    }
+
+    public function getValidationUserContextMiddleware(): ValidationUserContextMiddleware
+    {
+        return $this->validationUserContextMiddleware ??= $this->containers['factory'][ValidationUserContextMiddleware::class]
+            ->addConstructorArgument('tenantRepository', $this->getRepository(TenantEntity::class))
+            ->addConstructorArgument('collaboratorRepository', $this->getRepository(CollaboratorEntity::class))
+            ->addConstructorArgument('userRequestContext', $this->getUserContext())
+            ->newInstance();
     }
 }

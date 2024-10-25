@@ -3,19 +3,43 @@
 namespace Vertuoza\Exceptions;
 
 use Throwable;
+use Vertuoza\Enums\ExceptionErrorCodeEnum;
 
-class UnauthorizedTenantException extends BusinessException
+class UnauthorizedTenantException extends BusinessExceptionInterface
 {
-    public const code = 404;
-
+    /**
+     * @var string
+     */
     protected string $tenantId;
 
-    public function __construct(string $message, string $tenantId, Throwable $previous = null, array|null $args = null)
+    /**
+     * @param string $message
+     * @param string $tenantId
+     * @param Throwable|null $previous
+     * @param array $args
+     */
+    public function __construct(
+        string $message,
+        string $tenantId,
+        Throwable $previous = null,
+        array $args = []
+    )
     {
         $this->tenantId = $tenantId;
-        parent::__construct($message, "UNAUTHORIZED_TENANT", UnauthorizedTenantException::code, $previous, array_merge($args ?? [], ["tenantId" => $tenantId]));
+
+        $args['tenantId'] = $tenantId;
+
+        parent::__construct(
+            $message,
+            ExceptionErrorCodeEnum::UNAUTHORIZED,
+            $previous,
+            $args
+        );
     }
 
+    /**
+     * @return string
+     */
     public function getTenantId(): string
     {
         return $this->tenantId;

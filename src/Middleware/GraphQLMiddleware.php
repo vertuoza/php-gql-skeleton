@@ -4,6 +4,7 @@ namespace Vertuoza\Middleware;
 
 use Closure;
 use Exception;
+use Fig\Http\Message\RequestMethodInterface;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\GraphQL;
 use GraphQL\Server\ServerConfig;
@@ -18,21 +19,31 @@ use Vertuoza\Logger\LogContext;
 class GraphQLMiddleware
 {
     /**
-     * @param $request
+     * @param ServerRequestInterface|null $request
      *
      * @return bool
-     *
-     * @deprecated not need
      */
-    private static function isGraphQLQueryPath($request)
+    public function isGraphQLQueryPath(ServerRequestInterface $request = null): bool
     {
+        if (!$request) {
+            $request = Kernel::getInstance()->getRequest();
+        }
+
         $method = $request->getMethod();
-        if ($method !== 'POST') {
+
+        if ($method !== RequestMethodInterface::METHOD_POST) {
             return false;
         }
-        $prefix = "/graphql";
 
-        return strpos($request->getUri()->getPath(), $prefix) === 0;
+        if ($request->getUri()->getPath() === "/graphql") {
+            return true;
+        }
+
+        if (str_starts_with($request->getUri()->getPath(), "/graphql/")) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -45,22 +56,11 @@ class GraphQLMiddleware
      */
     public function __invoke(ServerRequestInterface $request, callable $next): mixed
     {
-        // PromiseAdapter $graphQLPromiseAdapter
-        if (!self::isGraphQLQueryPath($request)) {
+        if (!$this->isGraphQLQueryPath()) {
             return $next($request);
         }
 
         $kernel = Kernel::getInstance();
-        $schema = $kernel->getSchema();
-        $graphQLPromiseAdapter = $kernel->getGraphQLPromiseAdapter();
-
-        $config = new ServerConfig();
-        $config->setSchema($schema)
-            ->setErrorsHandler(function (array $errors, ?callable $formatter) use ($request) {
-                $context = $request->getAttribute('app-context');
-                ApplicationLogger::getInstance()->info('Log for bodyx with error', new LogContext(null, null), $errors);
-                return GqlErrorHandler::handle($errors, $formatter, $context->userContext);
-            });
 
         $rawInput = $request->getBody()->__toString();
         $input = json_decode($rawInput, true);
@@ -73,10 +73,21 @@ class GraphQLMiddleware
             return new Response(200, ['Content-Type' => 'application/json'], json_encode($resultArr, JSON_THROW_ON_ERROR));
         };
 
-        $promise = GraphQL::promiseToExecute($graphQLPromiseAdapter, $schema, $query, $rootValue, $request->getAttribute('app-context'), $variableValues);
-        $promise->then(function (ExecutionResult $result) use ($config) {
+        $promise = GraphQL::promiseToExecute(
+            $kernel->getGraphQLPromiseAdapter(),
+            $kernel->getSchema(),
+            $query,
+            $rootValue,
+            $kernel->getAppContext(),
+            $variableValues
+        );
+
+        $promise->then(function (ExecutionResult $result){
+            $kernel = Kernel::getInstance();
+            $config = $kernel->getServerConfig();
+            $userContext = $kernel->getUserContext();
             if (!empty($result->errors)) {
-                ApplicationLogger::getInstance()->info('Log for bodyx with error', new LogContext(null, null), $result->errors);
+                ApplicationLogger::getInstance()->info('Log for body with error', new LogContext($userContext->getTenantId(), $userContext->getUserId()), $result->errors);
                 $result->errors = $config->getErrorsHandler()($result->errors, $config->getErrorFormatter());
             }
         });

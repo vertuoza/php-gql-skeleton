@@ -3,10 +3,12 @@
 use GraphQL\Type\Definition\NonNull;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
+use Vertuoza\Entities\UnitTypeEntity;
 
 return new ObjectType([
     'name' => 'UnitType',
     'description' => 'Unit type',
+    'entity' => UnitTypeEntity::class,
     'fields' => static fn (): array => [
         'id' => [
             'description' => "Unique identifier of the unit type",

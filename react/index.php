@@ -32,7 +32,10 @@ try {
         new RequestBodyBufferMiddleware(20 * 1024 * 1024),
         new RequestBodyParserMiddleware(20 * 1024 * 1024, 1),
         $kernel->getSandbox(),
+        $kernel->getApiAccessMiddleware(),
         $kernel->getAppContext(),
+        $kernel->getUserRequestContextMiddleware(),
+        fn(...$args) => $kernel->getValidationUserContextMiddleware()->__invoke(...$args),
         $kernel->getGraphQLMiddleware(),
         fn (ServerRequest $request) => resolve(new Response(404))
     );

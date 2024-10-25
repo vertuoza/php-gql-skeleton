@@ -93,7 +93,6 @@ class AppContext
 
         $this->useCases = new UseCasesFactory();
         $this->request = $request;
-        $this->userContext = $kernel->getUserContext();
 
         return $next(
             $request->withAttribute('app-context', $this)

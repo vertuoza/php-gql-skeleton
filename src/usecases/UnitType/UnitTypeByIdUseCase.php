@@ -1,10 +1,11 @@
 <?php
 
-namespace Vertuoza\UseCases\UnitTypes;
+namespace Vertuoza\UseCases\UnitType;
 
 use React\Promise\Promise;
 use Vertuoza\Entities\UnitTypeEntity;
 use Vertuoza\Repositories\UnitTypeRepository;
+use function React\Async\async;
 
 class UnitTypeByIdUseCase
 {
@@ -30,6 +31,8 @@ class UnitTypeByIdUseCase
      */
     public function handle(string $id): Promise
     {
-        return $this->unitTypeRepository->getById($id);
+        return async(
+            [$this->unitTypeRepository, 'find']
+        )($id);
     }
 }

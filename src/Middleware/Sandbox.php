@@ -2,20 +2,26 @@
 
 namespace Vertuoza\Middleware;
 
+use Psr\Http\Message\ServerRequestInterface;
 use React\Http\Message\Response;
 use React\Http\Message\ServerRequest;
+use Vertuoza\Kernel;
 use function React\Promise\resolve;
 
 class Sandbox
 {
+    public function __construct(
+        protected Kernel $kernel
+    ) {}
+
     /**
-     * @param ServerRequest $request
+     * @param ServerRequestInterface $request
      *
      * @return bool
      */
-    private static function isSandboxRoute(ServerRequest $request)
+    public function isSandboxRoute(ServerRequestInterface $request)
     {
-        return $request->getUri()->getPath() === '/'
+        return !$this->kernel->getGraphQLMiddleware()->isGraphQLQueryPath($request)
             && $request->getMethod() === 'GET'
             && strtolower($_ENV['SANDBOX_ACTIVE']) === 'true';
     }
@@ -28,7 +34,7 @@ class Sandbox
      */
     public function __invoke (ServerRequest $request, callable $next): mixed
     {
-        if (!self::isSandboxRoute($request)) {
+        if (!$this->isSandboxRoute($request)) {
             return $next($request);
         }
 

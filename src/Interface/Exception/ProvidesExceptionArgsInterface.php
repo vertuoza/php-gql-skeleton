@@ -1,8 +1,8 @@
 <?php
 
-namespace Vertuoza\Exceptions;
+namespace Vertuoza\Interface\Exception;
 
-interface ProvidesExceptionArgs
+interface ProvidesExceptionArgsInterface
 {
     /**
      * Data added to define the exception

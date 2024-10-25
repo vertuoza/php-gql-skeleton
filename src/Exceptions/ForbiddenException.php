@@ -2,17 +2,24 @@
 
 namespace Vertuoza\Exceptions;
 
-require_once __DIR__ . "/BusinessException.php";
-
-
 use Throwable;
+use Vertuoza\Enums\ExceptionErrorCodeEnum;
 
-class ForbiddenException extends BusinessException
+class ForbiddenException extends BusinessExceptionInterface
 {
-    public const code = 403;
-
-    public function __construct(string $message, string $errorCode = "FORBIDDEN", Throwable $previous = null, array|null $args = null)
+    /**
+     * @param string $message
+     * @param ExceptionErrorCodeEnum $errorCode
+     * @param Throwable|null $previous
+     * @param array $args
+     */
+    public function __construct(
+        string $message,
+        ExceptionErrorCodeEnum $errorCode = ExceptionErrorCodeEnum::FORBIDDEN,
+        Throwable $previous = null,
+        array $args = []
+    )
     {
-        parent::__construct($message, $errorCode, ForbiddenException::code, $previous, $args);
+        parent::__construct($message, $errorCode, $previous, $args);
     }
 }

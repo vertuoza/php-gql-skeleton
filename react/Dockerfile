@@ -1,4 +1,4 @@
-FROM php:8.2-fpm AS base
+FROM php:8.2 AS base
 ENV INDEX_FILE="react/index.php"
 
 WORKDIR /var/www/html
@@ -38,7 +38,7 @@ RUN apt-get update \
 
 RUN npm install -g nodemon
 
-ENTRYPOINT nodemon --exec php "$INDEX_FILE" --watch . --legacy-watch -e php "$INDEX_FILE"
+ENTRYPOINT nodemon --exec php "$INDEX_FILE" --watch . -e php "$INDEX_FILE"
 
 
 ################## Production image ##################

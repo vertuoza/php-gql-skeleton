@@ -12,16 +12,16 @@ return [
         'args' => [
             'id' => new NonNull(Type::string()),
         ],
-        'resolve' => static fn ($rootValue, $args, AppContext $context)
-            => $context->useCases->unitType
+        'resolve' => static fn ($rootValue, $args, AppContext $context) =>
+            $context->useCases->unitType
                 ->unitTypeById
                 ->handle($args['id'])
     ],
     'unitTypes' => [
         'type' => new NonNull(new ListOfType(fn() => Kernel::getInstance()->getType('UnitType'))),
-        'resolve' => static fn ($rootValue, $args, AppContext $context)
-            => $context->useCases->unitType
-                ->unitTypesFindMany
+        'resolve' => static fn ($rootValue, $args, AppContext $context) =>
+            $context->useCases->unitType
+                ->unitTypeFindMany
                 ->handle()
     ]
 ];

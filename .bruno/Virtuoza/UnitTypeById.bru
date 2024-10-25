@@ -10,10 +10,16 @@ post {
   auth: none
 }
 
+headers {
+  api-key: FJKLjaiowRQI1q51KDOj52kB
+}
+
 body:graphql {
   query {
     unitTypeById (id: "4c2241c9-841f-44c9-9a51-18cfd8f37890") {
       id
+      name
+      isSystem
     }
   }
 }

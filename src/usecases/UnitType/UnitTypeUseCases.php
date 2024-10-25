@@ -1,6 +1,6 @@
 <?php
 
-namespace Vertuoza\UseCases\UnitTypes;
+namespace Vertuoza\UseCases\UnitType;
 
 use Vertuoza\Repositories\UnitTypeRepository;
 
@@ -12,9 +12,14 @@ readonly class UnitTypeUseCases
     public UnitTypeByIdUseCase $unitTypeById;
 
     /**
-     * @var UnitTypesFindManyUseCase
+     * @var UnitTypeFindManyUseCase
      */
-    public UnitTypesFindManyUseCase $unitTypesFindMany;
+    public UnitTypeFindManyUseCase $unitTypeFindMany;
+
+    /**
+     * @var UnitTypeCreateUseCase
+     */
+    public UnitTypeCreateUseCase $unitTypeCreate;
 
     /**
      * @param UnitTypeRepository $unitTypeRepository
@@ -22,6 +27,7 @@ readonly class UnitTypeUseCases
     public function __construct(UnitTypeRepository $unitTypeRepository)
     {
         $this->unitTypeById = new UnitTypeByIdUseCase($unitTypeRepository);
-        $this->unitTypesFindMany = new UnitTypesFindManyUseCase($unitTypeRepository);
+        $this->unitTypeFindMany = new UnitTypeFindManyUseCase($unitTypeRepository);
+        $this->unitTypeCreate = new UnitTypeCreateUseCase($unitTypeRepository);
     }
 }

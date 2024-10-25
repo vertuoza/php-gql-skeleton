@@ -1,11 +1,12 @@
 <?php
 
-namespace Vertuoza\UseCases\UnitTypes;
+namespace Vertuoza\UseCases\UnitType;
 
 use React\Promise\PromiseInterface;
 use Vertuoza\Repositories\UnitTypeRepository;
+use function React\Async\async;
 
-class UnitTypesFindManyUseCase
+class UnitTypeFindManyUseCase
 {
     /**
      * @var UnitTypeRepository
@@ -26,6 +27,8 @@ class UnitTypesFindManyUseCase
      */
     public function handle(): PromiseInterface
     {
-        return $this->unitTypeRepository->findMany();
+        return async(
+            [$this->unitTypeRepository, 'findMany']
+        )();
     }
 }

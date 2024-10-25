@@ -1,0 +1,27 @@
+meta {
+  name: UnitTypeCreate
+  type: graphql
+  seq: 8
+}
+
+post {
+  url: http://0.0.0.0:3003/graphql
+  body: graphql
+  auth: none
+}
+
+headers {
+  api-key: FJKLjaiowRQI1q51KDOj52kB
+  api-tenant-id: 112c33ae-3dbe-431b-994d-fffffe6fd49b
+  api-user-id: 08d97e48-c4a5-42c8-a166-b1159a40b42a
+}
+
+body:graphql {
+  query {
+    unitTypeById (id: "4c2241c9-841f-44c9-9a51-18cfd8f37890") {
+      id
+      name
+      isSystem
+    }
+  }
+}

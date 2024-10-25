@@ -6,7 +6,7 @@ use Vertuoza\Entities\UserRequestContext;
 use Vertuoza\Kernel;
 use Vertuoza\Patterns\FactoryPattern;
 use Vertuoza\Repositories\UnitTypeRepository;
-use Vertuoza\Usecases\UnitTypes\UnitTypeUseCases;
+use Vertuoza\Usecases\UnitType\UnitTypeUseCases;
 
 class UseCaseFactory extends FactoryPattern
 {

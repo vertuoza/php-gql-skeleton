@@ -2,30 +2,12 @@
 
 namespace Vertuoza\Entities;
 
-/**
- * @todo change class name
- */
-class UserRequestContext
+readonly class UserRequestContext
 {
-    /**
-     * @var string|null
-     */
-    private string|null $userId;
-
-    /**
-     * @var string|null
-     */
-    private string|null $tenantId;
-
-    /**
-     * @param string|null $userId
-     * @param string|null $tenantId
-     */
-    public function __construct(string|null $userId, string|null $tenantId)
-    {
-        $this->userId = $userId;
-        $this->tenantId = $tenantId;
-    }
+    public function __construct(
+        private string|null $userId = null,
+        private string|null $tenantId = null
+    ) {}
 
     /**
      * @return string|null

@@ -12,7 +12,7 @@ return [
                     return 'world';
                 }
             ],
-            ... include __DIR__ . '/queries/unitTypes.php'
+            ... include __DIR__ . '/queries/unitType.php'
         ];
     }
 ];

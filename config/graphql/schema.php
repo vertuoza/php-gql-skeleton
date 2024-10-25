@@ -2,5 +2,6 @@
 
 return [
     'types' => include __DIR__.'/types.php',
-    'query' => include __DIR__.'/query.php'
+    'query' => include __DIR__.'/query.php',
+    'mutation' => include __DIR__.'/mutation.php'
 ];

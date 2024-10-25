@@ -3,13 +3,23 @@
 namespace Vertuoza\Exceptions;
 
 use Throwable;
+use Vertuoza\Enums\ExceptionErrorCodeEnum;
 
-class NotFoundException extends BusinessException
+class NotFoundException extends BusinessExceptionInterface
 {
-    public const code = 404;
-
-    public function __construct(string $message = "The resource requested is not available", string $errorCode = "NOT_FOUND", Throwable $previous = null, array|null $args = null)
+    /**
+     * @param string $message
+     * @param ExceptionErrorCodeEnum $errorCode
+     * @param Throwable|null $previous
+     * @param array $args
+     */
+    public function __construct(
+        string $message = "The resource requested is not available",
+        ExceptionErrorCodeEnum $errorCode = ExceptionErrorCodeEnum::NOT_FOUND,
+        Throwable $previous = null,
+        array $args = []
+    )
     {
-        parent::__construct($message, $errorCode, NotFoundException::code, $previous, $args);
+        parent::__construct($message, $errorCode, $previous, $args);
     }
 }

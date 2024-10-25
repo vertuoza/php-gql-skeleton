@@ -2,9 +2,9 @@
 
 namespace Vertuoza\Factories;
 
+use Vertuoza\Entities\UnitTypeEntity;
 use Vertuoza\Kernel;
-use Vertuoza\Repositories\UnitTypeRepository;
-use Vertuoza\Usecases\UnitTypes\UnitTypeUseCases;
+use Vertuoza\Usecases\UnitType\UnitTypeUseCases;
 
 /**
  * @deprecated move to kernel
@@ -23,6 +23,6 @@ readonly class UseCasesFactory
     {
         $kernel = Kernel::getInstance();
 
-        $this->unitType = new UnitTypeUseCases($kernel->getRepository(UnitTypeRepository::class));
+        $this->unitType = new UnitTypeUseCases($kernel->getRepository(UnitTypeEntity::class));
     }
 }

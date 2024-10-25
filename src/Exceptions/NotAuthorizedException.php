@@ -3,13 +3,24 @@
 namespace Vertuoza\Exceptions;
 
 use Throwable;
+use Vertuoza\Enums\ExceptionErrorCodeEnum;
 
-class NotAuthorizedException extends BusinessException
+class NotAuthorizedException extends BusinessExceptionInterface
 {
-    public const code = 401;
-
-    public function __construct(Throwable $previous = null, array|null $args = null)
+    /**
+     * @param Throwable|null $previous
+     * @param array $args
+     */
+    public function __construct(
+        Throwable $previous = null,
+        array $args = []
+    )
     {
-        parent::__construct("You are not authenticated", 'UNAUTHORIZED', NotAuthorizedException::code, $previous, $args);
+        parent::__construct(
+            "You are not authenticated",
+            ExceptionErrorCodeEnum::UNAUTHORIZED,
+            $previous,
+            $args
+        );
     }
 }

@@ -4,10 +4,11 @@ namespace Vertuoza\Errors;
 
 use GraphQL\Error\Error;
 use Vertuoza\Entities\UserRequestContext;
+use Vertuoza\Enums\ExceptionErrorCodeEnum;
 use Vertuoza\Exceptions\BadUserInputException;
-use Vertuoza\Exceptions\BusinessException;
-use Vertuoza\Exceptions\ProvidesExceptionArgs;
+use Vertuoza\Exceptions\BusinessExceptionInterface;
 use Vertuoza\Exceptions\UnauthorizedTenantException;
+use Vertuoza\Interface\Exception\ProvidesExceptionArgsInterface;
 use Vertuoza\Logger\ApplicationLogger;
 use Vertuoza\Logger\LogContext;
 
@@ -17,24 +18,24 @@ class GqlErrorHandler
     {
         $mapped = array_map(function ($error) use ($userContext) {
             $locatedError = null;
-            $statusCode = 500;
-            $errorCode = "UNKNOWN_ERROR";
+
+            $errorCode = ExceptionErrorCodeEnum::INTERNAL_SERVER_ERROR;
 
             if ($error instanceof Error) {
                 $locatedError = $error;
                 if (!$error->isClientSafe()) {
-                    ApplicationLogger::getInstance()->error($error, $errorCode, null, [], $statusCode);
+                    ApplicationLogger::getInstance()->error($error, $errorCode);
                 }
             }
             $previous = $error->getPrevious();
-            if ($previous != null && $previous instanceof BusinessException) {
+            if ($previous != null && $previous instanceof BusinessExceptionInterface) {
                 $errorCode = $previous->getErrorCode();
                 $statusCode = $previous->getCode();
                 $message = $previous->getMessage();
 
 
                 $args = [];
-                if ($previous instanceof ProvidesExceptionArgs) {
+                if ($previous instanceof ProvidesExceptionArgsInterface) {
                     $args = $previous->getArgs() ?? [];
                 }
 

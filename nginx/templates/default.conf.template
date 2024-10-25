@@ -11,6 +11,10 @@ server {
     }
 
     location ~ \.php$ {
+        if ($http_api_key != "${API_KEY}") {
+            return 401;
+        }
+
         fastcgi_param HOST $host;
 
         root /var/www/html/php;

@@ -2,13 +2,11 @@
 
 namespace Vertuoza\Logger;
 
-require_once __DIR__ . '/GcpLoggerFormatter.php';
-require_once __DIR__ . '/LogContext.php';
-
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
 use Stringable;
+use Vertuoza\Enums\ExceptionErrorCodeEnum;
 
 class ApplicationLogger
 {
@@ -54,12 +52,14 @@ class ApplicationLogger
             return $computedContext;
         }
 
-        if ($logContext->getTenantId() !== null) {
-            $computedContext['tenantId'] = $logContext->getTenantId();
+        if ($logContext->tenantId !== null) {
+            $computedContext['tenantId'] = $logContext->tenantId;
         }
-        if ($logContext->getUserId() !== null) {
-            $computedContext['userId'] = $logContext->getUserId();
+
+        if ($logContext->userId !== null) {
+            $computedContext['userId'] = $logContext->userId;
         }
+
         return $computedContext;
     }
 
@@ -78,13 +78,28 @@ class ApplicationLogger
         $this->logger->warning($message, $this->computeContext($logContext, $metadata));
     }
 
-    public function error(Stringable|string $message, string $errorCode, LogContext|null $logContext, array $metadata = [], string|null $statusCode = null): void
+    /**
+     * @param Stringable|string $message
+     * @param ExceptionErrorCodeEnum $errorCode
+     * @param LogContext|null $logContext
+     * @param array $metadata
+     * @return void
+     */
+    public function error(
+        Stringable|string $message,
+        ExceptionErrorCodeEnum $errorCode,
+        LogContext|null $logContext = null,
+        array $metadata = []
+    ): void
     {
-        $context = ['errorCode' => $errorCode];
-        if ($statusCode !== null) {
-            $context['statusCode'] = $statusCode;
-        }
-        $this->logger->error($message, array_merge($context, $this->computeContext($logContext, $metadata)));
+        $context = [
+            'errorCode' => $errorCode->name,
+            'statusCode' => $errorCode->value
+        ];
+        $this->logger->error(
+            $message,
+            array_merge($context, $this->computeContext($logContext, $metadata))
+        );
     }
 
     public function critical(Stringable|string $message, LogContext|null $logContext, array $metadata = []): void

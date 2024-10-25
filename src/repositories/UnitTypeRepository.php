@@ -2,36 +2,25 @@
 
 namespace Vertuoza\Repositories;
 
-use React\Promise\Promise;
+use Illuminate\Database\Eloquent\Collection;
 use React\Promise\PromiseInterface;
 use Vertuoza\Entities\UnitTypeEntity;
-use Vertuoza\Kernel;
+use Vertuoza\Enums\FindTypeEum;
 use function React\Async\async;
 
-class UnitTypeRepository
+/**
+ * @method Collection<UnitTypeEntity> findMany()
+ * @method UnitTypeEntity find(string $id, FindTypeEum $findTypeEum = FindTypeEum::FIND)
+ * @method UnitTypeEntity create(array $data)
+ */
+class UnitTypeRepository extends AbstractRepository
 {
     /**
-     * @param string ...$ids
-     *
-     * @return PromiseInterface
+     * @return class-string<UnitTypeEntity>
      */
-    private function fetchByIds(string ...$ids): PromiseInterface
+    public function getModel(): string
     {
-        return async(
-            fn() => UnitTypeEntity::query()->findMany($ids)
-        )();
-    }
-
-    /**
-     * @param string $id
-     *
-     * @return Promise
-     */
-    public function getById(string $id): PromiseInterface
-    {
-        return async(
-            fn() => UnitTypeEntity::query()->find($id)
-        )();
+        return UnitTypeEntity::class;
     }
 
     /**
@@ -44,7 +33,7 @@ class UnitTypeRepository
     {
         die(__METHOD__);
         return async(
-            fn () => $this->getQueryBuilder(QueryEnum::SELECT)
+            fn() => $this->getQueryBuilder(QueryEnum::SELECT)
                 ->where('label', $name)
                 ->where(function ($query) use ($excludeId) {
                     if (isset($excludeId)) {
@@ -52,44 +41,5 @@ class UnitTypeRepository
                     }
                 })
         )();
-    }
-
-    /**
-     * @return PromiseInterface
-     */
-    public function findMany(): PromiseInterface
-    {
-        return async(
-            fn () => UnitTypeEntity::query()->get()
-        )();
-    }
-
-    /**
-     * @param UnitTypeMutationData $data
-     *
-     * @return int|string
-     */
-    public function create(UnitTypeMutationData $data): int|string
-    {
-        die(__METHOD__);
-        $kernel = Kernel::getInstance();
-        $tenantId = $kernel->getUserContext()->getTenantId();
-
-        return $this->getQueryBuilder(QueryEnum::INSERT)
-            ->insertGetId(UnitTypeMapper::serializeCreate($data, $tenantId));
-    }
-
-    /**
-     * @param string $id
-     * @param UnitTypeMutationData $data
-     *
-     * @return void
-     */
-    public function update(string $id, UnitTypeMutationData $data): void
-    {
-        die(__METHOD__);
-        $this->getQueryBuilder(QueryEnum::UPDATE)
-            ->where(UnitTypeModel::getPkColumnName(), $id)
-            ->update(UnitTypeMapper::serializeUpdate($data));
     }
 }

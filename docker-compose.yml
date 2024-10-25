@@ -6,8 +6,10 @@ services:
     ports:
       - 3002:80
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/templates:/etc/nginx/templates:ro
       - ./sandbox:/var/sandbox
+    env_file:
+      - nginx/.env
     restart: always
 
   react:

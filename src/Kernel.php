@@ -2,6 +2,7 @@
 
 namespace Vertuoza;
 
+use Exception;
 use GraphQL\Executor\Promise\PromiseAdapter as GraphQLPromiseAdapterInterface;
 use GraphQL\Server\ServerConfig;
 use GraphQL\Type\Definition\ObjectType;
@@ -13,17 +14,17 @@ use Psr\Http\Message\ServerRequestInterface;
 use React\Http\Message\ServerRequest;
 use Vertuoza\Entities\CollaboratorEntity;
 use Vertuoza\Entities\TenantEntity;
-use Vertuoza\Entities\UserRequestContext;
 use Vertuoza\Handlers\GqlErrorHandler;
 use Vertuoza\Interface\DatabaseInterface;
 use Vertuoza\Logger\ApplicationLogger;
-use Vertuoza\Logger\LogContext;
 use Vertuoza\Middleware\ApiAccessMiddleware;
-use Vertuoza\Middleware\AppContext;
+use Vertuoza\Middleware\AppContextMiddleware;
 use Vertuoza\Middleware\GraphQLMiddleware;
+use Vertuoza\Middleware\LogContextMiddleware;
 use Vertuoza\Middleware\Sandbox;
 use Vertuoza\Middleware\UserRequestContextMiddleware;
 use Vertuoza\Middleware\ValidationUserContextMiddleware;
+use Vertuoza\Patterns\FactoryPattern;
 use Vertuoza\Patterns\SingletonPattern;
 use Vertuoza\Repositories\AbstractRepository;
 
@@ -66,20 +67,19 @@ class Kernel extends SingletonPattern
     protected SchemaConfig $schemaConfig;
     protected array $repositories;
     protected array $useCases;
-    protected UserRequestContext $userRequestContext;
-    protected AppContext $appContext;
     protected Sandbox $sandbox;
     protected GraphQLMiddleware $graphqlMiddleware;
     protected GraphQLPromiseAdapterInterface $graphqlPromiseAdapter;
-    protected array $graphqlSchema;
     protected array $graphqlTypes;
-    protected LogContext $logContext;
     protected ServerConfig $serverConfig;
     protected ApiAccessMiddleware $apiAccessMiddleware;
     protected ValidationUserContextMiddleware $validationUserContextMiddleware;
     protected UserRequestContextMiddleware $userRequestContextMiddleware;
     protected array $config;
     protected GqlErrorHandler $gqlErrorHandler;
+    protected AppContextMiddleware $appContextMiddleware;
+    protected ?ServerRequestInterface $request = null;
+    protected LogContextMiddleware $logContextMiddleware;
 
     public function init(): void
     {
@@ -223,14 +223,6 @@ class Kernel extends SingletonPattern
             ->newInstance();
     }
 
-    /**
-     * @return UserRequestContext
-     */
-    public function getUserContext(): UserRequestContext
-    {
-        return $this->getAppContext()->userContext;
-    }
-
     public function getUserRequestContextMiddleware(): UserRequestContextMiddleware
     {
         return $this->userRequestContextMiddleware ??= $this->containers['factory'][UserRequestContextMiddleware::class]
@@ -238,10 +230,10 @@ class Kernel extends SingletonPattern
             ->newInstance();
     }
 
-    public function getAppContext(): AppContext
+    public function getAppContextMiddleware(): AppContextMiddleware
     {
-
-        return $this->appContext ??= $this->containers['factory'][AppContext::class]
+        return $this->appContextMiddleware ??= $this->containers['factory'][AppContextMiddleware::class]
+            ->addConstructorArgument('kernel', $this)
             ->newInstance();
     }
 
@@ -254,10 +246,11 @@ class Kernel extends SingletonPattern
 
     /**
      * @return GraphQLMiddleware
+     * @throws Exception
      */
     public function getGraphQLMiddleware(): GraphQLMiddleware
     {
-        return $this->graphqlMiddleware ??= $this->containers['factory'][GraphQLMiddleware::class]
+        return $this->graphqlMiddleware ??= $this->getMiddlewareFactory(GraphQLMiddleware::class)
             ->newInstance();
     }
 
@@ -279,17 +272,9 @@ class Kernel extends SingletonPattern
 
     public function getApiAccessMiddleware(): ApiAccessMiddleware
     {
-        return $this->apiAccessMiddleware ??= $this->containers['factory'][ApiAccessMiddleware::class]
+        return $this->apiAccessMiddleware ??= $this->getMiddlewareFactory(ApiAccessMiddleware::class)
                 ->addConstructorArgument('config', $this->getConfigContent('api_access'))
                 ->newInstance();
-    }
-
-    /**
-     * @return ServerRequestInterface
-     */
-    public function getRequest(): ServerRequestInterface
-    {
-        return $this->getAppContext()->request;
     }
 
     /**
@@ -321,27 +306,43 @@ class Kernel extends SingletonPattern
     {
         return $this->gqlErrorHandler ??= $this->containers['factory'][GqlErrorHandler::class]
             ->addConstructorArgument('applicationLogger', $this->getApplicationLogger())
-            ->addConstructorArgument('logContext', $this->getLogContext())
-            ->newInstance();
-    }
-
-    /**
-     * @return LogContext
-     */
-    public function getLogContext(): LogContext
-    {
-        return $this->logContext ??= $this->containers['factory'][LogContext::class]
-            ->addConstructorArgument('tenantId', $this->getUserContext()->getTenantId())
-            ->addConstructorArgument('userId', $this->getUserContext()->getUserId())
             ->newInstance();
     }
 
     public function getValidationUserContextMiddleware(): ValidationUserContextMiddleware
     {
-        return $this->validationUserContextMiddleware ??= $this->containers['factory'][ValidationUserContextMiddleware::class]
+        return $this->validationUserContextMiddleware ??= $this->getMiddlewareFactory(ValidationUserContextMiddleware::class)
             ->addConstructorArgument('tenantRepository', $this->getRepository(TenantEntity::class))
             ->addConstructorArgument('collaboratorRepository', $this->getRepository(CollaboratorEntity::class))
-            ->addConstructorArgument('userRequestContext', $this->getUserContext())
             ->newInstance();
+    }
+
+    public function getLogContextMiddleware(): LogContextMiddleware
+    {
+        return $this->logContextMiddleware ??= $this->getMiddlewareFactory(LogContextMiddleware::class)
+            ->newInstance();
+    }
+
+    /**
+     * @param $className
+     * @return FactoryPattern
+     *
+     * @throws Exception
+     */
+    public function getFactory($className): FactoryPattern
+    {
+        return $this->containers['factory'][$className] ?? throw new Exception($className);
+    }
+
+    /**
+     * @param string $middlewareClassName
+     * @return FactoryPattern
+     *
+     * @throws Exception
+     */
+    public function getMiddlewareFactory(string $middlewareClassName): FactoryPattern
+    {
+        return $this->getFactory($middlewareClassName)
+            ->addConstructorArgument('kernel', $this);
     }
 }

@@ -2,35 +2,14 @@
 
 namespace Vertuoza\Middleware;
 
-use Closure;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Vertuoza\Entities\UserRequestContext;
+use Vertuoza\Context\AppContext;
 use Vertuoza\Factories\UseCasesFactory;
 use Vertuoza\Kernel;
 
-class AppContext
+readonly class AppContextMiddleware extends AbstractMiddleware
 {
-    /**
-     * @var ServerRequestInterface
-     */
-    public ServerRequestInterface $request;
-
-    /**
-     * @var UserRequestContext
-     */
-    public UserRequestContext $userContext;
-
-    /**
-     * @var UseCasesFactory
-     */
-    public UseCasesFactory $useCases;
-
-    /**
-     * @var array
-     */
-    public array $headers = [];
-
     /**
      * @param string $cookieName
      * @param string $cookieValue
@@ -70,15 +49,7 @@ class AppContext
             $cookieHeader .= " Domain=$domain;";
         }
 
-        $this->headerContext[] = ["Set-Cookie" => $cookieHeader];
-    }
-
-    /**
-     * @return bool
-     */
-    public function isLogged(): bool
-    {
-        return isset($this->userContext) && $this->userContext->isLogged();
+        //$this->headerContext[] = ["Set-Cookie" => $cookieHeader];
     }
 
     /**
@@ -86,22 +57,26 @@ class AppContext
      * @param callable $next
      *
      * @return mixed
+     * @throws \Exception
      */
     public function __invoke(ServerRequestInterface $request, callable $next): mixed
     {
         $kernel = Kernel::getInstance();
 
-        $this->useCases = new UseCasesFactory();
-        $this->request = $request;
-
         return $next(
-            $request->withAttribute('app-context', $this)
+            $request->withAttribute(
+                'app-context',
+                $kernel->getFactory(AppContext::class)
+                    ->addConstructorArgument('request', $request)
+                    ->addConstructorArgument('useCases', new UseCasesFactory())
+                    ->newInstance()
+            )
         )->then(function (ResponseInterface $response) use ($kernel) {
-            foreach ($this->headers as $header) {
+            /*foreach ($this->headers as $header) {
                 foreach ($header as $name => $value) {
                     $response = $response->withHeader($name, $value);
                 }
-            }
+            }*/
 
             $kernel->getDatabase()->getConnection()->disconnect();
             return $response;

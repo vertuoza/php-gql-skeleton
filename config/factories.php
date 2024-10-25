@@ -12,14 +12,16 @@ use Overblog\PromiseAdapter\PromiseAdapterInterface as OverblogPromiseAdapterInt
 use React\Http\Message\ServerRequest;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Vertuoza\Context\AppContext;
+use Vertuoza\Context\LogContext;
 use Vertuoza\Factories\Factory;
 use Vertuoza\Factories\ServerRequestFactory;
 use Vertuoza\Handlers\GqlErrorHandler;
 use Vertuoza\Interface\DatabaseInterface;
-use Vertuoza\Logger\LogContext;
 use Vertuoza\Middleware\ApiAccessMiddleware;
-use Vertuoza\Middleware\AppContext;
+use Vertuoza\Middleware\AppContextMiddleware;
 use Vertuoza\Middleware\GraphQLMiddleware;
+use Vertuoza\Middleware\LogContextMiddleware;
 use Vertuoza\Middleware\Sandbox;
 use Vertuoza\Middleware\UserRequestContextMiddleware;
 use Vertuoza\Middleware\ValidationUserContextMiddleware;
@@ -30,6 +32,7 @@ use Vertuoza\Repositories\UnitTypeRepository;
 return [
     // name =>  [factory,                       class, ...alias]
                 [Factory::class,                AppContext::class],
+                [Factory::class,                AppContextMiddleware::class],
                 [Factory::class,                Sandbox::class],
                 [Factory::class,                SchemaConfig::class],
                 [Factory::class,                Schema::class],
@@ -51,4 +54,5 @@ return [
                 [Factory::class,                ValidationUserContextMiddleware::class],
                 [Factory::class,                UserRequestContextMiddleware::class],
                 [Factory::class,                GqlErrorHandler::class],
+                [Factory::class,                LogContextMiddleware::class],
 ];

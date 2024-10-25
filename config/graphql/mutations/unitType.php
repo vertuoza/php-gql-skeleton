@@ -3,7 +3,7 @@
 use GraphQL\Type\Definition\NonNull;
 use GraphQL\Type\Definition\Type;
 use Vertuoza\Kernel;
-use Vertuoza\Middleware\AppContext;
+use Vertuoza\Middleware\AppContextMiddleware;
 
 return [
     'createUnitType' => [
@@ -11,7 +11,7 @@ return [
         'args' => [
             'name' => new NonNull(Type::string()),
         ],
-        'resolve' => fn($rootValue, $args, AppContext $context) =>
+        'resolve' => fn($rootValue, $args, AppContextMiddleware $context) =>
             $context->useCases->unitType
                 ->unitTypeCreate
                 ->handle(...$args)

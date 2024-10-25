@@ -8,12 +8,12 @@ use GraphQL\GraphQL;
 use GraphQL\Server\ServerConfig;
 use Overblog\DataLoader\DataLoader;
 use React\Http\Message\Response;
+use Vertuoza\Context\LogContext;
 use Vertuoza\Factories\SingletonFactory;
 use Vertuoza\Factories\UseCasesFactory;
 use Vertuoza\Kernel;
 use Vertuoza\Logger\ApplicationLogger;
-use Vertuoza\Logger\LogContext;
-use Vertuoza\Middleware\AppContext;
+use Vertuoza\Middleware\AppContextMiddleware;
 
 $kernel = Kernel::getInstance();
 $kernel->init();
@@ -26,7 +26,7 @@ $useCases = new UseCasesFactory($userContext, $repositories);
 
 echo "<pre>";
 print_r(
-    SingletonFactory::getInstance(AppContext::class)
+    SingletonFactory::getInstance(AppContextMiddleware::class)
 );
 die();
 $x = $serializer->denormalize(
@@ -35,7 +35,7 @@ $x = $serializer->denormalize(
         'header_context' => [],
         'user_context' => $userContext
     ],
-    AppContext::class
+    AppContextMiddleware::class
 );
 
 print_R($x);
@@ -61,7 +61,7 @@ $promise = GraphQL::promiseToExecute(
 );
 $promise->then(function (ExecutionResult $result) use ($config) {
     if (!empty($result->errors)) {
-        ApplicationLogger::getInstance()->info('Log for bodyx with error', new LogContext(null, null), $result->errors);
+        ApplicationLogger::getInstance()->info('Log for bodyx with error', $result->errors);
         $result->errors = $config->getErrorsHandler()($result->errors, $config->getErrorFormatter());
     }
 });

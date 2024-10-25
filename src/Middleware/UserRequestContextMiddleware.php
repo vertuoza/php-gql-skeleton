@@ -2,23 +2,29 @@
 
 namespace Vertuoza\Middleware;
 
+use Exception;
 use Psr\Http\Message\ServerRequestInterface;
-use Vertuoza\Entities\UserRequestContext;
+use Vertuoza\Context\UserRequestContext;
 use Vertuoza\Kernel;
 
-readonly  class UserRequestContextMiddleware
+readonly class UserRequestContextMiddleware extends AbstractMiddleware
 {
-    public function __construct(
-        protected Kernel $kernel
-    ) {}
-
+    /**
+     * @param ServerRequestInterface $request
+     * @param callable $next
+     *
+     * @return mixed
+     *
+     * @throws Exception
+     */
     public function __invoke(ServerRequestInterface $request, callable $next): mixed
     {
-        $this->kernel->getAppContext()->userContext = new UserRequestContext(
-            userId: current($request->getHeader('api-user-id')),
-            tenantId: current($request->getHeader('api-tenant-id'))
-        );
-
-        return $next($request);
+        return $next($request->withAttribute(
+            'user-context',
+            new UserRequestContext(
+                userId: current($request->getHeader('api-user-id')),
+                tenantId: current($request->getHeader('api-tenant-id'))
+            )
+        ));
     }
 }

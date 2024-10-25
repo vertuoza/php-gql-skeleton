@@ -11,10 +11,8 @@ use Overblog\DataLoader\DataLoader;
 use Psr\Http\Message\ServerRequestInterface;
 use React\Http\Message\Response;
 use Vertuoza\Kernel;
-use Vertuoza\Logger\ApplicationLogger;
-use Vertuoza\Logger\LogContext;
 
-class GraphQLMiddleware
+readonly class GraphQLMiddleware extends AbstractMiddleware
 {
     /**
      * @param ServerRequestInterface|null $request
@@ -24,7 +22,7 @@ class GraphQLMiddleware
     public function isGraphQLQueryPath(ServerRequestInterface $request = null): bool
     {
         if (!$request) {
-            $request = Kernel::getInstance()->getRequest();
+            return false;
         }
 
         $method = $request->getMethod();
@@ -54,7 +52,7 @@ class GraphQLMiddleware
      */
     public function __invoke(ServerRequestInterface $request, callable $next): mixed
     {
-        if (!$this->isGraphQLQueryPath()) {
+        if (!$this->isGraphQLQueryPath($request)) {
             return $next($request);
         }
 
@@ -76,16 +74,19 @@ class GraphQLMiddleware
             $kernel->getSchema(),
             $query,
             $rootValue,
-            $kernel->getAppContext(),
+            $this->getAppContext($request),
             $variableValues
         );
 
         $promise->then(function (ExecutionResult $result){
-            $kernel = Kernel::getInstance();
-            $config = $kernel->getServerConfig();
-            $userContext = $kernel->getUserContext();
             if (!empty($result->errors)) {
-                ApplicationLogger::getInstance()->info('Log for body with error', new LogContext($userContext->getTenantId(), $userContext->getUserId()), $result->errors);
+                $kernel = Kernel::getInstance();
+                $config = $kernel->getServerConfig();
+
+                $kernel->getApplicationLogger()->info(
+                        'Log for body with error',
+                        $result->errors
+                    );
                 $result->errors = $config->getErrorsHandler()($result->errors, $config->getErrorFormatter());
             }
         });

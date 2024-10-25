@@ -3,25 +3,25 @@
 namespace Vertuoza\Handlers;
 
 use GraphQL\Error\Error;
+use Vertuoza\Context\LogContext;
 use Vertuoza\Enums\ExceptionErrorCodeEnum;
 use Vertuoza\Errors\GqlClientError;
 use Vertuoza\Exceptions\BadUserInputException;
 use Vertuoza\Exceptions\BusinessException;
 use Vertuoza\Exceptions\UnauthorizedTenantException;
 use Vertuoza\Logger\ApplicationLogger;
-use Vertuoza\Logger\LogContext;
 
 class GqlErrorHandler
 {
     public function __construct(
-        protected ApplicationLogger $applicationLogger,
-        protected ?LogContext $logContext = null
+        protected ApplicationLogger $applicationLogger
     )
     {}
 
     /**
      * @param array $errors
      * @param callable|null $formatter
+     * @param LogContext $logContext
      *
      * @return array
      */
@@ -29,7 +29,10 @@ class GqlErrorHandler
     {
         return array_map(
             $formatter,
-            array_map([$this, 'resolveError'], $errors)
+            array_map(
+                [$this, 'resolveError'],
+                $errors
+            )
         );
     }
 
@@ -50,7 +53,7 @@ class GqlErrorHandler
         $message = $previous->getMessage();
         $args = $previous->getArgs();
 
-        $this->applicationLogger->error($message, $errorCode, $this->logContext, $args);
+        $this->applicationLogger->error($message, $errorCode, $args);
 
         if ($previous instanceof UnauthorizedTenantException) {
             $errorCode = ExceptionErrorCodeEnum::NOT_FOUND;

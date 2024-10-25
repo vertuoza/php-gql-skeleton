@@ -4,6 +4,7 @@ namespace Vertuoza\Factories;
 
 use Vertuoza\Entities\UnitTypeEntity;
 use Vertuoza\Kernel;
+use Vertuoza\Repositories\UnitTypeRepository;
 use Vertuoza\Usecases\UnitType\UnitTypeUseCases;
 
 /**
@@ -21,8 +22,23 @@ readonly class UseCasesFactory
      */
     public function __construct()
     {
-        $kernel = Kernel::getInstance();
+        $this->unitType = new UnitTypeUseCases($this->getRepository());
+    }
 
-        $this->unitType = new UnitTypeUseCases($kernel->getRepository(UnitTypeEntity::class));
+    /**
+     * @return UnitTypeRepository
+     *
+     * @throws \Exception
+     */
+    public function getRepository(): UnitTypeRepository
+    {
+        $kernel = Kernel::getInstance();
+        $repository = $kernel->getRepository(UnitTypeEntity::class);
+
+        if (!$repository instanceof UnitTypeRepository) {
+            throw new \Exception();
+        }
+
+        return $repository;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vertuoza\Entities;
+namespace Vertuoza\Context;
 
 readonly class UserRequestContext
 {

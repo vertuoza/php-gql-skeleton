@@ -5,15 +5,10 @@ namespace Vertuoza\Middleware;
 use Psr\Http\Message\ServerRequestInterface;
 use React\Http\Message\Response;
 use React\Http\Message\ServerRequest;
-use Vertuoza\Kernel;
 use function React\Promise\resolve;
 
-class Sandbox
+readonly class Sandbox extends AbstractMiddleware
 {
-    public function __construct(
-        protected Kernel $kernel
-    ) {}
-
     /**
      * @param ServerRequestInterface $request
      *

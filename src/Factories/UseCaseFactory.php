@@ -2,7 +2,7 @@
 
 namespace Vertuoza\Factories;
 
-use Vertuoza\Entities\UserRequestContext;
+use Vertuoza\Context\UserRequestContext;
 use Vertuoza\Kernel;
 use Vertuoza\Patterns\FactoryPattern;
 use Vertuoza\Repositories\UnitTypeRepository;

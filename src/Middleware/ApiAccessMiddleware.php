@@ -6,16 +6,21 @@ use Closure;
 use Exception;
 use Psr\Http\Message\ServerRequestInterface;
 use React\Http\Message\Response;
+use Vertuoza\Kernel;
 use function React\Promise\resolve;
 
-class ApiAccessMiddleware
+readonly class ApiAccessMiddleware extends AbstractMiddleware
 {
     /**
      * @param array $config
+     * @param ...$args
      */
     public function __construct(
-        protected array $config
-    ) {}
+        protected array $config,
+        ...$args
+    ) {
+        parent::__construct(...$args);
+    }
 
     /**
      * @param ServerRequestInterface $request

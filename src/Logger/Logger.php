@@ -36,7 +36,7 @@ class Logger
         if (!(error_reporting() & $errno)) {
             // This error code is not included in error_reporting, so let it fall
             // through to the standard PHP error handler
-            $this->logger->warning($errstr, null, ['errline' => $errline, 'errfile' => $errfile]);
+            $this->logger->warning($errstr,  metadata: ['errline' => $errline, 'errfile' => $errfile]);
             return false;
         }
 
@@ -60,21 +60,21 @@ class Logger
             case E_COMPILE_WARNING:
             case E_USER_WARNING:
                 $message = "[$errno] $errstr\r\nWarning on line $errline in file $errfile";
-                $this->logger->warning($message, null, ['errline' => $errline, 'errfile' => $errfile]);
+                $this->logger->warning($message, metadata: ['errline' => $errline, 'errfile' => $errfile]);
                 break;
             case E_DEPRECATED:
                 $message = "[$errno] $errstr\r\nDeprecated on line $errline in file $errfile";
-                $this->logger->warning($message, null, ['errline' => $errline, 'errfile' => $errfile]);
+                $this->logger->warning($message, metadata: ['errline' => $errline, 'errfile' => $errfile]);
                 break;
 
             case E_USER_NOTICE:
                 $message = "[$errno] $errstr\r\nNotice error on line $errline in file $errfile";
-                $this->logger->info($message, null, ['errline' => $errline, 'errfile' => $errfile]);
+                $this->logger->info($message,  metadata: ['errline' => $errline, 'errfile' => $errfile]);
                 break;
 
             default:
                 $message = "[$errno] $errstr\r\nError on line $errline in file $errfile";
-                $this->logger->warning($message, null, ['errline' => $errline, 'errfile' => $errfile]);
+                $this->logger->warning($message,  metadata: ['errline' => $errline, 'errfile' => $errfile]);
                 break;
         }
 
@@ -91,7 +91,7 @@ class Logger
     {
         $this->logger->error(
             $exception,
-            ExceptionErrorCodeEnum::tryFrom($exception->getCode()) ?? ExceptionErrorCodeEnum::INTERNAL_SERVER_ERROR,
+            ExceptionErrorCodeEnum::tryFrom($exception->getCode()) ?? ExceptionErrorCodeEnum::UNDEFINED,
             metadata: ['exception' => $exception]
         );
     }

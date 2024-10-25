@@ -5,7 +5,7 @@ namespace Vertuoza\Exceptions;
 use Throwable;
 use Vertuoza\Enums\ExceptionErrorCodeEnum;
 
-class NotAuthorizedException extends BusinessExceptionInterface
+class NotAuthorizedException extends BusinessException
 {
     /**
      * @param Throwable|null $previous

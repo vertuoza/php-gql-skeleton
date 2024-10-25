@@ -7,7 +7,7 @@ use Throwable;
 use Vertuoza\Enums\ExceptionErrorCodeEnum;
 use Vertuoza\Interface\Exception\ProvidesExceptionArgsInterface;
 
-class BusinessExceptionInterface extends Exception implements ProvidesExceptionArgsInterface
+class BusinessException extends Exception implements ProvidesExceptionArgsInterface
 {
     /**
      * @var ExceptionErrorCodeEnum
@@ -55,9 +55,9 @@ class BusinessExceptionInterface extends Exception implements ProvidesExceptionA
     }
 
     /**
-     * @return array|null
+     * @return array
      */
-    public function getArgs(): array|null
+    public function getArgs(): array
     {
         return $this->args;
     }

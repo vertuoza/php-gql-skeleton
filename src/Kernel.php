@@ -2,6 +2,7 @@
 
 namespace Vertuoza;
 
+use GraphQL\Executor\Promise\PromiseAdapter as GraphQLPromiseAdapterInterface;
 use GraphQL\Server\ServerConfig;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Schema;
@@ -13,8 +14,9 @@ use React\Http\Message\ServerRequest;
 use Vertuoza\Entities\CollaboratorEntity;
 use Vertuoza\Entities\TenantEntity;
 use Vertuoza\Entities\UserRequestContext;
-use Vertuoza\Errors\GqlErrorHandler;
+use Vertuoza\Handlers\GqlErrorHandler;
 use Vertuoza\Interface\DatabaseInterface;
+use Vertuoza\Logger\ApplicationLogger;
 use Vertuoza\Logger\LogContext;
 use Vertuoza\Middleware\ApiAccessMiddleware;
 use Vertuoza\Middleware\AppContext;
@@ -23,9 +25,7 @@ use Vertuoza\Middleware\Sandbox;
 use Vertuoza\Middleware\UserRequestContextMiddleware;
 use Vertuoza\Middleware\ValidationUserContextMiddleware;
 use Vertuoza\Patterns\SingletonPattern;
-use GraphQL\Executor\Promise\PromiseAdapter as GraphQLPromiseAdapterInterface;
 use Vertuoza\Repositories\AbstractRepository;
-use function React\Async\async;
 
 class Kernel extends SingletonPattern
 {
@@ -79,6 +79,7 @@ class Kernel extends SingletonPattern
     protected ValidationUserContextMiddleware $validationUserContextMiddleware;
     protected UserRequestContextMiddleware $userRequestContextMiddleware;
     protected array $config;
+    protected GqlErrorHandler $gqlErrorHandler;
 
     public function init(): void
     {
@@ -299,10 +300,28 @@ class Kernel extends SingletonPattern
         return $this->serverConfig ??= $this->containers['factory'][ServerConfig::class]
             ->addSetter(
                 'ErrorsHandler',
-                function (array $errors, ?callable $formatter) {
-                    return GqlErrorHandler::handle($errors, $formatter, $this->getUserContext());
-                }
+                fn (array $errors, ?callable $formatter) =>
+                    $this->getGqlErrorHandler()->handle($errors, $formatter)
             )
+            ->newInstance();
+    }
+
+    /**
+     * @return ApplicationLogger
+     */
+    public function getApplicationLogger(): ApplicationLogger
+    {
+        return ApplicationLogger::getInstance();
+    }
+
+    /**
+     * @return GqlErrorHandler
+     */
+    public function getGqlErrorHandler(): GqlErrorHandler
+    {
+        return $this->gqlErrorHandler ??= $this->containers['factory'][GqlErrorHandler::class]
+            ->addConstructorArgument('applicationLogger', $this->getApplicationLogger())
+            ->addConstructorArgument('logContext', $this->getLogContext())
             ->newInstance();
     }
 

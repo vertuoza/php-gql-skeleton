@@ -5,13 +5,8 @@ namespace Vertuoza\Exceptions;
 use Throwable;
 use Vertuoza\Enums\ExceptionErrorCodeEnum;
 
-class UnauthorizedTenantException extends BusinessExceptionInterface
+class UnauthorizedTenantException extends BusinessException
 {
-    /**
-     * @var string
-     */
-    protected string $tenantId;
-
     /**
      * @param string $message
      * @param string $tenantId
@@ -25,8 +20,6 @@ class UnauthorizedTenantException extends BusinessExceptionInterface
         array $args = []
     )
     {
-        $this->tenantId = $tenantId;
-
         $args['tenantId'] = $tenantId;
 
         parent::__construct(
@@ -42,6 +35,6 @@ class UnauthorizedTenantException extends BusinessExceptionInterface
      */
     public function getTenantId(): string
     {
-        return $this->tenantId;
+        return $this->args['tenantId'];
     }
 }

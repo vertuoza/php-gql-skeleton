@@ -5,7 +5,7 @@ namespace Vertuoza\Exceptions;
 use Throwable;
 use Vertuoza\Enums\ExceptionErrorCodeEnum;
 
-class ForbiddenException extends BusinessExceptionInterface
+class ForbiddenException extends BusinessException
 {
     /**
      * @param string $message

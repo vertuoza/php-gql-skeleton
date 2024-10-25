@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Vertuoza\Factories\Factory;
 use Vertuoza\Factories\ServerRequestFactory;
+use Vertuoza\Handlers\GqlErrorHandler;
 use Vertuoza\Interface\DatabaseInterface;
 use Vertuoza\Logger\LogContext;
 use Vertuoza\Middleware\ApiAccessMiddleware;
@@ -49,4 +50,5 @@ return [
                 [Factory::class,                LogContext::class],
                 [Factory::class,                ValidationUserContextMiddleware::class],
                 [Factory::class,                UserRequestContextMiddleware::class],
+                [Factory::class,                GqlErrorHandler::class],
 ];

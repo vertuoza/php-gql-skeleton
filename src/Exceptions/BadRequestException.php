@@ -2,10 +2,11 @@
 
 namespace Vertuoza\Exceptions;
 
+use GraphQL\Error\ClientAware;
 use Throwable;
 use Vertuoza\Enums\ExceptionErrorCodeEnum;
 
-class BadRequestException extends BusinessExceptionInterface
+class BadRequestException extends BusinessException
 {
     /**
      * @param string $message

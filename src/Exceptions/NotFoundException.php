@@ -5,7 +5,7 @@ namespace Vertuoza\Exceptions;
 use Throwable;
 use Vertuoza\Enums\ExceptionErrorCodeEnum;
 
-class NotFoundException extends BusinessExceptionInterface
+class NotFoundException extends BusinessException
 {
     /**
      * @param string $message

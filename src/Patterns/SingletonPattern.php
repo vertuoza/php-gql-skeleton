@@ -8,7 +8,10 @@ use Vertuoza\Interface\SingletonInterface;
 
 abstract class SingletonPattern implements SingletonInterface
 {
-    private static $instances = [];
+    /**
+     * @var array<SingletonPattern>
+     */
+    private static array $instances = [];
 
     protected function __construct() {}
 
@@ -27,6 +30,9 @@ abstract class SingletonPattern implements SingletonInterface
         throw new SingletonWakeupException("Cannot unserialize singleton");
     }
 
+    /**
+     * @return static
+     */
     final public static function getInstance(): static
     {
         $subclass = static::class;
@@ -37,8 +43,16 @@ abstract class SingletonPattern implements SingletonInterface
             // method is called on the subclass, we want an instance of that
             // subclass to be created here.
 
-            self::$instances[$subclass] = new static();
+            self::$instances[$subclass] = static::newInstance();
         }
         return self::$instances[$subclass];
+    }
+
+    /**
+     * @return static
+     */
+    protected static function newInstance(): static
+    {
+        return new static();
     }
 }

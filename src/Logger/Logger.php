@@ -3,6 +3,7 @@
 namespace Vertuoza\Logger;
 
 use Throwable;
+use Vertuoza\Enums\ExceptionErrorCodeEnum;
 
 class Logger
 {
@@ -48,7 +49,10 @@ class Logger
             case E_ERROR:
             case E_USER_ERROR:
                 $message = "[$errno] $errstr\r\nFatal error on line $errline in file $errfile";
-                $this->logger->error($message, 'INTERNAL', null, ['errline' => $errline, 'errfile' => $errfile]);
+                $this->logger->error(
+                    $message,
+                    ExceptionErrorCodeEnum::INTERNAL_SERVER_ERROR,
+                    metadata: ['errline' => $errline, 'errfile' => $errfile]);
                 break;
 
             case E_CORE_WARNING:
@@ -86,9 +90,9 @@ class Logger
     public function exceptionHandler(Throwable $exception): void
     {
         $this->logger->error(
-            $exception, $exception->getCode(),
-            null,
-            ['exception' => $exception]
+            $exception,
+            ExceptionErrorCodeEnum::tryFrom($exception->getCode()) ?? ExceptionErrorCodeEnum::INTERNAL_SERVER_ERROR,
+            metadata: ['exception' => $exception]
         );
     }
 

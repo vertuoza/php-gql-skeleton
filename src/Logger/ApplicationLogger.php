@@ -7,20 +7,22 @@ use Monolog\Logger;
 use Psr\Log\LogLevel;
 use Stringable;
 use Vertuoza\Enums\ExceptionErrorCodeEnum;
+use Vertuoza\Patterns\SingletonPattern;
 
-class ApplicationLogger
+class ApplicationLogger extends SingletonPattern
 {
-    private static $instance = null;
     private Logger $logger;
     private string $serviceName;
 
     /**
-     * @param string $serviceName
+     * @return ApplicationLogger
      */
-    private function __construct(string $serviceName)
+    protected static function newInstance(): static
     {
-        $this->serviceName = $serviceName;
-        $this->logger = new Logger('kernel');
+        $instance = new static();
+
+        $instance->serviceName = 'gql-api';
+        $instance->logger = new Logger('kernel');
         if (isset($_ENV['LOG_ENABLED']) && $_ENV['LOG_ENABLED'] === 'true') {
             $stream = new StreamHandler('php://stdout', LogLevel::DEBUG);
             $formatter = new GcpLoggerFormatter(['serviceName', 'tenantId']);
@@ -28,86 +30,140 @@ class ApplicationLogger
 
             $stream->setFormatter($formatter);
 
-            $this->logger->pushHandler($stream);
+            $instance->logger->pushHandler($stream);
         }
+
+        return $instance;
     }
 
     /**
-     * @return ApplicationLogger
+     * @param LogContext|null $logContext
+     * @param array $metadata
+     *
+     * @return array|string[]
      */
-    public static function getInstance(): ApplicationLogger
+    protected function computeContext(LogContext|null $logContext, array $metadata = []): array
     {
-        if (self::$instance == null) {
-            self::$instance = new ApplicationLogger('gql-api');
-        }
-
-        return self::$instance;
-    }
-
-    protected function computeContext(LogContext|null $logContext, array $metadata = [])
-    {
-        $computedContext = array_merge($metadata, ["serviceName" => $this->serviceName]);
+        $metadata['serviceName'] = $this->serviceName;
 
         if ($logContext === null) {
-            return $computedContext;
+            return $metadata;
         }
 
         if ($logContext->tenantId !== null) {
-            $computedContext['tenantId'] = $logContext->tenantId;
+            $metadata['tenantId'] = $logContext->tenantId;
         }
 
         if ($logContext->userId !== null) {
-            $computedContext['userId'] = $logContext->userId;
+            $metadata['userId'] = $logContext->userId;
         }
 
-        return $computedContext;
+        return $metadata;
     }
 
-    public function info(Stringable|string $message, LogContext|null $logContext, array $metadata = []): void
+    /**
+     * @param Stringable|string $message
+     * @param LogContext|null $logContext
+     * @param array $metadata
+     *
+     * @return void
+     */
+    public function info(
+        Stringable|string $message,
+        LogContext|null $logContext,
+        array $metadata = []
+    ): void
     {
         $this->logger->info($message, $this->computeContext($logContext, $metadata));
     }
 
-    public function debug(Stringable|string $message, LogContext|null $logContext, array $metadata = []): void
+    /**
+     * @param Stringable|string $message
+     * @param LogContext|null $logContext
+     * @param array $metadata
+     *
+     * @return void
+     */
+    public function debug(
+        Stringable|string $message,
+        LogContext|null $logContext,
+        array $metadata = []
+    ): void
     {
         $this->logger->debug($message, $this->computeContext($logContext, $metadata));
     }
 
-    public function warning(Stringable|string $message, LogContext|null $logContext, array $metadata = []): void
+    /**
+     * @param Stringable|string $message
+     * @param LogContext|null $logContext
+     * @param array $metadata
+     *
+     * @return void
+     */
+    public function warning(
+        Stringable|string $message,
+        LogContext|null $logContext,
+        array $metadata = []
+    ): void
     {
         $this->logger->warning($message, $this->computeContext($logContext, $metadata));
     }
 
     /**
      * @param Stringable|string $message
-     * @param ExceptionErrorCodeEnum $errorCode
+     * @param ExceptionErrorCodeEnum $exceptionErrorCodeEnum
      * @param LogContext|null $logContext
      * @param array $metadata
+     *
      * @return void
      */
     public function error(
         Stringable|string $message,
-        ExceptionErrorCodeEnum $errorCode,
+        ExceptionErrorCodeEnum $exceptionErrorCodeEnum,
         LogContext|null $logContext = null,
         array $metadata = []
     ): void
     {
-        $context = [
-            'errorCode' => $errorCode->name,
-            'statusCode' => $errorCode->value
-        ];
         $this->logger->error(
             $message,
-            array_merge($context, $this->computeContext($logContext, $metadata))
+            array_merge(
+                [
+                    'errorCode' => $exceptionErrorCodeEnum->name,
+                    'statusCode' => $exceptionErrorCodeEnum->value
+                ],
+                $this->computeContext($logContext, $metadata)
+            )
         );
     }
 
-    public function critical(Stringable|string $message, LogContext|null $logContext, array $metadata = []): void
+    /**
+     * @param Stringable|string $message
+     * @param LogContext|null $logContext
+     * @param array $metadata
+     *
+     * @return void
+     */
+    public function critical(
+        Stringable|string $message,
+        LogContext|null $logContext = null,
+        array $metadata = []
+    ): void
     {
         $this->logger->critical($message, $this->computeContext($logContext, $metadata));
     }
 
-    public function emergency(Stringable|string $message, LogContext|null $logContext, array $metadata = []): void
+    /**
+     * @param Stringable|string $message
+     * @param LogContext|null $logContext
+     * @param array $metadata
+     *
+     * @return void
+     */
+    public function emergency(
+        Stringable|string $message,
+        LogContext|null $logContext,
+        array $metadata = []
+    ): void
     {
         $this->logger->emergency($message, $this->computeContext($logContext, $metadata));
     }

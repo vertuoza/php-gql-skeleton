@@ -1,0 +1,34 @@
+meta {
+  name: CreateTenant
+  type: graphql
+  seq: 10
+}
+
+post {
+  url: http://localhost:3003/graphql
+  body: graphql
+  auth: basic
+}
+
+headers {
+  api-key: FJKLjaiowRQI1q51KDOj52kB
+}
+
+auth:basic {
+  username: username
+  password: password
+}
+
+body:graphql {
+  mutation {
+    createTenant (
+      name: "mon-premier-tenant-13",
+      collaborators: ["80cbf0a0-924a-4af4-868e-e59464dc7067"]
+    ) {
+      id
+      collaborators {
+        id
+      }
+    }
+  }
+}

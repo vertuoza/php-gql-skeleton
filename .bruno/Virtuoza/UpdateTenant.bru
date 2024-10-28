@@ -1,0 +1,36 @@
+meta {
+  name: UpdateTenant
+  type: graphql
+  seq: 13
+}
+
+post {
+  url: http://localhost:3003/graphql
+  body: graphql
+  auth: basic
+}
+
+headers {
+  api-key: FJKLjaiowRQI1q51KDOj52kB
+}
+
+auth:basic {
+  username: username
+  password: password
+}
+
+body:graphql {
+  mutation {
+    updateTenant (
+      id: "dc877c68-3386-46e5-8b00-d5aa040f4303",
+      name: "bibi2",
+      collaborators: ["a3c8d691-9200-410b-aea9-e3dac1a84935", "80cbf0a0-924a-4af4-868e-e59464dc7067"]
+    ) {
+      id
+      name
+      collaborators {
+        id
+      }
+    }
+  }
+}

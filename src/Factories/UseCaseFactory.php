@@ -1,0 +1,28 @@
+<?php
+
+namespace Vertuoza\Factories;
+
+use Vertuoza\Context\UserRequestContext;
+use Vertuoza\Kernel;
+use Vertuoza\Patterns\FactoryPattern;
+use Vertuoza\Repositories\UnitTypeRepository;
+use Vertuoza\Usecases\UnitType\UnitTypeUseCases;
+
+class UseCaseFactory extends FactoryPattern
+{
+    /**
+     * @var UnitTypeUseCases $unitType
+     */
+    public UnitTypeUseCases $unitType;
+
+    /**
+     * Constructor
+     */
+    public function __construct(UserRequestContext $userContext)
+    {
+        $kernel = Kernel::getInstance();
+
+        die('kk');
+        $this->unitType = new UnitTypeUseCases($userContext, $kernel->getRepository(UnitTypeRepository::class));
+    }
+}

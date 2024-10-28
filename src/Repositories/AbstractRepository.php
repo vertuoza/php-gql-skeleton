@@ -132,10 +132,16 @@ abstract class AbstractRepository
      * @param array $data
      *
      * @return Model
+     *
+     * @throws ForbiddenException
      */
     public function update(string|Model $id, array $data): Model
     {
-        $this->getQuery()->whereKey($id)->update($data);
+        try {
+            $this->getQuery()->whereKey($id)->update($data);
+        } catch (UniqueConstraintViolationException $e) {
+            throw new ForbiddenException('Already exist');
+        }
 
         return $this->getQuery()->find($id)->first();
     }

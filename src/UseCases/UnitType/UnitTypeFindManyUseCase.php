@@ -37,7 +37,7 @@ class UnitTypeFindManyUseCase extends UseCasePattern
         }
 
         return async(
-            [$this->unitTypeRepository, 'findFirstBy']
+            [$this->unitTypeRepository, 'findBy']
         )(['tenant_id' => $tenantId], true);
     }
 }

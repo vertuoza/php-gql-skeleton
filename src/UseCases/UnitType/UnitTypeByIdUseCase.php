@@ -32,6 +32,6 @@ class UnitTypeByIdUseCase
     {
         return async(
             [$this->unitTypeRepository, 'findFirstBy']
-        )(['id' => $id, 'tenant_id' => $tenantId]);
+        )(['id' => $id, 'tenant_id' => $tenantId], true);
     }
 }

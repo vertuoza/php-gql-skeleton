@@ -53,7 +53,7 @@ services:
     restart: always
 
     volumes:
-      - ./seed:/docker-entrypoint-initdb.d
+      - ./mysql:/docker-entrypoint-initdb.d
       - ./mysql.cnf:/etc/mysql/conf.d/my.cnf
       - database-app:/var/lib/mysql
     env_file:

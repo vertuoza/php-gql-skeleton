@@ -1,0 +1,29 @@
+meta {
+  name: CreateUnitType
+  type: graphql
+  seq: 7
+}
+
+post {
+  url: http://0.0.0.0:3003/graphql
+  body: graphql
+  auth: basic
+}
+
+headers {
+  api-key: FJKLjaiowRQI1q51KDOj52kB
+  api-tenant-id: dc877c68-3386-46e5-8b00-d5aa040f4303
+}
+
+auth:basic {
+  username: admin
+  password: password
+}
+
+body:graphql {
+  mutation {
+    createUnitType (name: "ok") {
+      id
+    }
+  }
+}

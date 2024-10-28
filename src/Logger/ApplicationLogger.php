@@ -13,8 +13,19 @@ use Vertuoza\Patterns\SingletonPattern;
 
 class ApplicationLogger extends SingletonPattern
 {
+    /**
+     * @var Logger
+     */
     private Logger $logger;
+
+    /**
+     * @var string
+     */
     private string $serviceName;
+
+    /**
+     * @var LogContext|null
+     */
     private LogContext|null $logContext = null;
 
     /**
@@ -110,7 +121,7 @@ class ApplicationLogger extends SingletonPattern
      */
     public function error(
         Stringable|string $message,
-        ExceptionErrorCodeEnum $exceptionErrorCodeEnum,
+        ExceptionErrorCodeEnum $exceptionErrorCodeEnum = ExceptionErrorCodeEnum::UNDEFINED,
         array $metadata = []
     ): void
     {

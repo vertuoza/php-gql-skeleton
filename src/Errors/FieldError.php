@@ -2,29 +2,15 @@
 
 namespace Vertuoza\Errors;
 
+use GraphQL\Error\Error;
 use Vertuoza\Enums\FieldErrorCodeEnum;
 
-class FieldError
+class FieldError extends Error
 {
-    /**
-     * @var FieldErrorCodeEnum
-     */
-    public FieldErrorCodeEnum $code;
-
     /**
      * @var string
      */
     public string $field;
-
-    /**
-     * @var string
-     */
-    public string $path;
-
-    /**
-     * @var string
-     */
-    public string $message;
 
     /**
      * @var array
@@ -34,14 +20,17 @@ class FieldError
     public function __construct(
         string $field,
         string $message,
-        FieldErrorCodeEnum $code = FieldErrorCodeEnum::FIELD_ERROR,
-        string $path = "",
+        FieldErrorCodeEnum $codeEnum = FieldErrorCodeEnum::FIELD_ERROR,
+        ?array $path = null,
         array $args = []
     ) {
+        parent::__construct(
+            message: $message,
+            path: $path
+        );
+
+        $this->code = $codeEnum->name;
         $this->field = $field;
-        $this->message = $message;
-        $this->code = $code;
-        $this->path = $path;
         $this->args = $args;
     }
 
@@ -51,7 +40,7 @@ class FieldError
     public function toArray(): array
     {
         return [
-            "code" => $this->code->name,
+            "code" => $this->code,
             "field" => $this->field,
             "path" => $this->path,
             "message" => $this->message,

@@ -1,0 +1,33 @@
+meta {
+  name: Tenants
+  type: graphql
+  seq: 11
+}
+
+post {
+  url: http://localhost:3003/graphql
+  body: graphql
+  auth: none
+}
+
+headers {
+  api-key: FJKLjaiowRQI1q51KDOj52kB
+}
+
+body:graphql {
+  query {
+    tenants {
+      id,
+      owner {
+        id,
+        firstname,
+        username
+      }
+      collaborators {
+        id
+        firstname
+        username
+      }
+    }
+  }
+}

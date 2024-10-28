@@ -5,16 +5,21 @@ namespace Vertuoza\Middleware;
 use Psr\Http\Message\ServerRequestInterface;
 use React\Http\Message\Response;
 use React\Http\Message\ServerRequest;
+use React\Promise\PromiseInterface;
+use Vertuoza\Patterns\MiddlewarePattern;
 use function React\Promise\resolve;
+use Exception;
 
-readonly class Sandbox extends AbstractMiddleware
+readonly class SandboxMiddleware extends MiddlewarePattern
 {
     /**
      * @param ServerRequestInterface $request
      *
      * @return bool
+     *
+     * @throws Exception
      */
-    public function isSandboxRoute(ServerRequestInterface $request)
+    public function isSandboxRoute(ServerRequestInterface $request): bool
     {
         return !$this->kernel->getGraphQLMiddleware()->isGraphQLQueryPath($request)
             && $request->getMethod() === 'GET'
@@ -23,17 +28,25 @@ readonly class Sandbox extends AbstractMiddleware
 
     /**
      * @param ServerRequest $request
-     * @param callable $next
+     *
+     * @return bool
+     *
+     * @throws Exception
+     */
+    public function isSupported(ServerRequest $request): bool
+    {
+        return $this->isSandboxRoute($request);
+    }
+
+    /**
+     * @param ServerRequest $request
+     * @param ?callable $next
      *
      * @return mixed
      */
-    public function __invoke (ServerRequest $request, callable $next): mixed
+    public function handle(ServerRequest $request, ?callable $next): PromiseInterface
     {
-        if (!$this->isSandboxRoute($request)) {
-            return $next($request);
-        }
-
-        $sandboxhtml = file_get_contents('./assets/sandbox.html');
+        $sandboxhtml = $this->kernel->getSandboxContent('index');
         $response = Response::plaintext($sandboxhtml);
 
         return resolve($response->withHeader('Content-Type', 'text/html'));

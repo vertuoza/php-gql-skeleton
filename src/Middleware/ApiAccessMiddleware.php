@@ -6,10 +6,11 @@ use Closure;
 use Exception;
 use Psr\Http\Message\ServerRequestInterface;
 use React\Http\Message\Response;
-use Vertuoza\Kernel;
+use React\Promise\PromiseInterface;
+use Vertuoza\Patterns\MiddlewarePattern;
 use function React\Promise\resolve;
 
-readonly class ApiAccessMiddleware extends AbstractMiddleware
+readonly class ApiAccessMiddleware extends MiddlewarePattern
 {
     /**
      * @param array $config
@@ -24,13 +25,13 @@ readonly class ApiAccessMiddleware extends AbstractMiddleware
 
     /**
      * @param ServerRequestInterface $request
-     * @param callable $next
+     * @param ?callable $next
      *
-     * @return Closure
+     * @return PromiseInterface
      *
      * @throws Exception
      */
-    public function __invoke(ServerRequestInterface $request, callable $next): mixed
+    public function handle(ServerRequestInterface $request, ?callable $next): PromiseInterface
     {
         if (current($request->getHeader('api-key')) != $this->config['key']) {
             $response = Response::json(

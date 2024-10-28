@@ -4,20 +4,21 @@ namespace Vertuoza\Middleware;
 
 use Exception;
 use Psr\Http\Message\ServerRequestInterface;
+use React\Promise\PromiseInterface;
 use Vertuoza\Context\LogContext;
-use Vertuoza\Context\UserRequestContext;
-use Vertuoza\Kernel;
+use Vertuoza\Patterns\MiddlewarePattern;
 
-readonly class LogContextMiddleware extends AbstractMiddleware
+readonly class LogContextMiddlewarePattern extends MiddlewarePattern
 {
     /**
      * @param ServerRequestInterface $request
-     * @param callable $next
-     * @return mixed
+     * @param ?callable $next
+     *
+     * @return PromiseInterface
      *
      * @throws Exception
      */
-    public function __invoke(ServerRequestInterface $request, callable $next): mixed
+    public function handle(ServerRequestInterface $request, ?callable $next): PromiseInterface
     {
         $userContext = $this->getUserRequestContext($request);
         $logContext = $this->kernel->getFactory(LogContext::class)

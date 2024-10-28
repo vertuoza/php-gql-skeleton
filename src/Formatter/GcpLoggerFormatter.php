@@ -41,7 +41,7 @@ class GcpLoggerFormatter extends JsonFormatter
     {
         $formatted = [
             'message' => $record['message'],
-            'severity' => LevelSeverityEnum::tryFrom($record['level_name']) ?? LevelSeverityEnum::INFO,
+            'severity' => LevelSeverityEnum::tryFrom($record['level_name']) ?? LevelSeverityEnum::ALERT,
             'timestamp' => $record['datetime'],
             'channel' => $record['channel'],
         ];

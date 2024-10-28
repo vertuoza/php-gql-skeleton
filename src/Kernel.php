@@ -19,9 +19,11 @@ use Vertuoza\Interface\DatabaseInterface;
 use Vertuoza\Logger\ApplicationLogger;
 use Vertuoza\Middleware\ApiAccessMiddleware;
 use Vertuoza\Middleware\AppContextMiddleware;
+use Vertuoza\Middleware\ErrorContextMiddleware;
 use Vertuoza\Middleware\GraphQLMiddleware;
-use Vertuoza\Middleware\LogContextMiddleware;
-use Vertuoza\Middleware\Sandbox;
+use Vertuoza\Middleware\LogContextMiddlewarePattern;
+use Vertuoza\Middleware\SandboxMiddleware;
+use Vertuoza\Middleware\TerminusMiddleware;
 use Vertuoza\Middleware\UserRequestContextMiddleware;
 use Vertuoza\Middleware\ValidationUserContextMiddleware;
 use Vertuoza\Patterns\FactoryPattern;
@@ -67,7 +69,7 @@ class Kernel extends SingletonPattern
     protected SchemaConfig $schemaConfig;
     protected array $repositories;
     protected array $useCases;
-    protected Sandbox $sandbox;
+    protected SandboxMiddleware $sandboxMiddleware;
     protected GraphQLMiddleware $graphqlMiddleware;
     protected GraphQLPromiseAdapterInterface $graphqlPromiseAdapter;
     protected array $graphqlTypes;
@@ -76,10 +78,13 @@ class Kernel extends SingletonPattern
     protected ValidationUserContextMiddleware $validationUserContextMiddleware;
     protected UserRequestContextMiddleware $userRequestContextMiddleware;
     protected array $config;
+    protected array $sandbox;
     protected GqlErrorHandler $gqlErrorHandler;
     protected AppContextMiddleware $appContextMiddleware;
     protected ?ServerRequestInterface $request = null;
-    protected LogContextMiddleware $logContextMiddleware;
+    protected LogContextMiddlewarePattern $logContextMiddleware;
+    protected TerminusMiddleware $terminusMiddleware;
+    protected ErrorContextMiddleware $errorContextMiddleware;
 
     public function init(): void
     {
@@ -193,6 +198,21 @@ class Kernel extends SingletonPattern
         return $this->getConfigFolder().'/'.$filename.'.php';
     }
 
+    public function getSandboxContent(string $filename): string
+    {
+        return $this->sandbox[$filename] ??= @file_get_contents($this->getSandboxFilename($filename));
+    }
+
+    public function getSandboxFilename(string $filename): string
+    {
+        return $this->getSandboxFolder().'/'.$filename.'.html';
+    }
+
+    public function getSandboxFolder(): string
+    {
+        return __DIR__.'/../sandbox';
+    }
+
     /**
      * @param string $filename
      *
@@ -237,9 +257,9 @@ class Kernel extends SingletonPattern
             ->newInstance();
     }
 
-    public function getSandbox(): Sandbox
+    public function getSandbox(): SandboxMiddleware
     {
-        return $this->sandbox ??= $this->containers['factory'][Sandbox::class]
+        return $this->sandboxMiddleware ??= $this->containers['factory'][SandboxMiddleware::class]
             ->addConstructorArgument('kernel', $this)
             ->newInstance();
     }
@@ -251,6 +271,9 @@ class Kernel extends SingletonPattern
     public function getGraphQLMiddleware(): GraphQLMiddleware
     {
         return $this->graphqlMiddleware ??= $this->getMiddlewareFactory(GraphQLMiddleware::class)
+            ->addConstructorArgument('serverConfig', $this->getServerConfig())
+            ->addConstructorArgument('promiseAdapter', $this->getGraphQLPromiseAdapter())
+            ->addConstructorArgument('schema', $this->getSchema())
             ->newInstance();
     }
 
@@ -270,11 +293,22 @@ class Kernel extends SingletonPattern
         return $this->graphqlTypes ??= $this->getGraphqlSchema()['types'];
     }
 
+    /**
+     * @return ApiAccessMiddleware
+     *
+     * @throws Exception
+     */
     public function getApiAccessMiddleware(): ApiAccessMiddleware
     {
         return $this->apiAccessMiddleware ??= $this->getMiddlewareFactory(ApiAccessMiddleware::class)
                 ->addConstructorArgument('config', $this->getConfigContent('api_access'))
                 ->newInstance();
+    }
+
+    public function getTerminusMiddleware(): TerminusMiddleware
+    {
+        return $this->terminusMiddleware ??= $this->getMiddlewareFactory(TerminusMiddleware::class)
+            ->newInstance();
     }
 
     /**
@@ -288,6 +322,12 @@ class Kernel extends SingletonPattern
                 fn (array $errors, ?callable $formatter) =>
                     $this->getGqlErrorHandler()->handle($errors, $formatter)
             )
+            ->newInstance();
+    }
+
+    public function getErrorContextMiddleware(): ErrorContextMiddleware
+    {
+        return $this->errorContextMiddleware ??= $this->getMiddlewareFactory(ErrorContextMiddleware::class)
             ->newInstance();
     }
 
@@ -309,17 +349,9 @@ class Kernel extends SingletonPattern
             ->newInstance();
     }
 
-    public function getValidationUserContextMiddleware(): ValidationUserContextMiddleware
+    public function getLogContextMiddleware(): LogContextMiddlewarePattern
     {
-        return $this->validationUserContextMiddleware ??= $this->getMiddlewareFactory(ValidationUserContextMiddleware::class)
-            ->addConstructorArgument('tenantRepository', $this->getRepository(TenantEntity::class))
-            ->addConstructorArgument('collaboratorRepository', $this->getRepository(CollaboratorEntity::class))
-            ->newInstance();
-    }
-
-    public function getLogContextMiddleware(): LogContextMiddleware
-    {
-        return $this->logContextMiddleware ??= $this->getMiddlewareFactory(LogContextMiddleware::class)
+        return $this->logContextMiddleware ??= $this->getMiddlewareFactory(LogContextMiddlewarePattern::class)
             ->newInstance();
     }
 

@@ -7,19 +7,27 @@ meta {
 post {
   url: http://0.0.0.0:3003/graphql
   body: graphql
-  auth: none
+  auth: basic
 }
 
 headers {
   api-key: FJKLjaiowRQI1q51KDOj52kB
+  api-tenant-id: dc877c68-3386-46e5-8b00-d5aa040f4303
+}
+
+auth:basic {
+  username: username
+  password: password
 }
 
 body:graphql {
   query {
-    unitTypeById (id: "4c2241c9-841f-44c9-9a51-18cfd8f37890") {
+    unitTypeById (id: "6606d94a-6cf4-4616-8b93-8889e98dcec3") {
       id
       name
       isSystem
     }
   }
+  
+  
 }

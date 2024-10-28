@@ -1,0 +1,28 @@
+meta {
+  name: DeleteTenant
+  type: graphql
+  seq: 12
+}
+
+post {
+  url: http://localhost:3003/graphql
+  body: graphql
+  auth: basic
+}
+
+headers {
+  api-key: FJKLjaiowRQI1q51KDOj52kB
+}
+
+auth:basic {
+  username: username
+  password: password
+}
+
+body:graphql {
+  mutation {
+    deleteTenant (id: "f67af618-b79e-440e-b17b-0d281d2ed65f") {
+      id
+    }
+  }
+}

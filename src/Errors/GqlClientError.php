@@ -11,6 +11,17 @@ use Vertuoza\Enums\ExceptionErrorCodeEnum;
 
 class GqlClientError extends Error implements ClientAware, ProvidesExtensions
 {
+    /**
+     * @param string $message
+     * @param $nodes
+     * @param Source|null $source
+     * @param array|null $positions
+     * @param array|null $path
+     * @param Throwable|null $previous
+     * @param array|null $args
+     * @param array|null $fields
+     * @param ExceptionErrorCodeEnum $errorCode
+     */
     public function __construct(
         string $message,
         $nodes = null,
@@ -25,15 +36,14 @@ class GqlClientError extends Error implements ClientAware, ProvidesExtensions
         $args['statusCode'] = $errorCode->name;
         $args['errorCode'] = $errorCode->value;
 
-        // make sure everything is assigned properly
         parent::__construct(
-            $message,
-            $nodes,
-            $source,
-            $positions,
-            $path,
-            $previous,
-            [
+            message: $message,
+            nodes: $nodes,
+            source: $source,
+            positions: $positions,
+            path: $path,
+            previous: $previous,
+            extensions: [
                 "code" => $errorCode->value,
                 "args" => $args,
                 "fields" => $fields

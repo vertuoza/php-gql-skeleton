@@ -1,13 +1,13 @@
 meta {
-  name: UnitTypeCreate
+  name: Login
   type: graphql
-  seq: 8
+  seq: 9
 }
 
 post {
-  url: http://0.0.0.0:3003/graphql
+  url: http://localhost:3003/graphql
   body: graphql
-  auth: none
+  auth: basic
 }
 
 headers {
@@ -16,12 +16,18 @@ headers {
   api-user-id: 08d97e48-c4a5-42c8-a166-b1159a40b42a
 }
 
+auth:basic {
+  username: username
+  password: password
+}
+
 body:graphql {
   query {
-    unitTypeById (id: "4c2241c9-841f-44c9-9a51-18cfd8f37890") {
+    login {
       id
-      name
-      isSystem
+      firstname
+      lastname
+      fullname
     }
   }
 }

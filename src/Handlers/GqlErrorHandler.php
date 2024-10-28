@@ -3,7 +3,7 @@
 namespace Vertuoza\Handlers;
 
 use GraphQL\Error\Error;
-use Vertuoza\Context\LogContext;
+use GraphQL\Error\InvariantViolation;
 use Vertuoza\Enums\ExceptionErrorCodeEnum;
 use Vertuoza\Errors\GqlClientError;
 use Vertuoza\Exceptions\BadUserInputException;
@@ -21,7 +21,6 @@ class GqlErrorHandler
     /**
      * @param array $errors
      * @param callable|null $formatter
-     * @param LogContext $logContext
      *
      * @return array
      */
@@ -36,12 +35,19 @@ class GqlErrorHandler
         );
     }
 
-    public function resolveError(Error $error): Error
+    public function resolveError(Error|InvariantViolation $error): Error|InvariantViolation
     {
-        $errorCode = ExceptionErrorCodeEnum::INTERNAL_SERVER_ERROR;
+        if (!$error instanceof Error) {
+            $error = new Error(
+                message: $error->getMessage()
+            );
+        }
 
         if (!$error->isClientSafe()) {
-            $this->applicationLogger->error($error, $errorCode);
+            $this->applicationLogger->error(
+                $error,
+                ExceptionErrorCodeEnum::INTERNAL_SERVER_ERROR
+            );
         }
 
         $previous = $error->getPrevious();

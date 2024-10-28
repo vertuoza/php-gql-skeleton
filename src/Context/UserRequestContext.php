@@ -2,11 +2,14 @@
 
 namespace Vertuoza\Context;
 
+use Psr\Http\Message\ServerRequestInterface;
+use Vertuoza\Entities\CollaboratorEntity;
+
 readonly class UserRequestContext
 {
     public function __construct(
-        private string|null $userId = null,
-        private string|null $tenantId = null
+        private ?CollaboratorEntity $user = null,
+        private ?ServerRequestInterface $request = null
     ) {}
 
     /**
@@ -14,7 +17,7 @@ readonly class UserRequestContext
      */
     public function getUserId(): string|null
     {
-        return $this->userId;
+        return $this->user?->id ?: null;
     }
 
     /**
@@ -22,7 +25,7 @@ readonly class UserRequestContext
      */
     public function getTenantId(): string|null
     {
-        return $this->tenantId;
+        return current($this->request->getHeader('api-tenant-id'));
     }
 
     /**
@@ -30,6 +33,6 @@ readonly class UserRequestContext
      */
     public function isLogged(): bool
     {
-        return ($this->userId ?? null) && ($this->tenantId ?? null);
+        return ($this->getUserId() ?? null) && ($this->getTenantId() ?? null);
     }
 }

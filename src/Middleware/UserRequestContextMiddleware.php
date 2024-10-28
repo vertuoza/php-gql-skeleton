@@ -4,26 +4,27 @@ namespace Vertuoza\Middleware;
 
 use Exception;
 use Psr\Http\Message\ServerRequestInterface;
+use React\Promise\PromiseInterface;
 use Vertuoza\Context\UserRequestContext;
-use Vertuoza\Kernel;
+use Vertuoza\Patterns\MiddlewarePattern;
 
-readonly class UserRequestContextMiddleware extends AbstractMiddleware
+readonly class UserRequestContextMiddleware extends MiddlewarePattern
 {
     /**
      * @param ServerRequestInterface $request
-     * @param callable $next
+     * @param ?callable $next
      *
      * @return mixed
      *
      * @throws Exception
      */
-    public function __invoke(ServerRequestInterface $request, callable $next): mixed
+    public function handle(ServerRequestInterface $request, ?callable $next): PromiseInterface
     {
         return $next($request->withAttribute(
             'user-context',
             new UserRequestContext(
-                userId: current($request->getHeader('api-user-id')),
-                tenantId: current($request->getHeader('api-tenant-id'))
+                user: $this->getAppContext($request)->user ?? $this->getUser($request),
+                request: $request
             )
         ));
     }

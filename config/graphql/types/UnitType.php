@@ -22,7 +22,6 @@ return new ObjectType([
         'isSystem' => [
             'description' => "To know if the unit type has been created by the user or is a system unit type of Vertuoza",
             'type' => new NonNull(Type::boolean()),
-            'resolve' => fn($obj) => (($obj->tenantId ?? null) === null),
         ],
     ],
 ]);

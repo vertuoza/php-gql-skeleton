@@ -20,20 +20,22 @@ use Vertuoza\Handlers\GqlErrorHandler;
 use Vertuoza\Interface\DatabaseInterface;
 use Vertuoza\Middleware\ApiAccessMiddleware;
 use Vertuoza\Middleware\AppContextMiddleware;
+use Vertuoza\Middleware\ErrorContextMiddleware;
 use Vertuoza\Middleware\GraphQLMiddleware;
-use Vertuoza\Middleware\LogContextMiddleware;
-use Vertuoza\Middleware\Sandbox;
+use Vertuoza\Middleware\LogContextMiddlewarePattern;
+use Vertuoza\Middleware\SandboxMiddleware;
+use Vertuoza\Middleware\TerminusMiddleware;
 use Vertuoza\Middleware\UserRequestContextMiddleware;
-use Vertuoza\Middleware\ValidationUserContextMiddleware;
 use Vertuoza\Repositories\CollaboratorRepository;
 use Vertuoza\Repositories\TenantRepository;
 use Vertuoza\Repositories\UnitTypeRepository;
+use Vertuoza\Types\QueryType;
 
 return [
     // name =>  [factory,                       class, ...alias]
                 [Factory::class,                AppContext::class],
                 [Factory::class,                AppContextMiddleware::class],
-                [Factory::class,                Sandbox::class],
+                [Factory::class,                SandboxMiddleware::class],
                 [Factory::class,                SchemaConfig::class],
                 [Factory::class,                Schema::class],
                 [Factory::class,                GraphQLMiddleware::class],
@@ -51,8 +53,10 @@ return [
                 [Factory::class,                ApiAccessMiddleware::class],
                 [Factory::class,                ServerConfig::class],
                 [Factory::class,                LogContext::class],
-                [Factory::class,                ValidationUserContextMiddleware::class],
                 [Factory::class,                UserRequestContextMiddleware::class],
                 [Factory::class,                GqlErrorHandler::class],
-                [Factory::class,                LogContextMiddleware::class],
+                [Factory::class,                LogContextMiddlewarePattern::class],
+                [Factory::class,                QueryType::class],
+                [Factory::class,                TerminusMiddleware::class],
+                [Factory::class,                ErrorContextMiddleware::class]
 ];

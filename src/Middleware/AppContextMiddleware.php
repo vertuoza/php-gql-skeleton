@@ -2,13 +2,15 @@
 
 namespace Vertuoza\Middleware;
 
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use React\Promise\PromiseInterface;
 use Vertuoza\Context\AppContext;
 use Vertuoza\Factories\UseCasesFactory;
-use Vertuoza\Kernel;
+use Vertuoza\Patterns\MiddlewarePattern;
 
-readonly class AppContextMiddleware extends AbstractMiddleware
+readonly class AppContextMiddleware extends MiddlewarePattern
 {
     /**
      * @param string $cookieName
@@ -54,31 +56,30 @@ readonly class AppContextMiddleware extends AbstractMiddleware
 
     /**
      * @param ServerRequestInterface $request
-     * @param callable $next
+     * @param ?callable $next
      *
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
-    public function __invoke(ServerRequestInterface $request, callable $next): mixed
+    public function handle(ServerRequestInterface $request, ?callable $next): PromiseInterface
     {
-        $kernel = Kernel::getInstance();
-
         return $next(
             $request->withAttribute(
                 'app-context',
-                $kernel->getFactory(AppContext::class)
+                $this->kernel->getFactory(AppContext::class)
                     ->addConstructorArgument('request', $request)
                     ->addConstructorArgument('useCases', new UseCasesFactory())
+                    ->addConstructorArgument('user', $this->getUser($request))
                     ->newInstance()
             )
-        )->then(function (ResponseInterface $response) use ($kernel) {
+        )->then(function (ResponseInterface $response) {
             /*foreach ($this->headers as $header) {
                 foreach ($header as $name => $value) {
                     $response = $response->withHeader($name, $value);
                 }
             }*/
 
-            $kernel->getDatabase()->getConnection()->disconnect();
+            $this->kernel->getDatabase()->getConnection()->disconnect();
             return $response;
         });
     }

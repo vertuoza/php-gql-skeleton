@@ -11,7 +11,7 @@ use Vertuoza\Api\Graphql\Types;
 
 class UnitTypeQuery
 {
-    static function get()
+    static function get(): array
     {
         return [
             'unitTypeById' => [

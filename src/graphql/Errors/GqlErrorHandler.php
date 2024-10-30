@@ -17,6 +17,7 @@ class GqlErrorHandler
   public static function handle(array $errors, ?callable $formatter, ?UserRequestContext $userContext)
   {
     $mapped = array_map(function ($error) use ($userContext) {
+        echo 'ERROR';
       $locatedError = null;
       $statusCode = 500;
       $errorCode = "UNKNOWN_ERROR";

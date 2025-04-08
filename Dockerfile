@@ -8,6 +8,8 @@ COPY ./src /var/www/html/src
 COPY ./composer.json /var/www/html/composer.json
 COPY ./index.php /var/www/html/index.php
 COPY ./assets /var/www/html/assets
+# Use for the local env to easiest load vendor with the IDE.
+# COPY ./vendor /var/www/html/vendor
 
 
 RUN ls .

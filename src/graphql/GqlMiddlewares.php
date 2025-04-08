@@ -34,7 +34,7 @@ class GqlMiddlewares
         }
         $prefix = "/graphql";
 
-        return strpos($request->getUri()->getPath(), $prefix) === 0;
+        return str_starts_with($request->getUri()->getPath(), $prefix);
     }
 
     static function sandbox()
@@ -53,11 +53,12 @@ class GqlMiddlewares
     static function schema(\GraphQL\Executor\Promise\PromiseAdapter $graphQLPromiseAdapter, PromiseAdapterInterface $dataLoaderPromiseAdapter)
     {
         $query = new Query();
-        // $mutation = new Mutation();
+        $mutation = new Mutation();
 
         $schema = new Schema((
                 new SchemaConfig())
                 ->setQuery($query)
+                ->setMutation($mutation)
                 ->setTypeLoader([Types::class, 'byTypename'])
         );
 

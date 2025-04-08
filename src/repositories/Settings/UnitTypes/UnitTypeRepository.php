@@ -35,7 +35,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -114,10 +114,13 @@ class UnitTypeRepository
 
   public function create(UnitTypeMutationData $data, string $tenantId): int|string
   {
-    $newId = $this->getQueryBuilder()->insertGetId(
+    // InsertGetId return id (int) not string id. Should be a problem in long term.
+    $this->getQueryBuilder()->insertGetId(
       UnitTypeMapper::serializeCreate($data, $tenantId)
     );
-    return $newId;
+    
+    // Latest use created_at.
+    return $this->getQueryBuilder()->latest()->value('id');
   }
 
   public function update(string $id, UnitTypeMutationData $data)

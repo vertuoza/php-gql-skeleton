@@ -2,6 +2,7 @@
 
 namespace Vertuoza\Api\Graphql;
 
+use GraphQL\Type\Definition\InputObjectType;
 use GraphQL\Type\Definition\PhpEnumType;
 use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Type\Definition\Type;

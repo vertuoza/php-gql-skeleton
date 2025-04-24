@@ -2,10 +2,8 @@
 
 namespace Vertuoza\Libs\Logger;
 
-use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\LogRecord;
-use Monolog\LogRecord as MonologLogRecord;
 
 class GcpLoggerFormatter extends JsonFormatter
 {

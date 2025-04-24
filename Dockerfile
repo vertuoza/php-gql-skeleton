@@ -1,5 +1,5 @@
 # keep something similar to kevin
-FROM php:8.2-fpm as base
+FROM php:8.2-fpm AS base
 
 
 WORKDIR /var/www/html
@@ -14,17 +14,17 @@ RUN ls .
 
 # Install dependencies
 RUN apt-get update \
-    && apt-get install -y \
-    zip \
-    unzip
+  && apt-get install -y \
+  zip \
+  unzip
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 
 RUN apt-get install -y \
-    libmagickwand-dev --no-install-recommends
+  libmagickwand-dev --no-install-recommends
 RUN pecl install imagick \
-    && docker-php-ext-enable imagick
+  && docker-php-ext-enable imagick
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -33,13 +33,12 @@ RUN composer install
 RUN composer dump-autoload
 
 
-
 ################## Development image ##################
-FROM base as development
+FROM base AS development
 
 
 RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug
+  && docker-php-ext-enable xdebug
 
 # Should be put in the mutlistage dockerfile as dev base.
 COPY ./debug/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
@@ -47,9 +46,9 @@ COPY ./debug/error_reporting.ini /usr/local/etc/php/conf.d/error_reporting.ini
 
 # Install nodemon to watch php server
 RUN apt-get update \
-    && apt-get install -y \
-    nodejs \
-    npm
+  && apt-get install -y \
+  nodejs \
+  npm
 RUN npm install -g nodemon
 
 
@@ -62,7 +61,7 @@ CMD ["php", "./index.php"]
 
 
 ################## Production image ##################
-FROM base as production
+FROM base AS production
 
 RUN rm -rf /var/www/html/tests
 RUN rm -rf /var/www/html/src/**/*.spec

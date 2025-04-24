@@ -9,7 +9,6 @@ require_once __DIR__ . "/ApplicationLogger.php";
 require_once __DIR__ . "/GcpLoggerFormatter.php";
 require_once __DIR__ . "/LogContext.php";
 
-
 function startLogger()
 {
   $logger = ApplicationLogger::getInstance();
@@ -24,7 +23,6 @@ function startLogger()
 
     // $errstr may need to be escaped:
     $errstr = htmlspecialchars($errstr);
-
 
     switch ($errno) {
       case E_CORE_ERROR:

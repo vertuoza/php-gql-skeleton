@@ -20,7 +20,7 @@ class BadUserInputException extends BadRequestException
    * @param Throwable $previous
    * @param array|null $args
    */
-  public function __construct(array|FieldError $fieldsError, string $inputName, Throwable $previous = null, array|null $args = null)
+  public function __construct(array|FieldError $fieldsError, string $inputName, ?Throwable $previous = null, array|null $args = null)
   {
     $this->fieldsError = is_array($fieldsError) ? $fieldsError : [$fieldsError];
     $message = $inputName ? "Bad user input for {$inputName}" : "Bad user input";

@@ -2,8 +2,6 @@
 
 namespace Vertuoza\Libs\Exceptions;
 
-
-
 interface ProvidesExceptionArgs
 {
   /**

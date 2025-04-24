@@ -18,8 +18,8 @@ class GqlClientError extends Error implements ClientAware, ProvidesExtensions
     ?array $positions = null,
     ?array $path = null,
     ?Throwable $previous = null,
-    array $args = null,
-    array $fields = null
+    ?array $args = null,
+    ?array $fields = null
   ) {
     // make sure everything is assigned properly
     parent::__construct($message, $nodes, $source, $positions, $path, $previous, [

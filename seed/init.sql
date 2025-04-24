@@ -46,7 +46,7 @@ INSERT INTO `unit_type` (`id`, `tenant_id`, `label`) VALUES ('4c2241c9-841f-44c9
 DROP TABLE IF EXISTS `collaborator`;
 CREATE TABLE `collaborator` (
   `id` CHAR(36) NOT NULL DEFAULT (UUID()),
-  `tenant_id` CHAR(36) DEFAULT NULL,  -- Changed to CHAR(36) to match the data type of `tenant.id`
+  `tenant_id` CHAR(36) NOT NULL,  -- Changed to CHAR(36) to match the data type of `tenant.id`
   `name` varchar(255) NOT NULL,
   `first_name` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,

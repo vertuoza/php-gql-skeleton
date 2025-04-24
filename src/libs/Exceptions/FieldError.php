@@ -10,7 +10,7 @@ class FieldError
   public string $message;
   public array $args;
 
-  public function __construct(string $field, string $message, string $code = "FIELD_ERROR", string $path = "", array|null $args = null)
+  public function __construct(string $field, string $message, string $code = "FIELD_ERROR", string $path = "", array|null $args = [])
   {
     $this->field = $field;
     $this->message = $message;

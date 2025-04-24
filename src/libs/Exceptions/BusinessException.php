@@ -2,9 +2,6 @@
 
 namespace Vertuoza\Libs\Exceptions;
 
-
-require_once __DIR__ . "/ProvidesExceptionArgs.php";
-
 use Exception;
 use Throwable;
 
@@ -14,7 +11,7 @@ class BusinessException extends Exception implements ProvidesExceptionArgs
   protected string $errorCode;
   protected array|null $args;
 
-  public function __construct(string $message, string $errorCode, $code = 500, Throwable $previous = null, array|null $args = null)
+  public function __construct(string $message, string $errorCode, $code = 500, ?Throwable $previous = null, array|null $args = null)
   {
     $this->args = $args;
     $this->errorCode = $errorCode;

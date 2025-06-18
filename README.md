@@ -1,7 +1,6 @@
 # Description
 
-This repository is a skeleton to start easily a php api based on graphql.
-It creates a simple api with a database based on mysql.
+This repository creates a GraphQL API on PHP on the top of a relational database (MySQL); here an example of a query:
 
 ```gql
 type Query {
@@ -13,10 +12,10 @@ type Query {
 
 # Getting started
 
-you can simply run the solution with docker and docker-compose.
+Deploy the solution as follows:
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
-This will create the database and feed it with sample data. You can open Apollo studion to test the api on http://localhost:3003/
+This creates the database and feed it with sample data. You can open Apollo studio to test the API on http://localhost:3003/

@@ -27,6 +27,21 @@ class UnitTypeRepository
     $this->getbyIdsDL = [];
   }
 
+  private function fetchByLabel(string $tenantId, string $label)
+  {
+      $query = $this->getQueryBuilder()
+          ->where(function ($query) use ($tenantId, $label) {
+              $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
+                  ->where([UnitTypeModel::getLabelColumnName() => $label])
+                  ->orWhere(UnitTypeModel::getTenantColumnName(), null);
+          });
+      $query->whereNull('deleted_at');
+      return $query->get()->mapWithKeys(function ($row) {
+          $entity = UnitTypeMapper::modelToEntity(UnitTypeModel::fromStdclass($row));
+          return [$entity->name => $entity];
+      });
+  }
+
   private function fetchByIds(string $tenantId, array $ids)
   {
     return async(function () use ($tenantId, $ids) {
@@ -35,7 +50,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -112,12 +127,17 @@ class UnitTypeRepository
     )();
   }
 
-  public function create(UnitTypeMutationData $data, string $tenantId): int|string
+  public function create(UnitTypeMutationData $data, string $tenantId)
   {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
-    );
-    return $newId;
+      $this->getQueryBuilder()->insert(UnitTypeMapper::serializeCreate($data, $tenantId));
+      return $this->findByName($data, $tenantId);
+  }
+
+  public function findByName(UnitTypeMutationData $data, string $tenantId)
+  {
+      $label = $data->name;
+      $entities = $this->fetchByLabel($tenantId, $label);
+      return $entities[$label];
   }
 
   public function update(string $id, UnitTypeMutationData $data)

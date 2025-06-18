@@ -31,6 +31,11 @@ class UnitTypeModel
     return 'tenant_id';
   }
 
+  public static function getLabelColumnName(): string
+  {
+    return 'label';
+  }
+
   public static function getTableName(): string
   {
     return 'unit_type';

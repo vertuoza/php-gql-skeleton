@@ -15,21 +15,23 @@ class UnitTypeQuery
     {
         return [
             'unitTypeById' => [
+                'description' => "Find a unit type using its unique identifier.",
                 'type' => Types::get(UnitType::class),
                 'args' => [
                     'id' => new NonNull(Types::string()),
                 ],
                 'resolve' => static fn ($rootValue, $args, RequestContext $context)
                 => $context->useCases->unitType
-                    ->unitTypeById
-                    ->handle($args['id'], $context)
+                    ->findById
+                    ->handle($args['id'])
             ],
             'unitTypes' => [
+                'description' => "Finds all unit types of the current user (tenant identifier).",
                 'type' => new NonNull(new ListOfType(Types::get(UnitType::class))),
                 'resolve' => static fn ($rootValue, $args, RequestContext $context)
                 => $context->useCases->unitType
-                    ->unitTypesFindMany
-                    ->handle($context)
+                    ->findMany
+                    ->handle()
             ],
         ];
     }

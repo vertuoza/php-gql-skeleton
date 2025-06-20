@@ -32,8 +32,7 @@ class CollaboratorRepository
     return async(function () use ($tenantId, $ids) {
       $query = $this->getQueryBuilder()
         ->where(function ($query) use ($tenantId) {
-          $query->where([CollaboratorModel::getTenantColumnName() => $tenantId])
-            ->orWhere(CollaboratorModel::getTenantColumnName(), null);
+          $query->where([CollaboratorModel::getTenantColumnName() => $tenantId]);
         });
       $query->whereIn(CollaboratorModel::getPkColumnName(), $ids);
 

@@ -20,6 +20,8 @@ class RequestContext
     public ServerRequestInterface $request;
     public UserRequestContext $userContext;
     public UseCasesFactory $useCases;
+    public RepositoriesFactory $repositories;
+
     public array $headerContext;
 
     function addCookie(string $cookieName, string $cookieValue, int $exp = 0, string $domain = "", string $path = "/", bool $secure = false, bool $httpOnly = false, string $sameSite = "Lax")
@@ -65,6 +67,7 @@ class RequestContext
             $context->request = $request;
             $context->headerContext = array();
             $context->userContext = $userContext;
+            $context->repositories = $repositories;
 
 
             return $next(

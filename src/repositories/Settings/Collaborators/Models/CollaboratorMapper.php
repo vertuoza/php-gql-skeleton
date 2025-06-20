@@ -19,4 +19,5 @@ class CollaboratorMapper
     return $entity;
   }
 
+
 }

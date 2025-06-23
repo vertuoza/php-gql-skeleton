@@ -24,12 +24,12 @@ class UnitTypeMapper
     return self::serializeMutation($mutation);
   }
 
-  public static function serializeCreate(UnitTypeMutationData $mutation, string $tenantId): array
+  public static function serializeCreate(UnitTypeMutationData $mutation, string $tenantId, string $id): array
   {
-    return self::serializeMutation($mutation, $tenantId);
+    return self::serializeMutation($mutation, $tenantId, $id);
   }
 
-  private static function serializeMutation(UnitTypeMutationData $mutation, string $tenantId = null): array
+  private static function serializeMutation(UnitTypeMutationData $mutation, string $tenantId = null, string $id = null): array
   {
     $data = [
       'label' => $mutation->name,
@@ -37,6 +37,9 @@ class UnitTypeMapper
 
     if ($tenantId) {
       $data[UnitTypeModel::getTenantColumnName()] = $tenantId;
+    }
+    if ($id) {
+      $data['id'] = $id;
     }
     return $data;
   }

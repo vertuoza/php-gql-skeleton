@@ -4,8 +4,8 @@ namespace Vertuoza\Api\Graphql\Resolvers;
 
 use GraphQL\Type\Definition\ObjectType;
 use Vertuoza\Api\Graphql\Resolvers\Settings\Collaborators\CollaboratorQuery;
+use Vertuoza\Api\Graphql\Resolvers\Settings\Hello\HelloQuery;
 use Vertuoza\Api\Graphql\Resolvers\Settings\UnitTypes\UnitTypeQuery;
-use Vertuoza\Api\Graphql\Types;
 
 final class Query extends ObjectType
 {
@@ -14,13 +14,7 @@ final class Query extends ObjectType
     $config = [
       'fields' => function () {
         return [
-          'hello' => [
-            'description' => 'Just a "Hello world" for first test',
-            'type' => Types::string(),
-            'resolve' => function ($root, $args) {
-              return 'world';
-            }
-          ],
+          ...HelloQuery::get(),
           ...UnitTypeQuery::get(),
           ...CollaboratorQuery::get(),
         ];

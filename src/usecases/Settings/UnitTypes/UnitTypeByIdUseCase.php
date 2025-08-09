@@ -10,13 +10,13 @@ use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeRepository;
 class UnitTypeByIdUseCase
 {
   private UnitTypeRepository $unitTypeRepository;
-  private UserRequestContext $userContext;
+
   public function __construct(
     RepositoriesFactory $repositories,
-    UserRequestContext $userContext
-  ) {
+    private UserRequestContext $userContext
+  )
+  {
     $this->unitTypeRepository = $repositories->unitType;
-    $this->userContext = $userContext;
   }
 
   /**

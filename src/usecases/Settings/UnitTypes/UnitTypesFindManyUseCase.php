@@ -11,15 +11,14 @@ use Vertuoza\Repositories\RepositoriesFactory;
 
 class UnitTypesFindManyUseCase
 {
-  private UserRequestContext $userContext;
   private UnitTypeRepository $unitTypeRepository;
 
   public function __construct(
     RepositoriesFactory $repositories,
-    UserRequestContext $userContext,
-  ) {
+    private UserRequestContext $userContext,
+  )
+  {
     $this->unitTypeRepository = $repositories->unitType;
-    $this->userContext = $userContext;
   }
 
   /**

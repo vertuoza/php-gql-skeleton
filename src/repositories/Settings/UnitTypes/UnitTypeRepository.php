@@ -15,15 +15,12 @@ use function React\Async\async;
 class UnitTypeRepository
 {
   protected array $getbyIdsDL;
-  private QueryBuilder $db;
-  protected PromiseAdapterInterface $dataLoaderPromiseAdapter;
 
   public function __construct(
-    private QueryBuilder $database,
-    PromiseAdapterInterface $dataLoaderPromiseAdapter
-  ) {
-    $this->db = $database;
-    $this->dataLoaderPromiseAdapter = $dataLoaderPromiseAdapter;
+    private QueryBuilder $db,
+    private PromiseAdapterInterface $dataLoaderPromiseAdapter
+  )
+  {
     $this->getbyIdsDL = [];
   }
 

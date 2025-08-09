@@ -8,7 +8,6 @@ use React\Promise\Promise;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
-use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 
 use function React\Async\async;
 
@@ -50,7 +49,6 @@ class UnitTypeRepository
   protected function getDataloader(string $tenantId): DataLoader
   {
     if (!isset($this->getbyIdsDL[$tenantId])) {
-
       $dl = new DataLoader(function (array $ids) use ($tenantId) {
         return $this->fetchByIds($tenantId, $ids);
       }, $this->dataLoaderPromiseAdapter);
@@ -83,8 +81,9 @@ class UnitTypeRepository
         ->where('label', $name)
         ->whereNull('deleted_at')
         ->where(function ($query) use ($excludeId) {
-          if (isset($excludeId))
+          if (isset($excludeId)) {
             $query->where('id', '!=', $excludeId);
+          }
         })
         ->where(function ($query) use ($tenantId) {
           $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)

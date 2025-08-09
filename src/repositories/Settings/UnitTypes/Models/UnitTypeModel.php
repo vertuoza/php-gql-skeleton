@@ -11,6 +11,7 @@ class UnitTypeModel
   public string $label;
   public ?DateTime $deleted_at;
   public ?string $tenant_id;
+
   public static function fromStdclass(stdClass $data): UnitTypeModel
   {
     $model = new UnitTypeModel();

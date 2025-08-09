@@ -17,8 +17,8 @@ class QueryBuilder extends CapsuleManager
             'database' => $_ENV['DB_DATABASE'],
             'username' => $_ENV['DB_USERNAME'],
             'password' => $_ENV['DB_PASSWORD'],
-            'port' => isset($_ENV['DB_PORT']) ? $_ENV['DB_PORT'] : null,
-            'unix_socket' => isset($_ENV['DB_SOCKET']) ? $_ENV['DB_SOCKET'] : null,
+            'port' => $_ENV['DB_PORT'] ?? null,
+            'unix_socket' => $_ENV['DB_SOCKET'] ?? null,
         ];
 
 

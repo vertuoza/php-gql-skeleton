@@ -31,7 +31,7 @@ try {
         new RequestBodyParserMiddleware(20 * 1024 * 1024, 1),
         GqlMiddlewares::sandbox(),
         RequestContext::middleware($dataLoaderPromiseAdapter),
-        GqlMiddlewares::schema($graphQLPromiseAdapter, $dataLoaderPromiseAdapter),
+        GqlMiddlewares::schema($graphQLPromiseAdapter),
         fn (ServerRequest $request) => resolve(new Response(404))
     );
 

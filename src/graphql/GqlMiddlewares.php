@@ -51,7 +51,7 @@ class GqlMiddlewares
     };
   }
 
-  static function schema(PromiseAdapter $graphQLPromiseAdapter, PromiseAdapterInterface $dataLoaderPromiseAdapter)
+  static function schema(PromiseAdapter $graphQLPromiseAdapter)
   {
     $query = new Query();
     $mutation = new Mutation();

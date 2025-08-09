@@ -14,8 +14,10 @@ class UnitTypeQuery
   {
     return [
       'unitTypeById' => [
+        'description' => 'Get the unit type from its ID',
         'type' => Types::get(UnitType::class),
         'args' => [
+          'description' => 'ID of the unit type to find',
           'id' => new NonNull(Types::string()),
         ],
         'resolve' => static fn ($rootValue, $args, RequestContext $context) => $context->useCases->unitType
@@ -23,6 +25,7 @@ class UnitTypeQuery
           ->handle($args['id'], $context)
       ],
       'unitTypes' => [
+        'description' => 'Get all the unit types of the current tenant',
         'type' => new NonNull(new ListOfType(Types::get(UnitType::class))),
         'resolve' => static fn ($rootValue, $args, RequestContext $context) => $context->useCases->unitType
           ->unitTypesFindMany

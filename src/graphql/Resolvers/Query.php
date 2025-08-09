@@ -15,6 +15,7 @@ final class Query extends ObjectType
       'fields' => function () {
         return [
           'hello' => [
+            'description' => 'Just a "Hello world" for first test',
             'type' => Types::string(),
             'resolve' => function ($root, $args) {
               return 'world';

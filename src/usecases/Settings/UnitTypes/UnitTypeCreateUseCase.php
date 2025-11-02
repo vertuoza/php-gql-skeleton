@@ -6,7 +6,7 @@ use Vertuoza\Api\Graphql\Context\UserRequestContext;
 use Vertuoza\Entities\Settings\UnitTypeEntity;
 use Vertuoza\Libs\Exceptions\BadUserInputException;
 use Vertuoza\Libs\Exceptions\BusinessException;
-use Vertuoza\Libs\Exceptions\FieldError;
+use Vertuoza\Libs\Validation\InputStringValidator;
 use Vertuoza\Repositories\RepositoriesFactory;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeRepository;
@@ -37,21 +37,13 @@ class UnitTypeCreateUseCase
         return async(function () use ($name) {
             $name = trim($name);
 
-            // Check name is not empty
-            if ($name === '') {
-                throw new BadUserInputException(
-                    [new FieldError('name', 'The name cannot be empty')],
-                    'name'
-                );
-            }
+            // Check if $name doesn't contain invalid characters
+            // like <, >, ', ", &, (, ), ;
+            $pattern = '/^[\p{L}\p{N}\s\-_.]+$/u';
 
-            // Check 'name' does not exceed 255 characters
-            if (strlen($name) > 255) {
-                throw new BadUserInputException(
-                    [new FieldError('name', 'The name must be less than 255 characters')],
-                    'name'
-                );
-            }
+            // Check the validity of the name
+            InputStringValidator::validate(string: $name, fieldName: 'name', pattern: $pattern);
+
 
             $tenantId = $this->userContext->getTenantId();
 

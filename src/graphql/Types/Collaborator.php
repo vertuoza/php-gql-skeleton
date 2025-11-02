@@ -1,11 +1,16 @@
 <?php
 
-namespace Vertuoza\Api\Graphql\Resolvers\Settings\Collaborators;
+namespace Vertuoza\Api\Graphql\Types;
 
 use GraphQL\Type\Definition\NonNull;
 use GraphQL\Type\Definition\ObjectType;
 use Vertuoza\Api\Graphql\Types;
 
+/**
+ * GraphQL ObjectType representing a Collaborator.
+ * Defines the fields exposed via the API: id, name, and firstName.
+ * Used by GraphQL resolvers to return collaborator data.
+ */
 class Collaborator extends ObjectType
 {
     public function __construct()

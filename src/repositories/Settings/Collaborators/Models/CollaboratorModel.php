@@ -4,21 +4,22 @@ namespace Vertuoza\Repositories\Settings\Collaborators\Models;
 
 use stdClass;
 
+/**
+ * Collaborator Representation in the database
+ */
 class CollaboratorModel
 {
     public string $id;
 
     public string $name;
-    public string $firstName;
-    public ?string $tenantId;
+    public string $first_name;
 
     public static function fromStdclass(stdClass $data): CollaboratorModel
     {
         $model = new CollaboratorModel();
         $model->id = $data->id;
         $model->name = $data->name;
-        $model->firstName = $data->first_name;
-        $model->tenantId = $data->tenant_id;
+        $model->first_name = $data->first_name;
         return $model;
     }
 

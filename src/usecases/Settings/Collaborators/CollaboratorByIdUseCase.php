@@ -8,6 +8,7 @@ use Vertuoza\Entities\Settings\CollaboratorEntity;
 use Vertuoza\Repositories\RepositoriesFactory;
 use Vertuoza\Repositories\Settings\Collaborators\CollaboratorRepository;
 
+
 class CollaboratorByIdUseCase
 {
     private CollaboratorRepository $collaboratorRepository;
@@ -20,6 +21,8 @@ class CollaboratorByIdUseCase
     }
 
     /**
+     * Use case to retrieve a single Collaborator by its ID.
+     *
      * @param string $id id of the collaborator to retrieve
      * @return Promise<CollaboratorEntity>
      */

@@ -10,6 +10,12 @@ use Vertuoza\Api\Graphql\Types;
 use Vertuoza\Api\Graphql\Types\UnitType;
 
 
+/**
+ * GraphQL resolvers for querying UnitTypes.
+ *
+ *  - unitTypeById => Fetch a single UnitType by ID
+ *  - unitTypes => Fetch all UnitTypes available for the current tenant
+ */
 class UnitTypeQuery
 {
     static function get()

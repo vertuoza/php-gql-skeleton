@@ -26,7 +26,7 @@ class UnitTypeCreateUseCase
     }
 
     /**
-     * Create a new UnitType from a name
+     * Use Case to create a new UnitType from a name
      * @param string $name
      * @return Promise<UnitTypeEntity>
      * @throws BadUserInputException
@@ -69,6 +69,8 @@ class UnitTypeCreateUseCase
 
             $unitTypeId = await($this->unitTypeRepository->create($unitType, $tenantId));
 
+            // We already have all the information we need,
+            // so we don't need to fetch the UnitType
             $entity = new UnitTypeEntity();
             $entity->id = $unitTypeId;
             $entity->name = $name;

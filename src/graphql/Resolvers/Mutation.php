@@ -5,6 +5,11 @@ namespace Vertuoza\Api\Graphql\Resolvers;
 use GraphQL\Type\Definition\ObjectType;
 use Vertuoza\Api\Graphql\Resolvers\Settings\UnitTypes\UnitTypeMutation;
 
+/**
+ * Root GraphQL Mutation type.
+ *
+ *  - UnitType mutations
+ */
 final class Mutation extends ObjectType
 {
     public function __construct()

@@ -22,6 +22,7 @@ class CollaboratorFindManyUseCase
     }
 
     /**
+     * Use case to retrieve all Collaborator available for the current user
      * @return Promise<array<CollaboratorEntity>>
      */
     public function handle(): Promise

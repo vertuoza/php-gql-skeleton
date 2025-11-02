@@ -5,6 +5,7 @@ namespace Vertuoza\Repositories\Settings\Collaborators;
 use Overblog\DataLoader\DataLoader;
 use Overblog\PromiseAdapter\PromiseAdapterInterface;
 use React\Promise\Promise;
+use Vertuoza\Entities\Settings\CollaboratorEntity;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\Collaborators\Models\CollaboratorMapper;
 use Vertuoza\Repositories\Settings\Collaborators\Models\CollaboratorModel;
@@ -14,22 +15,18 @@ use function React\Async\async;
 class CollaboratorRepository
 {
     private array $getByIdsDL = [];
-    private QueryBuilder $db;
-    private PromiseAdapterInterface $dataLoaderPromiseAdapter;
 
     public function __construct(
-        private QueryBuilder $database,
-        PromiseAdapterInterface $dataLoaderPromiseAdapter
+        private QueryBuilder $db,
+        private PromiseAdapterInterface $dataLoaderPromiseAdapter
     ) {
-        $this->db = $database;
-        $this->dataLoaderPromiseAdapter = $dataLoaderPromiseAdapter;
     }
 
     /**
      * Fetch collaborators by their IDs for a given tenant
      * @param array $ids list of IDs for the collaborators
      * @param string $tenantId ID of the tenant
-     * @return Promise
+     * @return Promise<array<string, CollaboratorEntity>> array of ID => Collaborator
      */
     private function fetchByIds(array $ids, string $tenantId): Promise
     {
@@ -39,7 +36,7 @@ class CollaboratorRepository
                 ->whereIn(CollaboratorModel::getPkColumnName(), $ids)
 
                 ->where(function ($query) use ($tenantId) {
-                    // Ensures only collaborators for the current tenant or global ones (tenant_id IS NULL)
+                    // Ensures only collaborators for a tenant or global ones (tenant IS NULL)
                     // are returned without affecting other filters.
                     $query->where(CollaboratorModel::getTenantColumnName(), $tenantId)
                         ->orWhereNull(CollaboratorModel::getTenantColumnName());
@@ -63,7 +60,7 @@ class CollaboratorRepository
      * @param string $tenantId
      * @return DataLoader
      */
-    protected function getDataLoader(string $tenantId): DataLoader
+    private function getDataLoader(string $tenantId): DataLoader
     {
         if (false === isset($this->getByIdsDL[$tenantId])) {
             $dl = new DataLoader(function (array $ids) use ($tenantId) {
@@ -77,7 +74,7 @@ class CollaboratorRepository
     }
 
 
-    protected function getQueryBuilder()
+    private function getQueryBuilder()
     {
         return $this->db->getConnection()->table(CollaboratorModel::getTableName());
     }
@@ -87,10 +84,34 @@ class CollaboratorRepository
      *
      * @param string $id ID of the Collaborator
      * @param string $tenantId ID of the tenant
-     * @return Promise
+     * @return Promise<CollaboratorEntity>
      */
     public function getById(string $id, string $tenantId): Promise
     {
         return $this->getDataLoader($tenantId)->load($id);
+    }
+
+    /**
+     * Get all Collaborators from a tenant or global ones (tenant IS NULL)
+     *
+     * @param string $tenantId ID of the tenant
+     * @return Promise<array<CollaboratorEntity>>
+     */
+    public function findMany(string $tenantId): Promise
+    {
+        return async(
+            fn () => $this->getQueryBuilder()
+                ->whereNull('deleted_at')
+                ->where(function ($query) use ($tenantId) {
+                    // Ensures only collaborators for a tenant or global ones (tenant IS NULL)
+                    // are returned without affecting other filters.
+                    $query->where(CollaboratorModel::getTenantColumnName(), '=', $tenantId)
+                        ->orWhereNull(CollaboratorModel::getTenantColumnName());
+                })
+                ->get()
+                ->map(function ($row) {
+                    return CollaboratorMapper::modelToEntity(CollaboratorModel::fromStdclass($row));
+                })
+        )();
     }
 }

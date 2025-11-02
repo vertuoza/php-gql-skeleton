@@ -11,14 +11,12 @@ use Vertuoza\Repositories\Settings\Collaborators\CollaboratorRepository;
 class CollaboratorByIdUseCase
 {
     private CollaboratorRepository $collaboratorRepository;
-    private UserRequestContext $userContext;
 
     public function __construct(
         RepositoriesFactory $repositories,
-        UserRequestContext $userContext
+        private UserRequestContext $userContext
     ) {
         $this->collaboratorRepository = $repositories->collaborator;
-        $this->userContext = $userContext;
     }
 
     /**

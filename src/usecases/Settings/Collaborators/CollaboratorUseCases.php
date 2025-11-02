@@ -9,8 +9,11 @@ class CollaboratorUseCases
 {
     public CollaboratorByIdUseCase $collaboratorById;
 
+    public CollaboratorFindManyUseCase $collaboratorFindMany;
+
     public function __construct(UserRequestContext $userContext, RepositoriesFactory $repositories)
     {
         $this->collaboratorById = new CollaboratorByIdUseCase($repositories, $userContext);
+        $this->collaboratorFindMany = new CollaboratorFindManyUseCase($repositories, $userContext);
     }
 }

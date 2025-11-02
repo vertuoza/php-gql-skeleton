@@ -2,8 +2,7 @@
 
 namespace Vertuoza\Repositories\Settings\UnitTypes\Models;
 
-use stdClass;
-use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
+use Ramsey\Uuid\Uuid;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 use Vertuoza\Entities\Settings\UnitTypeEntity;
 
@@ -12,7 +11,7 @@ class UnitTypeMapper
   public static function modelToEntity(UnitTypeModel $dbData): UnitTypeEntity
   {
     $entity = new UnitTypeEntity();
-    $entity->id = $dbData->id . '';
+    $entity->id = $dbData->id;
     $entity->name = $dbData->label;
     $entity->isSystem = $dbData->tenant_id === null;
 
@@ -21,23 +20,17 @@ class UnitTypeMapper
 
   public static function serializeUpdate(UnitTypeMutationData $mutation): array
   {
-    return self::serializeMutation($mutation);
-  }
-
-  public static function serializeCreate(UnitTypeMutationData $mutation, string $tenantId): array
-  {
-    return self::serializeMutation($mutation, $tenantId);
-  }
-
-  private static function serializeMutation(UnitTypeMutationData $mutation, string $tenantId = null): array
-  {
-    $data = [
-      'label' => $mutation->name,
+    return [
+        UnitTypeModel::getLabelColumnName() => $mutation->name,
     ];
+  }
 
-    if ($tenantId) {
-      $data[UnitTypeModel::getTenantColumnName()] = $tenantId;
-    }
-    return $data;
+  public static function serializeCreate(UnitTypeMutationData $mutation, string $tenantId = null): array
+  {
+      return [
+          UnitTypeModel::getPkColumnName() => Uuid::uuid4()->toString(),
+          UnitTypeModel::getLabelColumnName() => $mutation->name,
+          UnitTypeModel::getTenantColumnName() => $tenantId,
+      ];
   }
 }

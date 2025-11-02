@@ -1,0 +1,37 @@
+<?php
+
+namespace Vertuoza\Api\Graphql\Types;
+
+use GraphQL\Type\Definition\NonNull;
+use GraphQL\Type\Definition\ObjectType;
+use Vertuoza\Api\Graphql\Types;
+
+/**
+ * GraphQL ObjectType representing a Collaborator.
+ * Defines the fields exposed via the API: id, name, and firstName.
+ * Used by GraphQL resolvers to return collaborator data.
+ */
+class Collaborator extends ObjectType
+{
+    public function __construct()
+    {
+        parent::__construct([
+            'name' => 'Collaborator',
+            'description' => 'Collaborator',
+            'fields' => static fn (): array => [
+                'id' => [
+                    'description' => "Unique identifier of the collaborator",
+                    'type' => new NonNull(Types::id()), // must not be null
+                ],
+                'name' => [
+                    'description' => "Name of the collaborator",
+                    'type' => new NonNull(Types::string()) // must not be null
+                ],
+                'firstName' => [
+                    'description' => "First name of the collaborator",
+                    'type' => new NonNull(Types::string()) // must not be null
+                ],
+            ],
+        ]);
+    }
+}

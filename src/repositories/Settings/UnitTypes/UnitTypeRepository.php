@@ -8,7 +8,6 @@ use React\Promise\Promise;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
-use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 
 use function React\Async\async;
 
@@ -35,7 +34,8 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -79,22 +79,33 @@ class UnitTypeRepository
     return $this->getDataloader($tenantId)->load($id);
   }
 
-  public function countUnitTypeWithLabel(string $name, string $tenantId, string|int|null $excludeId = null)
-  {
-    return async(
-      fn () => $this->getQueryBuilder()
-        ->where('label', $name)
-        ->whereNull('deleted_at')
-        ->where(function ($query) use ($excludeId) {
-          if (isset($excludeId))
-            $query->where('id', '!=', $excludeId);
-        })
-        ->where(function ($query) use ($tenantId) {
-          $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
-            ->orWhereNull(UnitTypeModel::getTenantColumnName());
-        })
-    )();
-  }
+    /**
+     * Check if a UnitType label already exists for a given tenant
+     *
+     * If tenantId is null, check for all UnitTypes
+     * If tenantId is not null, check only for that tenant and globally
+     *
+     * @param string $name The label to check.
+     * @param string|null $tenantId The tenant ID to scope the check.
+     * @param string|null $excludeId ID to exclude (useful when updating).
+     * @return Promise<bool> Returns true if the label exists, false otherwise.
+     */
+    public function labelExists(string $name, ?string $tenantId = null, ?string $excludeId = null): Promise
+    {
+        return async(fn () =>
+          $this->getQueryBuilder()
+            ->where(UnitTypeModel::getLabelColumnName(), $name)
+            ->whereNull('deleted_at')
+            ->when($excludeId !== null, fn($query) => $query->where(UnitTypeModel::getPkColumnName(), '!=', $excludeId))
+            ->when($tenantId !== null, fn($query) =>
+                $query->where(function ($query) use ($tenantId) {
+                    $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
+                        ->orWhereNull(UnitTypeModel::getTenantColumnName());
+                }))
+
+            ->exists()
+        )();
+    }
 
   public function findMany(string $tenantId)
   {
@@ -112,13 +123,20 @@ class UnitTypeRepository
     )();
   }
 
-  public function create(UnitTypeMutationData $data, string $tenantId): int|string
-  {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
-    );
-    return $newId;
-  }
+    /**
+     * Insert UnitType and return the ID
+     * @param UnitTypeMutationData $data
+     * @param string|null $tenantId
+     * @return Promise UnitType ID
+     */
+    public function create(UnitTypeMutationData $data, ?string $tenantId = null): Promise
+    {
+        return async(function () use ($data, $tenantId) {
+            $unitType = UnitTypeMapper::serializeCreate($data, $tenantId);
+            $this->getQueryBuilder()->insert($unitType);
+            return $unitType['id'];
+        })();
+    }
 
   public function update(string $id, UnitTypeMutationData $data)
   {

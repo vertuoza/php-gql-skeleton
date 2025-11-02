@@ -25,15 +25,27 @@ class CollaboratorRepository
     /**
      * Fetch collaborators by their IDs for a given tenant
      * @param array $ids list of IDs for the collaborators
-     * @param string $tenantId ID of the tenant
+     * @param string|null $tenantId ID of the tenant
      * @return Promise<array<string, CollaboratorEntity>> array of ID => Collaborator
      */
-    private function fetchByIds(array $ids, string $tenantId): Promise
+    private function fetchByIds(array $ids, ?string $tenantId = null): Promise
     {
         return async(function () use ($tenantId, $ids) {
             $query = $this->getQueryBuilder()
                 ->whereNull('deleted_at')
                 ->whereIn(CollaboratorModel::getPkColumnName(), $ids)
+
+                ->when($tenantId !== null, fn($query) =>
+                    $query->where(function ($query) use ($tenantId) {
+                        // Collaborators for the given tenant or global ones
+                        $query->where(CollaboratorModel::getTenantColumnName(), '=', $tenantId)
+                            ->orWhereNull(CollaboratorModel::getTenantColumnName());
+                    })
+                )
+                ->when($tenantId === null, fn($query) =>
+                    // Collaborators without tenant
+                    $query->whereNull(CollaboratorModel::getTenantColumnName())
+                )
 
                 ->where(function ($query) use ($tenantId) {
                     // Ensures only collaborators for a tenant or global ones (tenant IS NULL)
@@ -57,20 +69,22 @@ class CollaboratorRepository
     /**
      * Returns a DataLoader instance for the given tenant
      * creates it if it doesn't exist, to cache entities by IDs
-     * @param string $tenantId
+     * @param string|null $tenantId
      * @return DataLoader
      */
-    private function getDataLoader(string $tenantId): DataLoader
+    private function getDataLoader(?string $tenantId = null): DataLoader
     {
-        if (false === isset($this->getByIdsDL[$tenantId])) {
+        // global is as key used when $tenantId is null
+        $cacheKey = $tenantId ?? '__global__';
+
+        if (!isset($this->getByIdsDL[$cacheKey])) {
             $dl = new DataLoader(function (array $ids) use ($tenantId) {
                 return $this->fetchByIds($ids, $tenantId);
             }, $this->dataLoaderPromiseAdapter);
-            $this->getByIdsDL[$tenantId] = $dl;
+            $this->getByIdsDL[$cacheKey] = $dl;
         }
 
-
-        return $this->getByIdsDL[$tenantId];
+        return $this->getByIdsDL[$cacheKey];
     }
 
 
@@ -83,35 +97,41 @@ class CollaboratorRepository
      * Get one Collaborator by ID
      *
      * @param string $id ID of the Collaborator
-     * @param string $tenantId ID of the tenant
+     * @param string|null $tenantId ID of the tenant
      * @return Promise<CollaboratorEntity>
      */
-    public function getById(string $id, string $tenantId): Promise
+    public function getById(string $id, ?string $tenantId = null): Promise
     {
         return $this->getDataLoader($tenantId)->load($id);
     }
 
     /**
-     * Get all Collaborators from a tenant or global ones (tenant IS NULL)
+     * Get all Collaborators from a tenant
      *
-     * @param string $tenantId ID of the tenant
+     * If $tenantId is null, returns all Collaborators without a tenant
+     * If $tenantId is not null, returns all Collaborators for that tenant and global ones
+     *
+     * @param string|null $tenantId ID of the tenant
      * @return Promise<array<CollaboratorEntity>>
      */
-    public function findMany(string $tenantId): Promise
+    public function findMany(?string $tenantId = null): Promise
     {
-        return async(
-            fn () => $this->getQueryBuilder()
+        return async(fn () =>
+            $this->getQueryBuilder()
                 ->whereNull('deleted_at')
-                ->where(function ($query) use ($tenantId) {
-                    // Ensures only collaborators for a tenant or global ones (tenant IS NULL)
-                    // are returned without affecting other filters.
-                    $query->where(CollaboratorModel::getTenantColumnName(), '=', $tenantId)
-                        ->orWhereNull(CollaboratorModel::getTenantColumnName());
-                })
+                ->when($tenantId !== null, fn($query) =>
+                    $query->where(function ($query) use ($tenantId) {
+                        // Collaborators for the given tenant or global ones
+                        $query->where(CollaboratorModel::getTenantColumnName(), '=', $tenantId)
+                            ->orWhereNull(CollaboratorModel::getTenantColumnName());
+                    })
+                )
+                ->when($tenantId === null, fn($query) =>
+                    // Collaborators without tenant
+                    $query->whereNull(CollaboratorModel::getTenantColumnName())
+                )
                 ->get()
-                ->map(function ($row) {
-                    return CollaboratorMapper::modelToEntity(CollaboratorModel::fromStdclass($row));
-                })
+                ->map(fn($row) => CollaboratorMapper::modelToEntity(CollaboratorModel::fromStdclass($row)))
         )();
     }
 }

@@ -49,6 +49,7 @@ class UnitTypeMapper
   public static function serializeCreate(UnitTypeMutationData $mutation, string $tenantId = null): array
   {
       return [
+          // Generates id before inserting the record because the id is not returned by the database
           UnitTypeModel::getPkColumnName() => Uuid::uuid4()->toString(),
           UnitTypeModel::getLabelColumnName() => $mutation->name,
           UnitTypeModel::getTenantColumnName() => $tenantId,

@@ -35,7 +35,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -45,7 +45,7 @@ class UnitTypeRepository
 
       // Map the IDs to the corresponding entities, preserving the order of IDs.
       return collect($ids)
-        ->map(fn ($id) => $entities->get($id))
+        ->map(fn($id) => $entities->get($id))
         ->toArray();
     })();
   }
@@ -82,7 +82,7 @@ class UnitTypeRepository
   public function countUnitTypeWithLabel(string $name, string $tenantId, string|int|null $excludeId = null)
   {
     return async(
-      fn () => $this->getQueryBuilder()
+      fn() => $this->getQueryBuilder()
         ->where('label', $name)
         ->whereNull('deleted_at')
         ->where(function ($query) use ($excludeId) {
@@ -99,7 +99,7 @@ class UnitTypeRepository
   public function findMany(string $tenantId)
   {
     return async(
-      fn () => $this->getQueryBuilder()
+      fn() => $this->getQueryBuilder()
         ->whereNull('deleted_at')
         ->where(function ($query) use ($tenantId) {
           $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)

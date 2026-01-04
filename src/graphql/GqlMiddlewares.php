@@ -18,6 +18,8 @@ use React\Http\Message\ServerRequest;
 use Vertuoza\Api\Graphql\Errors\GqlErrorHandler;
 use Vertuoza\Libs\Logger\ApplicationLogger;
 use Vertuoza\Libs\Logger\LogContext;
+use Vertuoza\Api\Graphql\Types;
+
 
 class GqlMiddlewares
 {
@@ -53,10 +55,11 @@ class GqlMiddlewares
     static function schema(\GraphQL\Executor\Promise\PromiseAdapter $graphQLPromiseAdapter, PromiseAdapterInterface $dataLoaderPromiseAdapter)
     {
         $query = new Query();
-        // $mutation = new Mutation();
+        $mutation = new Mutation();
 
         $schema = new Schema((
                 new SchemaConfig())
+                ->setMutation($mutation)
                 ->setQuery($query)
                 ->setTypeLoader([Types::class, 'byTypename'])
         );

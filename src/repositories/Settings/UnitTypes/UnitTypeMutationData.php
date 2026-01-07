@@ -4,5 +4,6 @@ namespace Vertuoza\Repositories\Settings\UnitTypes;
 
 class UnitTypeMutationData
 {
-  public string $name;
+  public string $label;
+
 }

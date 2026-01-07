@@ -26,7 +26,7 @@ class UnitTypesFindManyUseCase
    * @param string $id id of the unit type to retrieve
    * @return Promise<UnitTypeEntity>
    */
-  public function handle()
+  public function handle(): Promise
   {
     return $this->unitTypeRepository->findMany($this->userContext->getTenantId());
   }

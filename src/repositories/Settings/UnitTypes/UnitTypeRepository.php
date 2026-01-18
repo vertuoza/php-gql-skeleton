@@ -35,7 +35,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -112,13 +112,19 @@ class UnitTypeRepository
     )();
   }
 
-  public function create(UnitTypeMutationData $data, string $tenantId): int|string
-  {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
-    );
-    return $newId;
-  }
+    public function create(UnitTypeMutationData $data, string $tenantId)
+    {
+        return async(function () use ($data, $tenantId) {
+            $id = $this->getQueryBuilder()->insertGetId(
+                UnitTypeMapper::serializeCreate($data, $tenantId)
+            );
+
+            // Ce log apparaîtra dans tes terminaux Docker
+            error_log("DEBUG: Generated ID is: " . var_export($id, true));
+
+            return $id;
+        })();
+    }
 
   public function update(string $id, UnitTypeMutationData $data)
   {
@@ -129,6 +135,20 @@ class UnitTypeRepository
     $this->clearCache($id);
   }
 
+  public function getByLabel(string $label, string $tenantId)
+  {
+    return async(function () use ($label, $tenantId) {
+        $row = $this->getQueryBuilder()
+            ->where('label', $label)
+            ->where(function ($query) use ($tenantId) {
+                $query->where(UnitTypeModel::getTenantColumnName(), $tenantId)
+                    ->orWhereNull(UnitTypeModel::getTenantColumnName());
+            })
+            ->first();
+
+        return $row ? UnitTypeMapper::modelToEntity(UnitTypeModel::fromStdclass($row)) : null;
+    })();
+  }
   private function clearCache(string $id)
   {
     foreach ($this->getbyIdsDL as $dl) {

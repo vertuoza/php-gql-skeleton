@@ -119,7 +119,6 @@ class UnitTypeRepository
                 UnitTypeMapper::serializeCreate($data, $tenantId)
             );
 
-            // Ce log apparaîtra dans tes terminaux Docker
             error_log("DEBUG: Generated ID is: " . var_export($id, true));
 
             return $id;

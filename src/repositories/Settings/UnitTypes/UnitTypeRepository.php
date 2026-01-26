@@ -11,6 +11,7 @@ use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 
 use function React\Async\async;
+use function React\Async\await;
 
 class UnitTypeRepository
 {
@@ -35,7 +36,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -45,7 +46,7 @@ class UnitTypeRepository
 
       // Map the IDs to the corresponding entities, preserving the order of IDs.
       return collect($ids)
-        ->map(fn ($id) => $entities->get($id))
+        ->map(fn($id) => $entities->get($id))
         ->toArray();
     })();
   }
@@ -62,7 +63,6 @@ class UnitTypeRepository
 
     return $this->getbyIdsDL[$tenantId];
   }
-
 
   protected function getQueryBuilder()
   {
@@ -82,7 +82,7 @@ class UnitTypeRepository
   public function countUnitTypeWithLabel(string $name, string $tenantId, string|int|null $excludeId = null)
   {
     return async(
-      fn () => $this->getQueryBuilder()
+      fn() => $this->getQueryBuilder()
         ->where('label', $name)
         ->whereNull('deleted_at')
         ->where(function ($query) use ($excludeId) {
@@ -99,7 +99,7 @@ class UnitTypeRepository
   public function findMany(string $tenantId)
   {
     return async(
-      fn () => $this->getQueryBuilder()
+      fn() => $this->getQueryBuilder()
         ->whereNull('deleted_at')
         ->where(function ($query) use ($tenantId) {
           $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
@@ -112,14 +112,33 @@ class UnitTypeRepository
     )();
   }
 
-  public function create(UnitTypeMutationData $data, string $tenantId): int|string
+  public function create(UnitTypeMutationData $data, string $tenantId): Promise
   {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
-    );
-    return $newId;
+    return async(function () use ($data, $tenantId) {
+
+      /* ici j'aurais pu utiliser ramsey/composer mais c'était une extention à ajouter en plus et je préferais montrer que c'était bien un uuid */
+      $newId = sprintf(
+        '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0x0fff) | 0x4000,
+        mt_rand(0, 0x3fff) | 0x8000,
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0xffff)
+      );
+
+      $insertData = UnitTypeMapper::serializeCreate($data, $tenantId);
+      $insertData['id'] = $newId;
+
+      $this->getQueryBuilder()->insert($insertData);
+      $unitType = await($this->getById($newId, $tenantId));
+      return $unitType;
+    })();
   }
 
+  /* Pas utilisé */
   public function update(string $id, UnitTypeMutationData $data)
   {
     $this->getQueryBuilder()

@@ -2,7 +2,6 @@
 
 namespace Vertuoza\Api\Graphql\Resolvers\Settings\UnitTypes;
 
-use GraphQL\Type\Definition\NonNull;
 use GraphQL\Type\Definition\ObjectType;
 use Vertuoza\Api\Graphql\Types;
 
@@ -13,7 +12,7 @@ class UnitType extends ObjectType
     parent::__construct([
       'name' => 'UnitType',
       'description' => 'Unit type"',
-      'fields' => static fn (): array => [
+      'fields' => static fn(): array => [
         'id' => [
           'description' => "Unique identifier of the unit type",
           'type' => Types::id(),
@@ -24,7 +23,7 @@ class UnitType extends ObjectType
         ],
         'isSystem' => [
           'description' => "To know if the unit type has been created by the user or is a system unit type of Vertuoza",
-          'type' => new NonNull(Types::boolean())
+          'type' => Types::boolean()
         ],
       ],
     ]);

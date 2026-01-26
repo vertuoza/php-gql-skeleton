@@ -32,7 +32,7 @@ try {
         GqlMiddlewares::sandbox(),
         RequestContext::middleware($dataLoaderPromiseAdapter),
         GqlMiddlewares::schema($graphQLPromiseAdapter, $dataLoaderPromiseAdapter),
-        fn (ServerRequest $request) => resolve(new Response(404))
+        fn(ServerRequest $request) => resolve(new Response(404))
     );
 
     $socket = new React\Socket\SocketServer('0.0.0.0:' . $_ENV['PORT']);

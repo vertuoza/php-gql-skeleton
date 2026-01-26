@@ -9,11 +9,12 @@ class UnitTypeUseCases
 {
   public UnitTypeByIdUseCase $unitTypeById;
   public UnitTypesFindManyUseCase $unitTypesFindMany;
-
+  public CreateUnitTypeUseCase $createUnitType;
 
   public function __construct(UserRequestContext $userContext, RepositoriesFactory $repositories)
   {
     $this->unitTypeById = new UnitTypeByIdUseCase($repositories, $userContext);
     $this->unitTypesFindMany = new UnitTypesFindManyUseCase($repositories, $userContext);
+    $this->createUnitType = new CreateUnitTypeUseCase($repositories, $userContext);
   }
 }

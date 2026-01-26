@@ -27,6 +27,7 @@ CREATE TABLE `tenant` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 INSERT INTO `tenant` (`id`, `name`) VALUES ('112c33ae-3dbe-431b-994d-fffffe6fd49b', 'Vertuoza');
+INSERT INTO `tenant` (`id`, `name`) VALUES ('112c33ae-3dbe-431b-1440-fffffe6fd49b', 'Arpeggio');
 
 DROP TABLE IF EXISTS `unit_type`;
 CREATE TABLE `unit_type` (
@@ -42,6 +43,7 @@ CREATE TABLE `unit_type` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 INSERT INTO `unit_type` (`id`, `tenant_id`, `label`) VALUES ('4c2241c9-841f-44c9-9a51-18cfd8f37890', '112c33ae-3dbe-431b-994d-fffffe6fd49b', 'Meter');
+INSERT INTO `unit_type` (`id`, `tenant_id`, `label`) VALUES ('fdefc2a4-3cf8-48c0-91eb-198d56ac7166', '112c33ae-3dbe-431b-994d-fffffe6fd49b', 'Kilo');
 
 DROP TABLE IF EXISTS `collaborator`;
 CREATE TABLE `collaborator` (

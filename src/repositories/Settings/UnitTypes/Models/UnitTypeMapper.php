@@ -2,7 +2,6 @@
 
 namespace Vertuoza\Repositories\Settings\UnitTypes\Models;
 
-use stdClass;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 use Vertuoza\Entities\Settings\UnitTypeEntity;
@@ -29,7 +28,7 @@ class UnitTypeMapper
     return self::serializeMutation($mutation, $tenantId);
   }
 
-  private static function serializeMutation(UnitTypeMutationData $mutation, string $tenantId = null): array
+  private static function serializeMutation(UnitTypeMutationData $mutation, $tenantId = null): array
   {
     $data = [
       'label' => $mutation->name,

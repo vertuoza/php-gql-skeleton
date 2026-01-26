@@ -27,7 +27,7 @@ final class Types
    */
   public static function get(string $classname): \Closure
   {
-    return static fn () => self::byClassName($classname);
+    return static fn() => self::byClassName($classname);
   }
 
   private static function getEnum(string $classname): Type

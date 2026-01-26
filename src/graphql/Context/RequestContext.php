@@ -13,9 +13,7 @@ use Vertuoza\Repositories\RepositoriesFactory;
 
 class RequestContext
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public ServerRequestInterface $request;
     public UserRequestContext $userContext;

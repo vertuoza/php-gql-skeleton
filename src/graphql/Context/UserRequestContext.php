@@ -27,4 +27,9 @@ class UserRequestContext
   {
     return $this->userId !== null && $this->tenantId !== null;
   }
+
+  public function isVertuoza(): bool
+  {
+    return $this->tenantId === "112c33ae-3dbe-431b-994d-fffffe6fd49b";
+  }
 }

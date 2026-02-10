@@ -35,7 +35,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -137,5 +137,22 @@ class UnitTypeRepository
         return;
       }
     }
+  }
+
+  public function findLastCreated(string $name, string $tenantId): Promise
+  {
+    return async(function () use ($name, $tenantId) {
+      $row = $this->getQueryBuilder()
+        ->whereNull('deleted_at')
+        ->where('label', $name)
+        ->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
+        ->orderByDesc('created_at')
+        ->first();
+
+        if(!$row) {
+          return null;
+        }
+        return UnitTypeMapper::modelToEntity(UnitTypeModel::fromStdclass($row));
+    })();
   }
 }

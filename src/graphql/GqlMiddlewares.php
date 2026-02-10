@@ -53,12 +53,13 @@ class GqlMiddlewares
     static function schema(\GraphQL\Executor\Promise\PromiseAdapter $graphQLPromiseAdapter, PromiseAdapterInterface $dataLoaderPromiseAdapter)
     {
         $query = new Query();
-        // $mutation = new Mutation();
+        $mutation = new Mutation();
 
         $schema = new Schema((
                 new SchemaConfig())
+                ->setMutation($mutation)
                 ->setQuery($query)
-                ->setTypeLoader([Types::class, 'byTypename'])
+                ->setTypeLoader([Types::class, 'byTypeName'])
         );
 
         return function (ServerRequest $request, $next) use ($schema, $graphQLPromiseAdapter) {

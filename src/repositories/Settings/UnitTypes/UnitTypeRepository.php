@@ -5,6 +5,7 @@ namespace Vertuoza\Repositories\Settings\UnitTypes;
 use Overblog\DataLoader\DataLoader;
 use Overblog\PromiseAdapter\PromiseAdapterInterface;
 use React\Promise\Promise;
+use RuntimeException;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
@@ -35,7 +36,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -93,6 +94,7 @@ class UnitTypeRepository
           $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
             ->orWhereNull(UnitTypeModel::getTenantColumnName());
         })
+        ->count()
     )();
   }
 
@@ -114,10 +116,24 @@ class UnitTypeRepository
 
   public function create(UnitTypeMutationData $data, string $tenantId): int|string
   {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
-    );
-    return $newId;
+    $insertData = UnitTypeMapper::serializeCreate($data, $tenantId);
+    $this->getQueryBuilder()->insert($insertData);
+
+    $createdId = $this->getQueryBuilder()
+      ->where('label', $data->name)
+      ->whereNull('deleted_at')
+      ->where(function ($query) use ($tenantId) {
+        $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
+          ->orWhereNull(UnitTypeModel::getTenantColumnName());
+      })
+      ->orderBy('created_at', 'desc')
+      ->value(UnitTypeModel::getPkColumnName());
+
+    if ($createdId === null) {
+      throw new RuntimeException('Unable to resolve created unit type id');
+    }
+
+    return (string) $createdId;
   }
 
   public function update(string $id, UnitTypeMutationData $data)

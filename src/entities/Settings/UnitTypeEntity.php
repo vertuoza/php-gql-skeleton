@@ -6,5 +6,5 @@ class UnitTypeEntity
 {
   public string $id;
   public string $name;
-  public bool $isSystem;
+  public string $status;
 }

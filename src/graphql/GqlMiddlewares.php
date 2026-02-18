@@ -53,13 +53,20 @@ class GqlMiddlewares
     static function schema(\GraphQL\Executor\Promise\PromiseAdapter $graphQLPromiseAdapter, PromiseAdapterInterface $dataLoaderPromiseAdapter)
     {
         $query = new Query();
-        // $mutation = new Mutation();
+        $mutation = new Mutation();
 
-        $schema = new Schema((
-                new SchemaConfig())
-                ->setQuery($query)
-                ->setTypeLoader([Types::class, 'byTypename'])
-        );
+        try {
+    $schema = new Schema(
+        (new SchemaConfig())
+            ->setQuery($query)
+            ->setMutation($mutation)
+            ->setTypeLoader([Types::class, 'byTypename'])
+    );
+} catch (\Throwable $e) {
+    var_dump($e->getMessage());
+    exit;
+}
+
 
         return function (ServerRequest $request, $next) use ($schema, $graphQLPromiseAdapter) {
             if (self::isGraphQLQueryPath($request)) {

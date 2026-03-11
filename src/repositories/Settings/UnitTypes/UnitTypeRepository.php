@@ -35,7 +35,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -112,13 +112,32 @@ class UnitTypeRepository
     )();
   }
 
-  public function create(UnitTypeMutationData $data, string $tenantId): int|string
-  {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
+/**
+ * Creates a new unit type for the given tenant.
+ * Generates a UUID v4 in PHP to ensure the inserted ID can be returned immediately.
+ *
+ * @param UnitTypeMutationData $data The data required to create the unit type
+ * @param string $tenantId The tenant ID to associate the unit type with
+ * @return string The UUID of the newly created unit type
+ */
+public function create(UnitTypeMutationData $data, string $tenantId): string
+{
+    $id = sprintf(
+        '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+        mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0x0fff) | 0x4000,
+        mt_rand(0, 0x3fff) | 0x8000,
+        mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
     );
-    return $newId;
-  }
+    $this->getQueryBuilder()->insert(
+        array_merge(
+            UnitTypeMapper::serializeCreate($data, $tenantId),
+            ['id' => $id]
+        )
+    );
+    return $id;
+}
 
   public function update(string $id, UnitTypeMutationData $data)
   {

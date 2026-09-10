@@ -30,7 +30,7 @@ class UnitTypeCreateUseCase
    */
   public function handle(array $input): Promise
   {
-    $name = trim($input['name'] ?? '');
+    $name = trim($input['name']);
 
     $errors = (new StringValidator('name', $name))
       ->notEmpty()

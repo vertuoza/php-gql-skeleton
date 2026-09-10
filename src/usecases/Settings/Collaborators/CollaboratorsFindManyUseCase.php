@@ -2,10 +2,10 @@
 
 namespace Vertuoza\Usecases\Settings\Collaborators;
 
-use React\Promise\Promise;
+use React\Promise\PromiseInterface;
 use Vertuoza\Api\Graphql\Context\UserRequestContext;
+use Vertuoza\Entities\Settings\CollaboratorEntity;
 use Vertuoza\Repositories\Settings\Collaborators\CollaboratorRepository;
-use Vertuoza\Entities\Settings\UnitTypeEntity;
 use Vertuoza\Repositories\RepositoriesFactory;
 
 class CollaboratorsFindManyUseCase
@@ -22,9 +22,9 @@ class CollaboratorsFindManyUseCase
   }
 
   /**
-   * @return Promise<UnitTypeEntity>
+   * @return PromiseInterface<CollaboratorEntity>
    */
-  public function handle()
+  public function handle(): PromiseInterface
   {
     return $this->collaboratorRepository->findMany($this->userContext->getTenantId());
   }

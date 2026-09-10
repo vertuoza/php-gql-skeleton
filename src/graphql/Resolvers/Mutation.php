@@ -7,7 +7,7 @@ use Vertuoza\Api\Graphql\Resolvers\Settings\UnitTypes\UnitTypeMutation;
 
 final class Mutation extends ObjectType
 {
-  final public function __construct()
+  public function __construct()
   {
     $config = [
       'fields' => static fn (): array => [

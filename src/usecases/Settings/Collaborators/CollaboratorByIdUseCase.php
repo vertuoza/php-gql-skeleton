@@ -2,9 +2,10 @@
 
 namespace Vertuoza\Usecases\Settings\Collaborators;
 
-use React\Promise\Promise;
+use React\Promise\PromiseInterface;
 use Vertuoza\Api\Graphql\Context\UserRequestContext;
 use Vertuoza\Entities\Settings\CollaboratorEntity;
+use Vertuoza\Libs\Exceptions\NotFoundException;
 use Vertuoza\Repositories\RepositoriesFactory;
 use Vertuoza\Repositories\Settings\Collaborators\CollaboratorRepository;
 
@@ -22,10 +23,18 @@ class CollaboratorByIdUseCase
 
   /**
    * @param string $id id of the collaborator to retrieve
-   * @return Promise<CollaboratorEntity>
+   * @return PromiseInterface<CollaboratorEntity>
    */
-  public function handle(string $id): Promise
+  public function handle(string $id): PromiseInterface
   {
-    return $this->collaboratorRepository->getById($id, $this->userContext->getTenantId());
+    return $this->collaboratorRepository
+      ->getById($id, $this->userContext->getTenantId())
+      ->then(function (?CollaboratorEntity $collaborator) use ($id) {
+        if ($collaborator === null) {
+          throw new NotFoundException("Collaborator with id {$id} not found");
+        }
+
+        return $collaborator;
+      });
   }
 }

@@ -2,11 +2,11 @@
 
 namespace Vertuoza\Usecases\Settings\UnitTypes;
 
-use React\Promise\Promise;
 use React\Promise\PromiseInterface;
 use Vertuoza\Api\Graphql\Context\UserRequestContext;
 use Vertuoza\Entities\Settings\UnitTypeEntity;
 use Vertuoza\Libs\Exceptions\BadUserInputException;
+use Vertuoza\Libs\Exceptions\FieldError;
 use Vertuoza\Libs\Exceptions\Validators\StringValidator;
 use Vertuoza\Repositories\RepositoriesFactory;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
@@ -26,7 +26,7 @@ class UnitTypeCreateUseCase
 
   /**
    * @param array $input data of the unit type to create
-   * @return Promise<UnitTypeEntity>
+   * @return PromiseInterface<UnitTypeEntity>
    * @throws BadUserInputException
    */
   public function handle(array $input): PromiseInterface
@@ -44,19 +44,30 @@ class UnitTypeCreateUseCase
 
     $tenantId = $this->userContext->getTenantId();
 
-    $data = new UnitTypeMutationData();
-    $data->name = $name;
-
-    $newId = $this->unitTypeRepository->create($data, $tenantId);
-
     return $this->unitTypeRepository
-      ->getById($newId, $tenantId)
-      ->then(function (?UnitTypeEntity $unitType) use ($newId) {
-        if ($unitType === null) {
-          throw new \RuntimeException("Unit type {$newId} could not be read back after creation");
+      ->countUnitTypeWithLabel($name, $tenantId)
+      ->then(function (int $count) use ($name, $tenantId) {
+        if ($count > 0) {
+          throw new BadUserInputException(
+            new FieldError('name', "A unit type named \"{$name}\" already exists", 'ALREADY_EXISTS'),
+            'UnitTypeCreateInput'
+          );
         }
 
-        return $unitType;
+        $data = new UnitTypeMutationData();
+        $data->name = $name;
+
+        $newId = $this->unitTypeRepository->create($data, $tenantId);
+
+        return $this->unitTypeRepository
+          ->getById($newId, $tenantId)
+          ->then(function (?UnitTypeEntity $unitType) use ($newId) {
+            if ($unitType === null) {
+              throw new \RuntimeException("Unit type {$newId} could not be read back after creation");
+            }
+
+            return $unitType;
+          });
       });
   }
 }

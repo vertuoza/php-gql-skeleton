@@ -4,6 +4,7 @@ namespace Vertuoza\Repositories\Settings\UnitTypes;
 
 use Overblog\DataLoader\DataLoader;
 use Overblog\PromiseAdapter\PromiseAdapterInterface;
+use Ramsey\Uuid\Uuid;
 use React\Promise\Promise;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
@@ -114,9 +115,12 @@ class UnitTypeRepository
 
   public function create(UnitTypeMutationData $data, string $tenantId): int|string
   {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
-    );
+    $newId = Uuid::uuid4()->toString();
+
+    $values = UnitTypeMapper::serializeCreate($data, $tenantId);
+    $values[UnitTypeModel::getPkColumnName()] = $newId;
+
+    $this->getQueryBuilder()->insert($values);
     return $newId;
   }
 

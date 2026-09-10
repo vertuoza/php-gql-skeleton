@@ -8,7 +8,6 @@ use React\Promise\Promise;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\Collaborators\Models\CollaboratorMapper;
 use Vertuoza\Repositories\Settings\Collaborators\Models\CollaboratorModel;
-use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
 
 use function React\Async\async;
 
@@ -36,7 +35,7 @@ class CollaboratorRepository
             ->orWhere(CollaboratorModel::getTenantColumnName(), null);
         });
       $query->whereNull('deleted_at');
-      $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
+      $query->whereIn(CollaboratorModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
         $entity = CollaboratorMapper::modelToEntity(CollaboratorModel::fromStdclass($row));

@@ -9,7 +9,6 @@ use React\Promise\Promise;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
-use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 
 use function React\Async\async;
 
@@ -94,6 +93,7 @@ class UnitTypeRepository
           $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
             ->orWhereNull(UnitTypeModel::getTenantColumnName());
         })
+        ->count()
     )();
   }
 

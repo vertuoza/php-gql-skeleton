@@ -3,6 +3,7 @@
 namespace Vertuoza\Usecases\Settings\UnitTypes;
 
 use React\Promise\Promise;
+use React\Promise\PromiseInterface;
 use Vertuoza\Api\Graphql\Context\UserRequestContext;
 use Vertuoza\Entities\Settings\UnitTypeEntity;
 use Vertuoza\Libs\Exceptions\BadUserInputException;
@@ -28,7 +29,7 @@ class UnitTypeCreateUseCase
    * @return Promise<UnitTypeEntity>
    * @throws BadUserInputException
    */
-  public function handle(array $input): Promise
+  public function handle(array $input): PromiseInterface
   {
     $name = trim($input['name']);
 
@@ -48,6 +49,14 @@ class UnitTypeCreateUseCase
 
     $newId = $this->unitTypeRepository->create($data, $tenantId);
 
-    return $this->unitTypeRepository->getById($newId, $tenantId);
+    return $this->unitTypeRepository
+      ->getById($newId, $tenantId)
+      ->then(function (?UnitTypeEntity $unitType) use ($newId) {
+        if ($unitType === null) {
+          throw new \RuntimeException("Unit type {$newId} could not be read back after creation");
+        }
+
+        return $unitType;
+      });
   }
 }

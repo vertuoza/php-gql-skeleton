@@ -11,7 +11,6 @@ services:
       - ./assets:/var/www/html/assets
       - ./src:/var/www/html/src
       - ./index.php:/var/www/html/index.php
-      - ./vendor:/var/www/html/vendor
     environment:
       - APP_ENV=local
       - APP_BASE_DOMAIN=vertuolocal.com

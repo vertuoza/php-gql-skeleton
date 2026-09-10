@@ -42,7 +42,6 @@ docker/data/mysql
 !.env.sample!/assets/pdf-builder/css/pdf-template-builder.bundle.css
 /plugin/rich-text-editor/node_modules/
 /Editor-PHP-2.0.10/
-composer.lock
 composer.phar
 
 node_modules

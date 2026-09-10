@@ -29,11 +29,7 @@ class CollaboratorRepository
   private function fetchByIds(string $tenantId, array $ids)
   {
     return async(function () use ($tenantId, $ids) {
-      $query = $this->getQueryBuilder()
-        ->where(function ($query) use ($tenantId) {
-          $query->where([CollaboratorModel::getTenantColumnName() => $tenantId])
-            ->orWhere(CollaboratorModel::getTenantColumnName(), null);
-        });
+      $query = $this->getQueryBuilder()->where(CollaboratorModel::getTenantColumnName(), $tenantId);
       $query->whereNull('deleted_at');
       $query->whereIn(CollaboratorModel::getPkColumnName(), $ids);
 
@@ -82,9 +78,7 @@ class CollaboratorRepository
     return async(
       fn () => $this->getQueryBuilder()
         ->whereNull('deleted_at')
-        ->where(function ($query) use ($tenantId) {
-          $query->where(CollaboratorModel::getTenantColumnName(), '=', $tenantId);
-        })
+        ->where(CollaboratorModel::getTenantColumnName(), $tenantId)
         ->get()
         ->map(function ($row) {
           return CollaboratorMapper::modelToEntity(CollaboratorModel::fromStdclass($row));

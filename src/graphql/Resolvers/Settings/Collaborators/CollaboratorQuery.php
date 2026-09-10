@@ -15,11 +15,11 @@ class CollaboratorQuery
             'collaboratorById' => [
                 'type' => new NonNull(Types::get(Collaborator::class)),
                 'args' => [
-                    'id' => new NonNull(Types::string()),
+                    'id' => new NonNull(Types::id()),
                 ],
                 'resolve' => static fn ($rootValue, $args, RequestContext $context) => $context->useCases->collaborator
                     ->collaboratorById
-                    ->handle($args['id'], $context)
+                    ->handle($args['id'])
             ],
             'collaborators' => [
                 'type' => new NonNull(
@@ -30,7 +30,7 @@ class CollaboratorQuery
                 'resolve' => static fn ($rootValue, $args, RequestContext $context)
                 => $context->useCases->collaborator
                     ->collaboratorsFindMany
-                    ->handle($context)
+                    ->handle()
             ],
         ];
     }

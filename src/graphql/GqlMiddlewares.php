@@ -2,9 +2,6 @@
 
 namespace Vertuoza\Api\Graphql;
 
-use Vertuoza\Api\Graphql\Resolvers\Settings\UnitTypes\UnitTypeCreateInput;
-use function React\Promise\resolve;
-
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\GraphQL;
 use GraphQL\Server\ServerConfig;
@@ -19,6 +16,8 @@ use React\Http\Message\ServerRequest;
 use Vertuoza\Api\Graphql\Errors\GqlErrorHandler;
 use Vertuoza\Libs\Logger\ApplicationLogger;
 use Vertuoza\Libs\Logger\LogContext;
+use Vertuoza\Api\Graphql\Resolvers\Settings\UnitTypes\UnitTypeCreateInput;
+use function React\Promise\resolve;
 
 class GqlMiddlewares
 {

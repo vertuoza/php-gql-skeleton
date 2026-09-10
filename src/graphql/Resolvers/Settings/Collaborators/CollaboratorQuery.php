@@ -23,9 +23,9 @@ class CollaboratorQuery
             ],
             'collaborators' => [
                 'type' => new NonNull(
-                  new ListOfType(
-                    new NonNull(Types::get(Collaborator::class))
-                  )
+                    new ListOfType(
+                        new NonNull(Types::get(Collaborator::class))
+                    )
                 ),
                 'resolve' => static fn ($rootValue, $args, RequestContext $context)
                 => $context->useCases->collaborator

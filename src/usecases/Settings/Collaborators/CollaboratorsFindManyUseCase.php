@@ -22,7 +22,7 @@ class CollaboratorsFindManyUseCase
   }
 
   /**
-   * @return PromiseInterface<CollaboratorEntity>
+   * @return PromiseInterface<CollaboratorEntity[]>
    */
   public function handle(): PromiseInterface
   {

@@ -3,6 +3,7 @@
 namespace Vertuoza\Usecases\Settings\UnitTypes;
 
 use React\Promise\Promise;
+use React\Promise\PromiseInterface;
 use Vertuoza\Api\Graphql\Context\UserRequestContext;
 use Vertuoza\Repositories\Repositories;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeRepository;
@@ -23,10 +24,9 @@ class UnitTypesFindManyUseCase
   }
 
   /**
-   * @param string $id id of the unit type to retrieve
-   * @return Promise<UnitTypeEntity>
+   * @return Promise<UnitTypeEntity[]>
    */
-  public function handle()
+  public function handle(): PromiseInterface
   {
     return $this->unitTypeRepository->findMany($this->userContext->getTenantId());
   }

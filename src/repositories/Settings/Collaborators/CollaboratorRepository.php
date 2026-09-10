@@ -14,14 +14,12 @@ use function React\Async\async;
 class CollaboratorRepository
 {
   protected array $getbyIdsDL;
-  private QueryBuilder $db;
   protected PromiseAdapterInterface $dataLoaderPromiseAdapter;
 
   public function __construct(
-    private QueryBuilder $database,
+    private QueryBuilder $db,
     PromiseAdapterInterface $dataLoaderPromiseAdapter
   ) {
-    $this->db = $database;
     $this->dataLoaderPromiseAdapter = $dataLoaderPromiseAdapter;
     $this->getbyIdsDL = [];
   }

@@ -57,11 +57,11 @@ class GqlMiddlewares
         $mutation = new Mutation();
 
         $schema = new Schema((
-          new SchemaConfig())
-          ->setQuery($query)
-          ->setMutation($mutation)
-          ->setTypes([(Types::get(UnitTypeCreateInput::class))()])
-          ->setTypeLoader([Types::class, 'byTypename'])
+            new SchemaConfig())
+            ->setQuery($query)
+            ->setMutation($mutation)
+            ->setTypes([(Types::get(UnitTypeCreateInput::class))()])
+            ->setTypeLoader([Types::class, 'byTypename'])
         );
 
         return function (ServerRequest $request, $next) use ($schema, $graphQLPromiseAdapter) {

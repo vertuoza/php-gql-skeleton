@@ -8,7 +8,6 @@ use Vertuoza\Api\Graphql\Types;
 
 class UnitTypeMutation
 {
-
   static function get()
   {
     return [

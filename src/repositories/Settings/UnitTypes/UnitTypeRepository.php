@@ -8,7 +8,7 @@ use React\Promise\Promise;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
-use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
+use Illuminate\Support\Str;
 
 use function React\Async\async;
 
@@ -35,7 +35,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -93,6 +93,7 @@ class UnitTypeRepository
           $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
             ->orWhereNull(UnitTypeModel::getTenantColumnName());
         })
+        ->count()
     )();
   }
 
@@ -112,15 +113,19 @@ class UnitTypeRepository
     )();
   }
 
-  public function create(UnitTypeMutationData $data, string $tenantId): int|string
-  {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
-    );
-    return $newId;
-  }
+    public function create(UnitTypeMutationData $data, string $tenantId): string
+    {
+        $id = (string) Str::uuid();
 
-  public function update(string $id, UnitTypeMutationData $data)
+        $values = UnitTypeMapper::serializeCreate($data, $tenantId);
+        $values['id'] = $id;
+
+        $this->getQueryBuilder()->insert($values);
+
+        return $id;
+    }
+
+  public function update(string $id, UnitTypeMutationData $data): void
   {
     $this->getQueryBuilder()
       ->where(UnitTypeModel::getPkColumnName(), $id)
@@ -129,7 +134,7 @@ class UnitTypeRepository
     $this->clearCache($id);
   }
 
-  private function clearCache(string $id)
+  private function clearCache(string $id): void
   {
     foreach ($this->getbyIdsDL as $dl) {
       if ($dl->key_exists($id)) {

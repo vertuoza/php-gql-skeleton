@@ -9,6 +9,7 @@ use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeModel;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
+use Vertuoza\Libs\Uuid\UuidGenerator;
 
 use function React\Async\async;
 
@@ -114,11 +115,19 @@ class UnitTypeRepository
 
   public function create(UnitTypeMutationData $data, string $tenantId): int|string
   {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
+     $newId = UuidGenerator::v4();
+
+    $this->getQueryBuilder()->insert(
+      array_merge(
+        UnitTypeMapper::serializeCreate($data, $tenantId),
+        ['id' => $newId]
+      )
     );
+
     return $newId;
   }
+
+  
 
   public function update(string $id, UnitTypeMutationData $data)
   {

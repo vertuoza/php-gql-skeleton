@@ -4,7 +4,6 @@ namespace Vertuoza\Api\Graphql\Resolvers\Settings\UnitTypes;
 
 use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\NonNull;
-use Vertuoza\Api\Context\VertuozaContext;
 use Vertuoza\Api\Graphql\Context\RequestContext;
 use Vertuoza\Api\Graphql\Types;
 

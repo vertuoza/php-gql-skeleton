@@ -14,7 +14,7 @@ class UnitTypeModel
   public static function fromStdclass(stdClass $data): UnitTypeModel
   {
     $model = new UnitTypeModel();
-    $model->id = $data->id;
+    $model->id = (string) $data->id;
     $model->label = $data->label;
     $model->deleted_at = $data->deleted_at;
     $model->tenant_id = $data->tenant_id;

@@ -4,6 +4,7 @@ namespace Vertuoza\Usecases\Settings\UnitTypes;
 
 use React\Promise\Promise;
 use Vertuoza\Api\Graphql\Context\UserRequestContext;
+use Vertuoza\Entities\Settings\UnitTypeEntity;
 use Vertuoza\Repositories\RepositoriesFactory;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeRepository;
 

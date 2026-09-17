@@ -94,6 +94,7 @@ class UnitTypeRepository
           $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
             ->orWhereNull(UnitTypeModel::getTenantColumnName());
         })
+        ->count()
     )();
   }
 

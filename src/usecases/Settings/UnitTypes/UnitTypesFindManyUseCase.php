@@ -22,10 +22,9 @@ class UnitTypesFindManyUseCase
     $this->userContext = $userContext;
   }
 
-  /**
-   * @param string $id id of the unit type to retrieve
-   * @return Promise<UnitTypeEntity>
-   */
+    /**
+     * @return Promise<array<int, UnitTypeEntity>>
+     */
   public function handle()
   {
     return $this->unitTypeRepository->findMany($this->userContext->getTenantId());

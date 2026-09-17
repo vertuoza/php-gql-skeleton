@@ -16,14 +16,14 @@ class BusinessException extends Exception implements ProvidesExceptionArgs
 
   public function __construct(string $message, string $errorCode, $code = 500, Throwable $previous = null, array|null $args = null)
   {
-    $this->args = $args;
+    $this->args = $args ?? [];
     $this->errorCode = $errorCode;
     // make sure everything is assigned properly
     parent::__construct($message, $code, $previous);
   }
 
   // custom string representation of object
-  public function __toString()
+  public function __toString(): string
   {
     return __CLASS__ . ": [{$this->errorCode}]: {$this->message}\n";
   }

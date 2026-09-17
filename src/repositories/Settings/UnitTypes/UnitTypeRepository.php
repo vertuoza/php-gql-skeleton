@@ -2,6 +2,7 @@
 
 namespace Vertuoza\Repositories\Settings\UnitTypes;
 
+use Illuminate\Support\Str;
 use Overblog\DataLoader\DataLoader;
 use Overblog\PromiseAdapter\PromiseAdapterInterface;
 use React\Promise\Promise;
@@ -35,7 +36,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -93,6 +94,7 @@ class UnitTypeRepository
           $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
             ->orWhereNull(UnitTypeModel::getTenantColumnName());
         })
+        ->count()
     )();
   }
 
@@ -112,12 +114,16 @@ class UnitTypeRepository
     )();
   }
 
-  public function create(UnitTypeMutationData $data, string $tenantId): int|string
-  {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
-    );
-    return $newId;
+    public function create(UnitTypeMutationData $data, string $tenantId): int|string
+    {
+        $newId = (string)Str::uuid();
+
+        $payload = UnitTypeMapper::serializeCreate($data, $tenantId);
+        $payload[UnitTypeModel::getPkColumnName()] = $newId;
+
+        $this->getQueryBuilder()->insert($payload);
+
+        return $newId;
   }
 
   public function update(string $id, UnitTypeMutationData $data)

@@ -12,7 +12,7 @@ class UnitTypeMapper
   public static function modelToEntity(UnitTypeModel $dbData): UnitTypeEntity
   {
     $entity = new UnitTypeEntity();
-    $entity->id = $dbData->id . '';
+    $entity->id = $dbData->id;
     $entity->name = $dbData->label;
     $entity->isSystem = $dbData->tenant_id === null;
 

@@ -4,6 +4,7 @@ namespace Vertuoza\Repositories\Settings\UnitTypes;
 
 use Overblog\DataLoader\DataLoader;
 use Overblog\PromiseAdapter\PromiseAdapterInterface;
+use Ramsey\Uuid\Uuid;
 use React\Promise\Promise;
 use Vertuoza\Repositories\Database\QueryBuilder;
 use Vertuoza\Repositories\Settings\UnitTypes\Models\UnitTypeMapper;
@@ -35,7 +36,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -114,9 +115,12 @@ class UnitTypeRepository
 
   public function create(UnitTypeMutationData $data, string $tenantId): int|string
   {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
+    $newId = Uuid::uuid4()->toString();
+
+    $this->getQueryBuilder()->insert(
+      array_merge(UnitTypeMapper::serializeCreate($data, $tenantId), [UnitTypeModel::getPkColumnName() => $newId])
     );
+
     return $newId;
   }
 

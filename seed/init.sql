@@ -60,3 +60,23 @@ CREATE TABLE `collaborator` (
 INSERT INTO `collaborator` (`id`, `tenant_id`, `name`, `first_name`) VALUES ('4146e6ea-2534-4708-b33d-93af6cab43b6', '112c33ae-3dbe-431b-994d-fffffe6fd49b', 'Smith', 'John');
 INSERT INTO `collaborator` (`id`, `tenant_id`, `name`, `first_name`) VALUES ('3125c2bd-94c6-47cd-a7f8-7a60f2762662', '112c33ae-3dbe-431b-994d-fffffe6fd49b', 'Denuit', 'Michel');
 INSERT INTO `collaborator` (`id`, `tenant_id`, `name`, `first_name`) VALUES ('08d97e48-c4a5-42c8-a166-b1159a40b42a', '112c33ae-3dbe-431b-994d-fffffe6fd49b', 'Mayer', 'Carl');
+DROP TABLE IF EXISTS `customer`;
+CREATE TABLE `customer` (
+  `id` CHAR(36) NOT NULL DEFAULT (UUID()),
+  `tenant_id` CHAR(36) DEFAULT NULL,
+  `collaborator_id` CHAR(36) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_customer_tenant_idx` (`tenant_id`),
+  KEY `fk_customer_collab_idx` (`collaborator_id`),
+  CONSTRAINT `fk_customer_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenant` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_customer_collab` FOREIGN KEY (`collaborator_id`) REFERENCES `collaborator` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+INSERT INTO `customer` (`id`, `tenant_id`, `collaborator_id`, `name`, `first_name`)
+VALUES ('9d3b1f52-6a0e-4c1b-8f47-2e5a7c1d9b30', '112c33ae-3dbe-431b-994d-fffffe6fd49b',
+        '4146e6ea-2534-4708-b33d-93af6cab43b6', 'Dupont', 'Marie');

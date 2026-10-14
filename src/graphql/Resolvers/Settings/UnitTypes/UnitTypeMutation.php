@@ -17,6 +17,12 @@ class UnitTypeMutation
         'resolve' => static fn ($rootValue, $args, RequestContext $context)
           => $context->useCases->unitType->unitTypeCreate->handle($args['input']),
       ],
+      'unitTypeCreateRandom' => [
+        'type' => new NonNull(Types::get(UnitType::class)),
+        'args' => [],
+        'resolve' => static fn ($rootValue, $args, RequestContext $context)
+          => $context->useCases->unitType->unitTypeCreateRandom->handle(),
+      ],
     ];
   }
 }

@@ -10,6 +10,7 @@ class UnitTypeUseCases
   public UnitTypeByIdUseCase $unitTypeById;
   public UnitTypesFindManyUseCase $unitTypesFindMany;
   public UnitTypeCreateUseCase $unitTypeCreate;
+  public UnitTypeCreateRandomUseCase $unitTypeCreateRandom;
 
 
   public function __construct(UserRequestContext $userContext, RepositoriesFactory $repositories)
@@ -17,5 +18,6 @@ class UnitTypeUseCases
     $this->unitTypeById = new UnitTypeByIdUseCase($repositories, $userContext);
     $this->unitTypesFindMany = new UnitTypesFindManyUseCase($repositories, $userContext);
     $this->unitTypeCreate = new UnitTypeCreateUseCase($repositories, $userContext);
+    $this->unitTypeCreateRandom = new UnitTypeCreateRandomUseCase($repositories, $userContext);
   }
 }

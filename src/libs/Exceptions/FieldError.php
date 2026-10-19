@@ -16,7 +16,7 @@ class FieldError
     $this->message = $message;
     $this->code = $code;
     $this->path = $path;
-    $this->args = $args;
+    $this->args = $args ?? [];
   }
 
   public function toArray()

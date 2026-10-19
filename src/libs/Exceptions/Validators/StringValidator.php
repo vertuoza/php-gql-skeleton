@@ -14,7 +14,7 @@ class StringValidator extends Validator
   public function notEmpty(bool $trimmed = false)
   {
     $value = $trimmed ? trim($this->value) : $this->value;
-    if (empty($value)) {
+    if ($value === null || $value === '') {
       $this->errors[] = new FieldError($this->field, "Field cannot be empty", "EMPTY", $this->path);
     }
 
@@ -23,7 +23,7 @@ class StringValidator extends Validator
 
   public function max(int $max)
   {
-    if (isset($this->value) && strlen($this->value) > $max) {
+    if (isset($this->value) && mb_strlen($this->value) > $max) {
       $this->errors[] = new FieldError($this->field, "Field cannot be longer than $max characters", "MAX_LENGTH", $this->path, ["max" => $max]);
     }
 

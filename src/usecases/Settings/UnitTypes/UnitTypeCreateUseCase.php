@@ -12,6 +12,8 @@ use Vertuoza\Repositories\RepositoriesFactory;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeMutationData;
 use Vertuoza\Repositories\Settings\UnitTypes\UnitTypeRepository;
 
+use function React\Promise\reject;
+
 class UnitTypeCreateUseCase
 {
   private UnitTypeRepository $unitTypeRepository;
@@ -45,7 +47,7 @@ class UnitTypeCreateUseCase
       );
     }
     if (count($errors) > 0) {
-      throw new BadUserInputException($errors, 'UnitTypeCreateInput');
+      return reject(new BadUserInputException($errors, 'UnitTypeCreateInput'));
     }
 
     $tenantId = $this->userContext->getTenantId();

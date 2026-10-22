@@ -32,10 +32,15 @@ class CollaboratorRepository
   private function fetchByIds(string $tenantId, array $ids)
   {
     return async(function () use ($tenantId, $ids) {
+      $queryableIds = array_filter(
+        $ids,
+        fn ($id) => !preg_match('/[\x{10000}-\x{10FFFF}]/u', $id)
+      );
+
       $entities = $this->getQueryBuilder()
         ->where(CollaboratorModel::getTenantColumnName(), $tenantId)
         ->whereNull('deleted_at')
-        ->whereIn(CollaboratorModel::getPkColumnName(), $ids)
+        ->whereIn(CollaboratorModel::getPkColumnName(), $queryableIds)
         ->get()
         ->mapWithKeys(function ($row) {
           $entity = CollaboratorMapper::modelToEntity(CollaboratorModel::fromStdclass($row));

@@ -35,7 +35,7 @@ class UnitTypeRepository
           $query->where([UnitTypeModel::getTenantColumnName() => $tenantId])
             ->orWhere(UnitTypeModel::getTenantColumnName(), null);
         });
-      $query->whereNull('_deleted_at');
+      $query->whereNull('deleted_at');
       $query->whereIn(UnitTypeModel::getPkColumnName(), $ids);
 
       $entities = $query->get()->mapWithKeys(function ($row) {
@@ -93,6 +93,7 @@ class UnitTypeRepository
           $query->where(UnitTypeModel::getTenantColumnName(), '=', $tenantId)
             ->orWhereNull(UnitTypeModel::getTenantColumnName());
         })
+        ->count()
     )();
   }
 
@@ -112,11 +113,15 @@ class UnitTypeRepository
     )();
   }
 
-  public function create(UnitTypeMutationData $data, string $tenantId): int|string
+  public function create(UnitTypeMutationData $data, string $tenantId): string
   {
-    $newId = $this->getQueryBuilder()->insertGetId(
-      UnitTypeMapper::serializeCreate($data, $tenantId)
-    );
+    $newId = $this->db->getConnection()->selectOne('SELECT UUID() AS id')->id;
+
+    $this->getQueryBuilder()->insert([
+      UnitTypeModel::getPkColumnName() => $newId,
+      ...UnitTypeMapper::serializeCreate($data, $tenantId),
+    ]);
+
     return $newId;
   }
 

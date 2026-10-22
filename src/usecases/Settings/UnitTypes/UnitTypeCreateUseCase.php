@@ -37,6 +37,13 @@ class UnitTypeCreateUseCase
       ->notEmpty()
       ->max(255)
       ->validate();
+    if (preg_match('/[\x{10000}-\x{10FFFF}]/u', $data->name)) {
+      $errors[] = new FieldError(
+        'name',
+        'Field cannot contain emojis or other 4-byte characters',
+        'UNSUPPORTED_CHARACTERS'
+      );
+    }
     if (count($errors) > 0) {
       throw new BadUserInputException($errors, 'UnitTypeCreateInput');
     }
